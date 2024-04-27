@@ -1,21 +1,30 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+import uuid
 
 
 # Create your models here.
 class Client(models.Model):
     name = models.CharField(max_length=100)
-    address = models.CharField(max_length=100)
-    postal_address = models.CharField(max_length=100)
+    address = models.CharField(max_length=400)
+    postal_address = models.CharField(max_length=400)
+
+    def __str__(self):
+        return f'{self.name}'
+
+    class Meta:
+        verbose_name = "Clients"
+        verbose_name_plural = 'Clients'
 
 
 class Quotation(models.Model):
-    quotation_id = models.CharField(max_length=100, blank=False, primary_key=True)
+    quotation_id = models.CharField(primary_key=True, default=uuid.uuid4, blank=True, editable=False,
+                                    max_length=100)
     customer_id = models.ForeignKey(Client, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=15, decimal_places=2)
     status = models.BooleanField(default="False", null=True, blank=True)
-    quotation_doc = models.FileField(upload_to='quotation', default='default.jpg')
+    quotation_doc = models.FileField(upload_to='quotation', default='default.jpg', null=True, blank=True)
     date = models.DateTimeField(default=timezone.now)
 
 

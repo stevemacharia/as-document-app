@@ -1,7 +1,45 @@
 from django import forms
 from .models import Quotation, QuotationItems, Client
+from crispy_bootstrap5.bootstrap5 import FloatingField
+from django.contrib.admin.widgets import AdminDateWidget
+
+
+class ClientForm(forms.ModelForm):
+    name = forms.CharField()
+    address = forms.CharField()
+    postal_address = forms.CharField(required=False, widget=forms.Textarea)
+
+    class Meta:
+        model = Client
+        fields = ['name', 'address', 'postal_address']
 
 
 class QuotationForm(forms.ModelForm):
-    quotation_id = forms.CharField()
-    customer_id = forms.CharField()
+    STATUS_CHOICES = (
+        ('1', 'Final'),
+        ('0', 'Draft'),
+    )
+    customer = forms.ModelChoiceField(queryset=Client.objects.all(),
+                                      widget=forms.Select(attrs={'class': 'form-control'}))
+    amount = forms.CharField(label="Total Amount")
+    date = forms.DateField(
+        label="Date",
+        required=True,
+        widget=forms.DateInput(format="%Y-%m-%d", attrs={"type": "date"}),
+        input_formats=["%Y-%m-%d"]
+    )
+
+    class Meta:
+        model = Quotation
+        fields = ['customer', 'amount', 'date']
+
+
+class QuotationItemsForm(forms.ModelForm):
+    item = forms.CharField()
+    item_description = forms.CharField(required=False, widget=forms.Textarea)
+    quantity = forms.IntegerField(required=False)
+    price = forms.CharField()
+
+    class Meta:
+        model = QuotationItems
+        fields = ['item', 'item_description', 'quantity', 'price']

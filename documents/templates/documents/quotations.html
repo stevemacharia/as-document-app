@@ -1,4 +1,7 @@
 {% extends 'documents/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
 {% block content %}
     <main>
         <div class="container-fluid px-4">
@@ -7,7 +10,6 @@
                 <li class="breadcrumb-item active">Create or view quotations from here</li>
             </ol>
 
-
             <div class="card bg-warning mb-4">
                 <a class="text-decoration-none text-dark" href="#">
                     <div class="card-body" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -15,7 +17,6 @@
                     </div>
                 </a>
             </div>
-
 
             <!-- Start of Upload Modal -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" data-bs-backdrop="static" aria-hidden="true">
@@ -26,6 +27,10 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
+                          <form method="POST">
+                                {% csrf_token %}
+                                {{ quotation_form|crispy }}
+                          </form>
                       </div>
                       <div class="p-3">
                         <div class="d-grid gap-2">
@@ -38,7 +43,88 @@
             <!-- End of Upload Modal -->
 
 
+
+            {#start of draft quotation tables#}
+                <section class="p-4">
+                    <div class="table-responsive">
+                        <table class="table table-sm caption-top table-hover table-bordered">
+                            <caption>Draft Quotations</caption>
+                            <thead class="table-light">
+                                <tr>
+                                  <th scope="col">#</th>
+                                  <th scope="col">First</th>
+                                  <th scope="col">Last</th>
+                                  <th scope="col">Handle</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                  <th scope="row">1</th>
+                                  <td>Mark</td>
+                                  <td>Otto</td>
+                                  <td>@mdo</td>
+                                </tr>
+                                <tr>
+                                  <th scope="row">2</th>
+                                  <td>Jacob</td>
+                                  <td>Thornton</td>
+                                  <td>@fat</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            {# end of quotation tables#}
+
+
+
+            {#start of final quotation tables#}
+                <section class="p-4">
+                    <div class="table-responsive">
+                        <table class="table table-sm caption-top table-hover table-bordered">
+                            <caption>Completed Quotations</caption>
+                            <thead class="table-light">
+                                <tr>
+                                  <th scope="col">#</th>
+                                  <th scope="col">Quotation Id</th>
+                                  <th scope="col">Client</th>
+                                  <th scope="col">amount</th>
+                                  <th scope="col">date</th>
+                                  <th scope="col">status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                  <th scope="row">1</th>
+                                  <td>Mark</td>
+                                  <td>Otto</td>
+                                  <td>@mdo</td>
+                                  <td>@mdo</td>
+                                  <td>@mdo</td>
+                                </tr>
+                                <tr>
+                                  <th scope="row">2</th>
+                                  <td>Jacob</td>
+                                  <td>Thornton</td>
+                                  <td>@fat</td>
+                                  <td>@fat</td>
+                                  <td>@fat</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            {# end of quotation tables#}
+
+
         </div>
     </main>
-
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script>
+  $(function () {
+    $("#datetimepicker1").datetimepicker({
+      format: 'DD/MM/YYYY HH:mm',
+    });
+  });
+</script>
 {% endblock %}

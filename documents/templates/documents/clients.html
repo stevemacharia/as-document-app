@@ -1,0 +1,106 @@
+{% extends 'documents/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+    <main>
+        {% if messages %}
+           {% for message in messages %}
+               <div class="alert alert-{{message.tags}} m-3">
+                   {{message}}
+               </div>
+           {% endfor %}
+        {% endif %}
+        <div class="container-fluid px-4">
+            <h1 class="mt-4">Clients</h1>
+            <ol class="breadcrumb mb-4">
+                <li class="breadcrumb-item active">Create Client billing address</li>
+            </ol>
+
+            <div class="card bg-warning mb-4">
+                <a class="text-decoration-none text-dark" href="#">
+                    <div class="card-body" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <h5 class="text-center fw-bolder"><i class="bi bi-upload pe-2"></i> Create Client address</h5>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Start of Upload Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" data-bs-backdrop="static" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                          <form method="POST" enctype="multipart/form-data">
+                              {% csrf_token %}
+                              <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Enter Client Details</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                  {{ client_form|crispy }}
+                              </div>
+                              <div class="p-3">
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-success" type="submit">Submit</button>
+                                </div>
+                              </div>
+                          </form>
+                    </div>
+                  </div>
+                </div>
+            <!-- End of Upload Modal -->
+
+
+
+            {#start of client tables#}
+                <section class="p-4">
+                    <div class="table-responsive">
+                        <table class="table table-sm caption-top table-hover table-bordered">
+                            <caption>Client list</caption>
+                            <thead class="table-light">
+                                <tr>
+                                  <th scope="col">#</th>
+                                  <th scope="col">Name</th>
+                                  <th scope="col">Address</th>
+                                  <th scope="col">Postal Address</th>
+                                  <th scope="col">Edit</th>
+                                  <th scope="col">Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for client in client_list %}
+                                    <tr>
+                                        <th scope="row">{{ forloop.counter }}</th>
+                                        <td>{{ client.name }}</td>
+                                        <td>{{ client.address }}</td>
+                                        <td>{{ client.postal_address }}</td>
+                                        <td><a href="{% url 'client_details' client.id %}"><button type="button" class="btn btn-primary btn-sm">Edit</button></a></td>
+                                        <td><button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal2">Delete</button></td>
+
+                                            <!-- Start of confrim delete modal -->
+                                                <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                  <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                      <div class="modal-body text-center">
+                                                          <h6 class="my-2">Confirm you want to delete {{ client.name  }} details </h6>               <a href="{% url 'client_delete' client.id %}"><button type="button" class="btn btn-danger" data-bs-dismiss="modal">Delete Client</button></a>
+                                                      </div>
+
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                            <!-- End of confirm delete modal -->
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            {# end of client tables#}
+
+
+
+
+
+        </div>
+    </main>
+    </main>
+{% endblock %}
