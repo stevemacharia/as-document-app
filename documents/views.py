@@ -10,14 +10,30 @@ def index(request):
 
 
 def quotations(request):
-    quotation_form = QuotationForm()
-    quotation_items_form = QuotationItemsForm()
-    context = {
-        'quotation_form': quotation_form,
-        'quotation_items_form': quotation_items_form,
-    }
-    return render(request, 'documents/quotations.html', context)
+    if request.method == 'POST':
+        quotation_form = QuotationForm(request.POST)
+        if quotation_form.is_valid():
+            quotation_form.save()
+            messages.success(request, f'Added Record Successfully.')
+            return redirect('quotations')
+        else:
+            messages.warning(request, f'Failed to add record, Kindly retry again..')
+            return redirect('quotations')
+    else:
+        quotation_form = QuotationForm()
+        quotation_items_form = QuotationItemsForm()
+        context = {
+            'quotation_form': quotation_form,
+            'quotation_items_form': quotation_items_form,
+        }
+        return render(request, 'documents/quotations.html', context)
 
+def quotation_details(request, id):
+    chosen_quotation = Quotation.objects.get(id=id)
+    context = {
+        'chosen_quotation': chosen_quotation,
+    }
+    return render(request, 'documents/quotation_details.html', context)
 
 def clients(request):
     if request.method == "POST":

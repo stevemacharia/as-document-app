@@ -21,11 +21,13 @@ class Client(models.Model):
 class Quotation(models.Model):
     quotation_id = models.CharField(primary_key=True, default=uuid.uuid4, blank=True, editable=False,
                                     max_length=100)
-    customer_id = models.ForeignKey(Client, on_delete=models.CASCADE)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=15, decimal_places=2)
     status = models.BooleanField(default="False", null=True, blank=True)
-    quotation_doc = models.FileField(upload_to='quotation', default='default.jpg', null=True, blank=True)
+    quotation_doc = models.FileField(upload_to='quotation', default='default.pdf', null=True, blank=True)
     date = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
 
 class QuotationItems(models.Model):

@@ -19,7 +19,7 @@ class QuotationForm(forms.ModelForm):
         ('1', 'Final'),
         ('0', 'Draft'),
     )
-    customer = forms.ModelChoiceField(queryset=Client.objects.all(),
+    client = forms.ModelChoiceField(queryset=Client.objects.all(),
                                       widget=forms.Select(attrs={'class': 'form-control'}))
     amount = forms.CharField(label="Total Amount")
     date = forms.DateField(
@@ -31,7 +31,7 @@ class QuotationForm(forms.ModelForm):
 
     class Meta:
         model = Quotation
-        fields = ['customer', 'amount', 'date']
+        fields = ['client', 'amount', 'date']
 
 
 class QuotationItemsForm(forms.ModelForm):

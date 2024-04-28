@@ -4,6 +4,13 @@
 
 {% block content %}
     <main>
+        {% if messages %}
+           {% for message in messages %}
+               <div class="alert alert-{{message.tags}} m-3">
+                   {{message}}
+               </div>
+           {% endfor %}
+        {% endif %}
         <div class="container-fluid px-4">
             <h1 class="mt-4">Quotations</h1>
             <ol class="breadcrumb mb-4">
@@ -30,12 +37,12 @@
                           <form method="POST">
                                 {% csrf_token %}
                                 {{ quotation_form|crispy }}
+                              <div class="p-3">
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-success" type="submit">Submit</button>
+                                </div>
+                              </div>
                           </form>
-                      </div>
-                      <div class="p-3">
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-success" type="button">Submit</button>
-                        </div>
                       </div>
                     </div>
                   </div>
