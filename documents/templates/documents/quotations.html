@@ -4,6 +4,15 @@
 
 {% block content %}
     <main>
+        <script>
+            $(document).ready(function() {
+                $('#add-form-btn').click(function() {
+                    var clone = $('.form-container').last().clone(true);
+                    clone.find('input').val('');  // Clear input values
+                    $('.form-container').last().after(clone);
+                });
+            });
+        </script>
         {% if messages %}
            {% for message in messages %}
                <div class="alert alert-{{message.tags}} m-3">
@@ -34,23 +43,24 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
-                          <form method="POST">
+                          <form id="original-form" method="post" action="{% url 'quotations' %}">
                                 {% csrf_token %}
-                                {{ quotation_form|crispy }}
-                                {{ quotation_items_form|crispy }}
+                              <div class="form-container">
+                                {{ quotation_form| crispy }}
+                              </div>
+                              <button type="button" id="add-form-btn">Add Another Form</button>
                               <div class="p-3">
                                 <div class="d-grid gap-2">
                                     <button class="btn btn-success" type="submit">Submit</button>
                                 </div>
                               </div>
+                              <input type="submit" name="add_another" value="Add Another Form and Save">
                           </form>
                       </div>
                     </div>
                   </div>
                 </div>
             <!-- End of Upload Modal -->
-
-
 
             {#start of draft quotation tables#}
                 <section class="p-4">
@@ -127,12 +137,7 @@
 
         </div>
     </main>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-<script>
-  $(function () {
-    $("#datetimepicker1").datetimepicker({
-      format: 'DD/MM/YYYY HH:mm',
-    });
-  });
-</script>
+
+
+
 {% endblock %}

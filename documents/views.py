@@ -3,6 +3,8 @@ from django.contrib import messages
 from .forms import QuotationForm, QuotationItemsForm, ClientForm
 from .models import Client, Quotation, QuotationItems
 import uuid
+from django.http import JsonResponse
+import json
 
 # Create your views here.
 def index(request):
@@ -17,15 +19,25 @@ def quotations(request):
             quotation_form.save(commit=False)
             quotation_form.id = x
             quotation_form.save()
+            if 'add_another' in request.POST:
+                quotation_form = QuotationForm()
+                x = uuid.uuid4()
+                quotation_form.save(commit=False)
+                quotation_form.id = x
+                quotation_form.save()
+            else:
+                messages.success(request, f'Added Record Successfully 1.')
+                return redirect('quotations')
             # ex = Example()
             # ex.username = form.cleaned_data['username']
             # ex.save()
-
+            # messages.success(request, f'Added Record Successfully.')
+            # return redirect('quotations')
+            # return JsonResponse({'success': True})
+        else:
             messages.success(request, f'Added Record Successfully.')
             return redirect('quotations')
-        else:
-            messages.warning(request, f'Failed to add record, Kindly retry again..')
-            return redirect('quotations')
+            # return JsonResponse({'success': False, 'errors': quotation_form.errors})
     else:
         quotation_form = QuotationForm()
         quotation_items_form = QuotationItemsForm()
