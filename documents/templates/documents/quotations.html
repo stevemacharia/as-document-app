@@ -27,7 +27,7 @@
 
             <!-- Start of Upload Modal -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" data-bs-backdrop="static" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-dialog modal-xl modal-dialog-centered">
                     <div class="modal-content">
                       <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Enter Quotation Details</h1>
@@ -37,6 +37,7 @@
                           <form method="POST">
                                 {% csrf_token %}
                                 {{ quotation_form|crispy }}
+                                {{ quotation_items_form|crispy }}
                               <div class="p-3">
                                 <div class="d-grid gap-2">
                                     <button class="btn btn-success" type="submit">Submit</button>

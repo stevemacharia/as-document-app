@@ -21,12 +21,12 @@ class QuotationItemsAdmin(admin.StackedInline):
 class QuotationAdmin(admin.ModelAdmin):
     inlines = [QuotationItemsAdmin]
     # a list of displayed columns name.
-    list_display = ['quotation_id', 'client', 'amount', 'date', 'status', 'date']
+    list_display = ['quotation_id', 'client', 'amount', 'submission_date', 'status']
     # list_filter = ('p',)
     # define search columns list, then a search box will be added at the top of Department list page.
     search_fields = ['quotation_id', 'client', ]
     # define model data list ordering.
-    ordering = ('date',)
+    ordering = ('created_at',)
 
 
 admin.site.register(Quotation, QuotationAdmin)

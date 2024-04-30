@@ -19,11 +19,13 @@ class QuotationForm(forms.ModelForm):
         ('1', 'Final'),
         ('0', 'Draft'),
     )
+    id = forms.CharField(widget=forms.HiddenInput(), required=False)
+
     client = forms.ModelChoiceField(queryset=Client.objects.all(),
                                       widget=forms.Select(attrs={'class': 'form-control'}))
     amount = forms.CharField(label="Total Amount")
-    date = forms.DateField(
-        label="Date",
+    submission_date = forms.DateField(
+        label="Submission Date",
         required=True,
         widget=forms.DateInput(format="%Y-%m-%d", attrs={"type": "date"}),
         input_formats=["%Y-%m-%d"]
@@ -31,7 +33,7 @@ class QuotationForm(forms.ModelForm):
 
     class Meta:
         model = Quotation
-        fields = ['client', 'amount', 'date']
+        fields = ['id', 'client', 'amount', 'submission_date']
 
 
 class QuotationItemsForm(forms.ModelForm):

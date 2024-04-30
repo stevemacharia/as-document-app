@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import QuotationForm, QuotationItemsForm, ClientForm
 from .models import Client, Quotation, QuotationItems
-
+import uuid
 
 # Create your views here.
 def index(request):
@@ -13,7 +13,14 @@ def quotations(request):
     if request.method == 'POST':
         quotation_form = QuotationForm(request.POST)
         if quotation_form.is_valid():
+            x = uuid.uuid4()
+            quotation_form.save(commit=False)
+            quotation_form.id = x
             quotation_form.save()
+            # ex = Example()
+            # ex.username = form.cleaned_data['username']
+            # ex.save()
+
             messages.success(request, f'Added Record Successfully.')
             return redirect('quotations')
         else:
