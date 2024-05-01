@@ -19,7 +19,7 @@ class QuotationForm(forms.ModelForm):
         ('1', 'Final'),
         ('0', 'Draft'),
     )
-    id = forms.CharField(widget=forms.HiddenInput(), required=False)
+    quotation_id = forms.CharField(widget=forms.HiddenInput(), required=False)
 
     client = forms.ModelChoiceField(queryset=Client.objects.all(),
                                       widget=forms.Select(attrs={'class': 'form-control'}))
@@ -33,7 +33,7 @@ class QuotationForm(forms.ModelForm):
 
     class Meta:
         model = Quotation
-        fields = ['id', 'client', 'amount', 'submission_date']
+        fields = ['quotation_id', 'client', 'amount', 'submission_date']
 
 
 class QuotationItemsForm(forms.ModelForm):

@@ -7,9 +7,21 @@
         <script>
             $(document).ready(function() {
                 $('#add-form-btn').click(function() {
+                    var formCount = $('.form-container').length;
                     var clone = $('.form-container').last().clone(true);
                     clone.find('input').val('');  // Clear input values
+                    clone.find('label').each(function() {
+                        var labelFor = $(this).attr('for');
+                        $(this).attr('for', labelFor.replace(/\d+/, formCount));
+                    });
+                    clone.find('input, select, textarea').each(function() {
+                        var id = $(this).attr('id');
+                        var name = $(this).attr('name');
+                        $(this).attr('id', id.replace(/\d+/, formCount));
+                        $(this).attr('name', name.replace(/\d+/, formCount));
+                    });
                     $('.form-container').last().after(clone);
+                    $('#form_count').val(formCount + 1);
                 });
             });
         </script>
@@ -45,16 +57,22 @@
                       <div class="modal-body">
                           <form id="original-form" method="post" action="{% url 'quotations' %}">
                                 {% csrf_token %}
-                              <div class="form-container">
-                                {{ quotation_form| crispy }}
-                              </div>
-                              <button type="button" id="add-form-btn">Add Another Form</button>
-                              <div class="p-3">
-                                <div class="d-grid gap-2">
-                                    <button class="btn btn-success" type="submit">Submit</button>
+                                <input type="hidden" id="form_count" name="form_count" value="{{ forms|length }}">
+                                {% for form in forms %}
+                                    <div class="form-container">
+                                        {{ quotation_form|crispy }}
+{#                                        {{ form|crispy }}#}
+                                    </div>
+                                {% endfor %}
+
+
+
+                                <button type="button" id="add-form-btn">Add Another Form</button>
+                                <div class="p-3">
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-success" type="submit">Submit</button>
+                                    </div>
                                 </div>
-                              </div>
-                              <input type="submit" name="add_another" value="Add Another Form and Save">
                           </form>
                       </div>
                     </div>

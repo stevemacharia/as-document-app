@@ -14,38 +14,70 @@ def index(request):
 def quotations(request):
     if request.method == 'POST':
         quotation_form = QuotationForm(request.POST)
+
         if quotation_form.is_valid():
             x = uuid.uuid4()
             quotation_form.save(commit=False)
-            quotation_form.id = x
+            quotation_form.quotation_id = x
             quotation_form.save()
-            if 'add_another' in request.POST:
-                quotation_form = QuotationForm()
-                x = uuid.uuid4()
-                quotation_form.save(commit=False)
-                quotation_form.id = x
-                quotation_form.save()
-            else:
+
+            chosen_quotation = Quotation.objects.get(quotation_id=[x])
+
+
+            forms = []
+            form_count = int(request.POST.get('form_count', 1))
+            # quotation_forms = [QuotationForm(request.POST, prefix=str(i)) for i in range(int(request.POST['form_count']))]
+            for i in range(form_count):
+                form = QuotationItemsForm(request.POST, prefix='form{}'.format(i))
+                if form.is_valid():
+                    forms.append(form)
+                else:
+                    quotation_form = QuotationForm()
+                    quotation_items_form = QuotationItemsForm()
+                    context = {
+                        'quotation_form': quotation_form,
+                        'quotation_items_form': quotation_items_form,
+                    }
+                    # If any form is invalid, render the template with all forms
+                    return render(request, 'documents/quotations.html', context)
+
+            if forms:
+                # If all forms are valid, save them
+                for form in forms:
+                    form.save(commit=False)
+                    form.quotation = chosen_quotation
+                    form.save()
                 messages.success(request, f'Added Record Successfully 1.')
                 return redirect('quotations')
-            # ex = Example()
-            # ex.username = form.cleaned_data['username']
-            # ex.save()
-            # messages.success(request, f'Added Record Successfully.')
-            # return redirect('quotations')
-            # return JsonResponse({'success': True})
         else:
-            messages.success(request, f'Added Record Successfully.')
+            messages.warning(request, f'Failed to add record.')
             return redirect('quotations')
-            # return JsonResponse({'success': False, 'errors': quotation_form.errors})
+
+
+
+
+
+        # if all(quotation_forms.is_valid() for form in quotation_forms):
+        #     for quotation_form in quotation_forms:
+        #         x = uuid.uuid4()
+        #         quotation_form.save(commit=False)
+        #         quotation_form.id = x
+        #         quotation_form.save()
+        #         messages.success(request, f'Added Record Successfully 1.')
+        #         return redirect('quotations')
+        # else:
+        #     messages.success(request, f'Added Record Successfully.')
+        #     return redirect('quotations')
+        #     # return JsonResponse({'success': False, 'errors': quotation_form.errors})
     else:
+        form = QuotationItemsForm(prefix='form0')
         quotation_form = QuotationForm()
-        quotation_items_form = QuotationItemsForm()
-        context = {
-            'quotation_form': quotation_form,
-            'quotation_items_form': quotation_items_form,
-        }
-        return render(request, 'documents/quotations.html', context)
+        # quotation_items_form = QuotationItemsForm(prefix='form0')
+        # context = {
+        #     'form': [quotation_items_form],
+        #     'quotation_form': quotation_form,
+        # }
+        return render(request, 'documents/quotations.html', {'forms': [form], 'quotation_form': quotation_form})
 
 def quotation_details(request, id):
     chosen_quotation = Quotation.objects.get(id=id)
