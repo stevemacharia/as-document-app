@@ -57,18 +57,43 @@
                       <div class="modal-body">
                           <form id="original-form" method="post" action="{% url 'quotations' %}">
                                 {% csrf_token %}
+                                <div class="row g-3">
+                                    <div class="col-6">
+                                        {{ quotation_form.client|as_crispy_field }}
+                                    </div>
+                                    <div class="col-6">
+                                        {{ quotation_form.submission_date|as_crispy_field }}
+                                    </div>
+                                </div>
                                 <input type="hidden" id="form_count" name="form_count" value="{{ forms|length }}">
                                 {% for form in forms %}
                                     <div class="form-container">
-                                        {{ quotation_form|crispy }}
-{#                                        {{ form|crispy }}#}
+                                        <hr class="pt-2">
+                                        <div class="row g-3">
+                                            <div class="col-sm-12">
+                                                {{ form.item|as_crispy_field }}
+                                            </div>
+                                        </div>
+                                        <div class="row g-3">
+                                            <div class="col-sm-12">
+                                                {{ form.item_description|as_crispy_field }}
+                                            </div>
+                                        </div>
+                                        <div class="row g-3">
+                                            <div class="col-sm-6">
+                                                {{ form.quantity|as_crispy_field }}
+                                            </div>
+                                            <div class="col-sm-6">
+                                                {{ form.price|as_crispy_field }}
+                                            </div>
+                                        </div>
                                     </div>
                                 {% endfor %}
 
 
 
-                                <button type="button" id="add-form-btn">Add Another Form</button>
-                                <div class="p-3">
+                                <button type="button" class="btn btn-primary" id="add-form-btn">Add another Item <i class="bi bi-database-fill-add"></i></button>
+                                <div class="py-3">
                                     <div class="d-grid gap-2">
                                         <button class="btn btn-success" type="submit">Submit</button>
                                     </div>

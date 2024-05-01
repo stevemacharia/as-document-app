@@ -19,7 +19,7 @@ class Client(models.Model):
 
 
 class Quotation(models.Model):
-    quotation_id = models.CharField(primary_key=True, default=uuid.uuid4, blank=True, editable=True,
+    quotation_id = models.CharField( blank=True,
                                     max_length=100)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)

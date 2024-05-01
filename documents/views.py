@@ -14,14 +14,13 @@ def index(request):
 def quotations(request):
     if request.method == 'POST':
         quotation_form = QuotationForm(request.POST)
-
+        x = uuid.uuid4()
         if quotation_form.is_valid():
-            x = uuid.uuid4()
-            quotation_form.save(commit=False)
-            quotation_form.quotation_id = x
-            quotation_form.save()
+            q_form = quotation_form.save(commit=False)
+            q_form.quotation_id = x
+            q_form.save()
 
-            chosen_quotation = Quotation.objects.get(quotation_id=[x])
+            chosen_quotation = Quotation.objects.get(quotation_id=x)
 
 
             forms = []
@@ -44,9 +43,9 @@ def quotations(request):
             if forms:
                 # If all forms are valid, save them
                 for form in forms:
-                    form.save(commit=False)
-                    form.quotation = chosen_quotation
-                    form.save()
+                    Q_Items_form = form.save(commit=False)
+                    Q_Items_form.quotation = chosen_quotation
+                    Q_Items_form.save()
                 messages.success(request, f'Added Record Successfully 1.')
                 return redirect('quotations')
         else:
@@ -54,21 +53,6 @@ def quotations(request):
             return redirect('quotations')
 
 
-
-
-
-        # if all(quotation_forms.is_valid() for form in quotation_forms):
-        #     for quotation_form in quotation_forms:
-        #         x = uuid.uuid4()
-        #         quotation_form.save(commit=False)
-        #         quotation_form.id = x
-        #         quotation_form.save()
-        #         messages.success(request, f'Added Record Successfully 1.')
-        #         return redirect('quotations')
-        # else:
-        #     messages.success(request, f'Added Record Successfully.')
-        #     return redirect('quotations')
-        #     # return JsonResponse({'success': False, 'errors': quotation_form.errors})
     else:
         form = QuotationItemsForm(prefix='form0')
         quotation_form = QuotationForm()
