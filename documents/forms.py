@@ -36,10 +36,10 @@ class QuotationForm(forms.ModelForm):
 
 
 class QuotationItemsForm(forms.ModelForm):
-    item = forms.CharField()
-    item_description = forms.CharField(required=False, widget=forms.Textarea)
+    item = forms.CharField(label="Item Name")
+    item_description = forms.CharField(required=False, label="Description", widget=forms.Textarea)
     quantity = forms.IntegerField(required=False)
-    price = forms.CharField()
+    price = forms.CharField(label="Unit cost")
 
     class Meta:
         model = QuotationItems

@@ -14,7 +14,8 @@ def index(request):
 def quotations(request):
     if request.method == 'POST':
         quotation_form = QuotationForm(request.POST)
-        x = uuid.uuid4()
+        x =  str(uuid.uuid4())[:5]
+
         if quotation_form.is_valid():
             q_form = quotation_form.save(commit=False)
             q_form.quotation_id = x
@@ -46,7 +47,7 @@ def quotations(request):
                     Q_Items_form = form.save(commit=False)
                     Q_Items_form.quotation = chosen_quotation
                     Q_Items_form.save()
-                messages.success(request, f'Added Record Successfully 1.')
+                messages.success(request, f'Added Record Successfully.')
                 return redirect('quotations')
         else:
             messages.warning(request, f'Failed to add record.')
@@ -56,18 +57,35 @@ def quotations(request):
     else:
         form = QuotationItemsForm(prefix='form0')
         quotation_form = QuotationForm()
+        all_quotations = Quotation.objects.all()
         # quotation_items_form = QuotationItemsForm(prefix='form0')
         # context = {
         #     'form': [quotation_items_form],
         #     'quotation_form': quotation_form,
         # }
-        return render(request, 'documents/quotations.html', {'forms': [form], 'quotation_form': quotation_form})
+        return render(request, 'documents/quotations.html', {'forms': [form], 'quotation_form': quotation_form, 'all_quotations': all_quotations})
 
 def quotation_details(request, id):
     chosen_quotation = Quotation.objects.get(id=id)
-    context = {
-        'chosen_quotation': chosen_quotation,
-    }
+    listed_quotation_items = QuotationItems.objects.filter(quotation=chosen_quotation)
+    if request.method == "POST":
+        quotation_form = QuotationForm(request.POST, instance=chosen_quotation)
+        quotation_items_form = QuotationItemsForm(request.POST, instance=listed_quotation_items)
+        if quotation_form.is_valid() and quotation_items_form.is_valid():
+            quotation_items_form.save()
+            quotation_form.save()
+            messages.success(request, f'Updated Quotation Successfully.')
+            return redirect('quotations')
+        else:
+            messages.warning(request, f'Failed to update quotation details, Kindly retry again. ')
+            return redirect('quotations')
+    else:
+        quotation_form = QuotationForm(instance=chosen_quotation)
+        quotation_items_form = QuotationItemsForm(instance=listed_quotation_items)
+        context = {
+            'quotation_form': quotation_form,
+            'quotation_items_form ': quotation_items_form,
+        }
     return render(request, 'documents/quotation_details.html', context)
 
 def clients(request):
@@ -96,7 +114,7 @@ def clients(request):
 def client_details(request, id):
     chosen_client = Client.objects.get(id=id)
     if request.method == "POST":
-        client_form = ClientForm(request.POST)
+        client_form = ClientForm(request.POST, instance=chosen_client)
         if client_form.is_valid():
             client_form.save()
             context = {

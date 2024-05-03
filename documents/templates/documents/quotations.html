@@ -48,8 +48,8 @@
 
             <!-- Start of Upload Modal -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" data-bs-backdrop="static" aria-hidden="true">
-                  <div class="modal-dialog modal-xl modal-dialog-centered">
-                    <div class="modal-content">
+                  <div class="modal-dialog modal-fullscreen modal-dialog-centered">
+                    <div class="modal-content p-4">
                       <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Enter Quotation Details</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -69,6 +69,7 @@
                                 {% for form in forms %}
                                     <div class="form-container">
                                         <hr class="pt-2">
+                                        <h6 class="fw-bolder">Add Item Details</h6>
                                         <div class="row g-3">
                                             <div class="col-sm-12">
                                                 {{ form.item|as_crispy_field }}
@@ -113,24 +114,28 @@
                             <thead class="table-light">
                                 <tr>
                                   <th scope="col">#</th>
-                                  <th scope="col">First</th>
-                                  <th scope="col">Last</th>
-                                  <th scope="col">Handle</th>
+                                  <th scope="col">Quotation Code</th>
+                                  <th scope="col">Client</th>
+                                  <th scope="col">Total Amount</th>
+                                  <th scope="col">Submission Date</th>
+                                  <th scope="col">View Quotation</th>
+                                  <th scope="col">Status</th>
+                                  <th scope="col">Edit</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                  <th scope="row">1</th>
-                                  <td>Mark</td>
-                                  <td>Otto</td>
-                                  <td>@mdo</td>
-                                </tr>
-                                <tr>
-                                  <th scope="row">2</th>
-                                  <td>Jacob</td>
-                                  <td>Thornton</td>
-                                  <td>@fat</td>
-                                </tr>
+                                {% for quotation in all_quotations %}
+                                    <tr>
+                                      <th scope="row">{{ forloop.counter }}</th>
+                                      <td class="text-uppercase">{{ quotation.quotation_id }}</td>
+                                      <td>{{ quotation.client }}</td>
+                                      <td>{{ quotation.amount }}</td>
+                                      <td>{{ quotation.submission_date }}</td>
+                                      <td>{{ quotation.quotation_doc }}</td>
+                                      <td>{{ quotation.status }}</td>
+                                      <td><a href="{% url 'quotation_details' quotation.id %}"><button type="button" class="btn btn-primary btn-sm">Edit</button></a></td>
+                                    </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>

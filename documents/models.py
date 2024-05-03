@@ -19,8 +19,7 @@ class Client(models.Model):
 
 
 class Quotation(models.Model):
-    quotation_id = models.CharField( blank=True,
-                                    max_length=100)
+    quotation_id = models.CharField(blank=True, max_length=100)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     status = models.BooleanField(default="False", null=True, blank=True)
@@ -32,7 +31,7 @@ class Quotation(models.Model):
 
 class QuotationItems(models.Model):
     quotation = models.ForeignKey(Quotation, on_delete=models.CASCADE)
-    item = models.CharField(max_length=100)
-    item_description = models.CharField(max_length=500)
+    item = models.CharField(max_length=300)
+    item_description = models.CharField(max_length=800)
     quantity = models.IntegerField()
     price = models.DecimalField(max_digits=15, decimal_places=2)
