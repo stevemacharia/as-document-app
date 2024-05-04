@@ -3,6 +3,8 @@ from django.contrib import messages
 from .forms import QuotationForm, QuotationItemsForm, ClientForm
 from .models import Client, Quotation, QuotationItems
 import uuid
+from django.forms import modelformset_factory
+from django.forms import formset_factory
 from django.http import JsonResponse
 import json
 
@@ -68,11 +70,19 @@ def quotations(request):
 def quotation_details(request, id):
     chosen_quotation = Quotation.objects.get(id=id)
     listed_quotation_items = QuotationItems.objects.filter(quotation=chosen_quotation)
+    QIFormSet = formset_factory(QuotationItemsForm, extra=0)  # Set extra=0 to avoid extra empty forms
+
     if request.method == "POST":
         quotation_form = QuotationForm(request.POST, instance=chosen_quotation)
-        quotation_items_form = QuotationItemsForm(request.POST, instance=listed_quotation_items)
-        if quotation_form.is_valid() and quotation_items_form.is_valid():
-            quotation_items_form.save()
+        formset = QIFormSet(request.POST)
+        # quotation_items_form = QuotationItemsForm(request.POST, instance=listed_quotation_items)
+        if quotation_form.is_valid():
+            # quotation_items_form.save()
+            instances = formset.save(commit=False)
+            instances.save()
+            for instance in instances:
+                instance.save()
+
             quotation_form.save()
             messages.success(request, f'Updated Quotation Successfully.')
             return redirect('quotations')
@@ -80,11 +90,15 @@ def quotation_details(request, id):
             messages.warning(request, f'Failed to update quotation details, Kindly retry again. ')
             return redirect('quotations')
     else:
+        QuotationItemsFormSet = modelformset_factory(QuotationItems, form=QuotationItemsForm, extra=0)
         quotation_form = QuotationForm(instance=chosen_quotation)
-        quotation_items_form = QuotationItemsForm(instance=listed_quotation_items)
+        # quotation_items_form = QuotationItemsForm(instance=listed_quotation_items)
+
+        QIformset = QuotationItemsFormSet(queryset=listed_quotation_items)
         context = {
             'quotation_form': quotation_form,
-            'quotation_items_form ': quotation_items_form,
+            # 'quotation_items_form ': quotation_items_form,
+            'QIformset': QIformset,
         }
     return render(request, 'documents/quotation_details.html', context)
 

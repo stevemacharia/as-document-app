@@ -18,7 +18,16 @@
                       <form method="POST" enctype="multipart/form-data">
                             {% csrf_token %}
                             {{ quotation_form|crispy }}
-                            {{ quotation_items_form|crispy }}
+
+
+                            <!-- Iterate over form instances in the formset -->
+                            {{ formset.management_form }}
+                            {% for form in QIformset %}
+                                {{ form|crispy }}
+                            {% endfor %}
+
+
+
                             <div class="p-3">
                                 <div class="d-grid gap-2">
                                     <button class="btn btn-success" type="submit">Submit</button>
