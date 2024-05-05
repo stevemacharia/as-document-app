@@ -3,10 +3,21 @@ from django.contrib import messages
 from .forms import QuotationForm, QuotationItemsForm, ClientForm
 from .models import Client, Quotation, QuotationItems
 import uuid
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import modelformset_factory
 from django.forms import formset_factory
+from django.forms import inlineformset_factory
 from django.http import JsonResponse
+from django.urls import reverse
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django_renderpdf.views import PDFView
+import datetime
+from django.conf import settings
+from django.urls import reverse
+from django.shortcuts import render
+from django.template.loader import get_template
 import json
+from weasyprint import HTML, CSS
 
 # Create your views here.
 def index(request):
@@ -16,7 +27,7 @@ def index(request):
 def quotations(request):
     if request.method == 'POST':
         quotation_form = QuotationForm(request.POST)
-        x =  str(uuid.uuid4())[:5]
+        x = str(uuid.uuid4())[:5]
 
         if quotation_form.is_valid():
             q_form = quotation_form.save(commit=False)
@@ -24,7 +35,6 @@ def quotations(request):
             q_form.save()
 
             chosen_quotation = Quotation.objects.get(quotation_id=x)
-
 
             forms = []
             form_count = int(request.POST.get('form_count', 1))
@@ -65,42 +75,108 @@ def quotations(request):
         #     'form': [quotation_items_form],
         #     'quotation_form': quotation_form,
         # }
-        return render(request, 'documents/quotations.html', {'forms': [form], 'quotation_form': quotation_form, 'all_quotations': all_quotations})
+        return render(request, 'documents/quotations.html',
+                      {'forms': [form], 'quotation_form': quotation_form, 'all_quotations': all_quotations})
+
 
 def quotation_details(request, id):
     chosen_quotation = Quotation.objects.get(id=id)
     listed_quotation_items = QuotationItems.objects.filter(quotation=chosen_quotation)
-    QIFormSet = formset_factory(QuotationItemsForm, extra=0)  # Set extra=0 to avoid extra empty forms
+    QuotationItemFormSet = inlineformset_factory(Quotation, QuotationItems, form=QuotationItemsForm, extra=0)
 
     if request.method == "POST":
-        quotation_form = QuotationForm(request.POST, instance=chosen_quotation)
-        formset = QIFormSet(request.POST)
-        # quotation_items_form = QuotationItemsForm(request.POST, instance=listed_quotation_items)
-        if quotation_form.is_valid():
-            # quotation_items_form.save()
-            instances = formset.save(commit=False)
-            instances.save()
-            for instance in instances:
-                instance.save()
-
-            quotation_form.save()
+        form = QuotationForm(request.POST, instance=chosen_quotation)
+        formset = QuotationItemFormSet(request.POST, instance=chosen_quotation)
+        if form.is_valid() and formset.is_valid():
+            form.save()
+            formset.save()
             messages.success(request, f'Updated Quotation Successfully.')
             return redirect('quotations')
         else:
-            messages.warning(request, f'Failed to update quotation details, Kindly retry again. ')
+            messages.warning(request, f'Failed to update quotation details, Kindly retry again.')
             return redirect('quotations')
     else:
-        QuotationItemsFormSet = modelformset_factory(QuotationItems, form=QuotationItemsForm, extra=0)
-        quotation_form = QuotationForm(instance=chosen_quotation)
-        # quotation_items_form = QuotationItemsForm(instance=listed_quotation_items)
-
-        QIformset = QuotationItemsFormSet(queryset=listed_quotation_items)
+        form = QuotationForm(instance=chosen_quotation)
+        formset = QuotationItemFormSet(instance=chosen_quotation)
+        quotation_items_form = QuotationItemsForm()
         context = {
-            'quotation_form': quotation_form,
-            # 'quotation_items_form ': quotation_items_form,
-            'QIformset': QIformset,
+            'quotation_form': form,
+            'quotation_items_form': quotation_items_form,
+            'QIformset': formset,
+            'chosen_quotation': chosen_quotation
         }
     return render(request, 'documents/quotation_details.html', context)
+
+
+def add_quotation_item(request, id):
+    selected_quotation = Quotation.objects.get(id=id)
+    if request.method == "POST":
+        quotation_item_form = QuotationItemsForm(request.POST)
+        if quotation_item_form.is_valid():
+            QI_form = quotation_item_form.save(commit=False)
+            QI_form.quotation = selected_quotation
+            QI_form.save()
+            messages.success(request, f'Successfully added quotation item')
+            return redirect(reverse('quotation_details', kwargs={'id': id}))
+        else:
+            messages.warning(request, f'Failed to add quotation item')
+            return redirect('quotations')
+    else:
+        messages.warning(request, f'Not post request')
+        return redirect('quotations')
+
+
+def quotation_delete(request, id):
+    selected_quotation = Quotation.objects.get(id=id)
+    selected_quotation.delete()
+    messages.success(request, f'Quotation deleted successfully')
+    return redirect('quotations')
+
+
+# class LabelsView(LoginRequiredMixin, PDFView):
+#     """Generate labels for some Shipments.
+#
+#     A PDFView behaves pretty much like a TemplateView, so you can treat it as such.
+#     """
+#     template_name = 'orders/pdf_invoice.html'
+#
+#     download_name = 'Masomo Portal Invoices' + \
+#                     str(datetime.datetime.now()) + '.pdf'
+#     prompt_download = True
+#
+#     def get_context_data(self, *args, **kwargs):
+#         """Pass some extra context to the template."""
+#         template_name = 'orders/pdf_invoice.html'
+#         OrderModel = Order.objects.filter(order_name_id=shortcode)
+#         context = super().get_context_data(*args, **kwargs)
+#         context['user'] = userinfo
+#         context['customerorderdetails'] = OrderDetail.objects.filter(order_name_id=shortcode)
+#         context['customerorders'] = Order.objects.filter(order_name_id=shortcode)
+#         rendered_html = template_name.render(context)
+#         pdf_file = HTML(string=rendered_html).write_pdf(
+#             stylesheets=[CSS(settings.STATIC_ROOT + 'style.css')])
+#         OrderModel.invoice_doc = SimpleUploadedFile(pdf_file, content_type='application/pdf')
+#         OrderModel.save()
+#
+#         return context
+
+
+def generate_pdf_quotation(request, id):
+    selected_quotation = Quotation.objects.get(id=id)
+    template_name = get_template('documents/quotation_doc.html')
+    listed_quotation_items = QuotationItems.objects.filter(quotation=selected_quotation)
+    context = {
+        'selected_quotation': selected_quotation,
+        'listed_quotation_items': listed_quotation_items,
+    }
+    rendered_html = template_name.render(context)
+    pdf_file = HTML(string=rendered_html).write_pdf()
+
+    ########## Update Quotation Model ##############
+    selected_quotation.quotation_doc = SimpleUploadedFile('Arieshelby Quotation-' + selected_quotation.quotation_id + '.pdf', pdf_file, content_type='application/pdf')
+    selected_quotation.save()
+    ###############################
+    return redirect('quotations')
 
 def clients(request):
     if request.method == "POST":
@@ -153,5 +229,5 @@ def client_details(request, id):
 def client_delete(request, id):
     selected_client = Client.objects.get(id=id)
     selected_client.delete()
-    messages.success(request, f'Contract deleted successfully')
+    messages.success(request, f'Client details deleted successfully')
     return redirect('clients')

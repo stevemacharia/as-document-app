@@ -16,8 +16,8 @@ class ClientForm(forms.ModelForm):
 
 class QuotationForm(forms.ModelForm):
     STATUS_CHOICES = (
-        ('1', 'Final'),
         ('0', 'Draft'),
+        ('1', 'Final'),
     )
 
 
@@ -29,17 +29,18 @@ class QuotationForm(forms.ModelForm):
         widget=forms.DateInput(format="%Y-%m-%d", attrs={"type": "date"}),
         input_formats=["%Y-%m-%d"]
     )
-
+    status = forms.ChoiceField(choices=STATUS_CHOICES, label='Status', required=True)
     class Meta:
         model = Quotation
-        fields = ['client', 'submission_date']
+        fields = ['client', 'submission_date', 'status']
 
 
 class QuotationItemsForm(forms.ModelForm):
-    item = forms.CharField(label="Item Name")
-    item_description = forms.CharField(required=False, label="Description", widget=forms.Textarea)
-    quantity = forms.IntegerField(required=False)
-    price = forms.CharField(label="Unit cost")
+    item = forms.CharField(required=True, label="Item Name")
+    item_description = forms.CharField(required=True, label="Description", widget=forms.Textarea)
+    quantity = forms.IntegerField(required=True)
+    price = forms.CharField(required=True, label="Unit cost")
+
 
     class Meta:
         model = QuotationItems

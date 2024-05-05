@@ -4,6 +4,7 @@
 
 {% block content %}
     <main>
+
         {% if messages %}
            {% for message in messages %}
                <div class="alert alert-{{message.tags}} m-3">
@@ -13,29 +14,45 @@
         {% endif %}
         <div class="container-fluid">
             <div class="container my-5">
-                  <div class="position-relative p-5 text-start text-muted bg-body border border-dashed rounded-5">
-                      <h4 class="text-body-emphasis text-capitalize">Update {{ chosen_client.name }} Quotation details</h4>
-                      <form method="POST" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            {{ quotation_form|crispy }}
+                <div class="row">
+                    <div class="col-sm-6">
+                          <div class="position-relative p-4 text-start text-muted bg-body border border-dashed rounded-5">
+                              <h6 class="text-primary fw-bolder text-capitalize pb-2"><i class="bi bi-pencil-square"></i> Update <span class="text-uppercase">{{ chosen_quotation.quotation_id }}</span> Quotation details</h6>
+                              <form method="POST" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    {{ quotation_form|crispy }}
+
+                                    <!-- Iterate over form instances in the formset -->
+                                    {{ QIformset.management_form }}
+                                    {% for form in QIformset %}
+                                        {{ form|crispy }}
+
+                                    {% endfor %}
 
 
-                            <!-- Iterate over form instances in the formset -->
-                            {{ formset.management_form }}
-                            {% for form in QIformset %}
-                                {{ form|crispy }}
-                            {% endfor %}
-
-
-
-                            <div class="p-3">
-                                <div class="d-grid gap-2">
-                                    <button class="btn btn-success" type="submit">Submit</button>
-                                </div>
-                            </div>
-                      </form>
-
-                  </div>
+                                    <div class="py-3">
+                                        <div class="d-grid gap-2">
+                                            <button class="btn btn-success" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                              </form>
+                          </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="position-relative p-4 text-start text-muted bg-body border border-dashed rounded-5">
+                            <h6 class="text-success fw-bolder text-capitalize"><i class="bi bi-plus-circle-fill"></i> Add Item to <span class="text-uppercase">{{ chosen_quotation.quotation_id }}</span> Quotation </h6>
+                                <form method="POST" enctype="multipart/form-data" action="{% url 'add_quotation_item' chosen_quotation.id %}">
+                                    {% csrf_token %}
+                                    {{ quotation_items_form|crispy }}
+                                    <div class="py-3">
+                                        <div class="d-grid gap-2">
+                                            <button class="btn btn-success" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
