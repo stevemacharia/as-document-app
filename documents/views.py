@@ -19,9 +19,14 @@ from django.template.loader import get_template
 import json
 from weasyprint import HTML, CSS
 
+
 # Create your views here.
 def index(request):
-    return render(request, 'documents/index.html')
+    quotations=Quotation.objects.all()
+    context = {
+        'all_quotations': quotations,
+    }
+    return render(request, 'documents/index.html', context)
 
 
 def quotations(request):
@@ -59,6 +64,25 @@ def quotations(request):
                     Q_Items_form = form.save(commit=False)
                     Q_Items_form.quotation = chosen_quotation
                     Q_Items_form.save()
+
+                # chosen__quotation = Quotation.objects.get(id=id)
+                template_name = get_template('documents/quotation_doc.html')
+                listed_quotation_items = QuotationItems.objects.filter(quotation=chosen_quotation)
+                context = {
+                    'selected_quotation': chosen_quotation,
+                    'listed_quotation_items': listed_quotation_items,
+                }
+                rendered_html = template_name.render(context)
+                pdf_file = HTML(string=rendered_html).write_pdf()
+
+                ########## Update Quotation Model ##############
+                chosen_quotation.quotation_doc = SimpleUploadedFile(
+                    'Arieshelby Quotation-' + chosen_quotation.quotation_id + '.pdf', pdf_file,
+                    content_type='application/pdf')
+                chosen_quotation.save()
+                ###############################
+
+
                 messages.success(request, f'Added Record Successfully.')
                 return redirect('quotations')
         else:
@@ -133,34 +157,6 @@ def quotation_delete(request, id):
     return redirect('quotations')
 
 
-# class LabelsView(LoginRequiredMixin, PDFView):
-#     """Generate labels for some Shipments.
-#
-#     A PDFView behaves pretty much like a TemplateView, so you can treat it as such.
-#     """
-#     template_name = 'orders/pdf_invoice.html'
-#
-#     download_name = 'Masomo Portal Invoices' + \
-#                     str(datetime.datetime.now()) + '.pdf'
-#     prompt_download = True
-#
-#     def get_context_data(self, *args, **kwargs):
-#         """Pass some extra context to the template."""
-#         template_name = 'orders/pdf_invoice.html'
-#         OrderModel = Order.objects.filter(order_name_id=shortcode)
-#         context = super().get_context_data(*args, **kwargs)
-#         context['user'] = userinfo
-#         context['customerorderdetails'] = OrderDetail.objects.filter(order_name_id=shortcode)
-#         context['customerorders'] = Order.objects.filter(order_name_id=shortcode)
-#         rendered_html = template_name.render(context)
-#         pdf_file = HTML(string=rendered_html).write_pdf(
-#             stylesheets=[CSS(settings.STATIC_ROOT + 'style.css')])
-#         OrderModel.invoice_doc = SimpleUploadedFile(pdf_file, content_type='application/pdf')
-#         OrderModel.save()
-#
-#         return context
-
-
 def generate_pdf_quotation(request, id):
     selected_quotation = Quotation.objects.get(id=id)
     template_name = get_template('documents/quotation_doc.html')
@@ -173,10 +169,12 @@ def generate_pdf_quotation(request, id):
     pdf_file = HTML(string=rendered_html).write_pdf()
 
     ########## Update Quotation Model ##############
-    selected_quotation.quotation_doc = SimpleUploadedFile('Arieshelby Quotation-' + selected_quotation.quotation_id + '.pdf', pdf_file, content_type='application/pdf')
+    selected_quotation.quotation_doc = SimpleUploadedFile(
+        'Arieshelby Quotation-' + selected_quotation.quotation_id + '.pdf', pdf_file, content_type='application/pdf')
     selected_quotation.save()
     ###############################
     return redirect('quotations')
+
 
 def clients(request):
     if request.method == "POST":

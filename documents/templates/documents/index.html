@@ -53,39 +53,39 @@
         </div>
         <div class="row">
             <div class="col-xl-6 p-4">
-                <table class="table table-sm table-hover table-bordered caption-top table-responsive">
-                    <caption>Quotations</caption>
-                  <thead>
-                    <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">Quotation Code</th>
-                      <th scope="col">Client</th>
-                      <th scope="col">Amount</th>
-                      <th scope="col">Status</th>
-                      <th scope="col">PDF file</th>
-                      <th scope="col">Edit</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <th scope="row">1</th>
-                      <td>Mark</td>
-                      <td>Otto</td>
-                      <td>@mdo</td>
-                      <td>Mark</td>
-                      <td><button type="button" class="btn btn-success btn-sm">Pdf file</button></td>
-                      <td><button type="button" class="btn btn-primary btn-sm">Edit</button></td>
-                    </tr>
-                    <tr>
-                      <th scope="row">2</th>
-                      <td>Jacob</td>
-                      <td>Thornton</td>
-                      <td>@fat</td>
-                      <td>Jacob</td>
-                      <td><button type="button" class="btn btn-success btn-sm">Pdf file</button></td>
-                      <td><button type="button" class="btn btn-primary btn-sm">Edit</button></td>
-                    </tr>
-                  </tbody>
+                <table class="table table-sm caption-top table-hover table-bordered">
+                    <caption>Draft Quotations</caption>
+                    <thead class="table-light">
+                        <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">Quotation Code</th>
+                          <th scope="col">Client</th>
+                          <th scope="col">Total Amount</th>
+                          <th scope="col">Submission Date</th>
+                          <th scope="col">Status</th>
+                          <th scope="col">Edit</th>
+                          <th scope="col">Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for quotation in all_quotations %}
+                            <tr>
+                              <th scope="row">{{ forloop.counter }}</th>
+                              <td class="text-uppercase">{{ quotation.quotation_id }}</td>
+                              <td>{{ quotation.client }}</td>
+                              <td>{{ quotation.amount }}</td>
+                              <td>{{ quotation.submission_date }}</td>
+                              <td>{% if quotation.status %}
+                                    Final
+                                  {% else %}
+                                    Draft
+                                  {% endif %}
+                              </td>
+                              <td><a href="{% url 'quotation_details' quotation.id %}"><button type="button" class="btn btn-primary btn-sm">Edit</button></a></td>
+                              <td><a href="{% url 'quotation_delete' quotation.id %}"><button type="button" class="btn btn-danger btn-sm">Delete</button></a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
                 </table>
             </div>
             <div class="col-xl-6 p-4">
