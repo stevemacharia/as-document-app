@@ -4,7 +4,27 @@
 
 {% block content %}
     <main>
-
+        <script>
+            $(document).ready(function() {
+                $('#add-form-btn').click(function() {
+                    var formCount = $('.form-container').length;
+                    var clone = $('.form-container').last().clone(true);
+                    clone.find('input').val('');  // Clear input values
+                    clone.find('label').each(function() {
+                        var labelFor = $(this).attr('for');
+                        $(this).attr('for', labelFor.replace(/\d+/, formCount));
+                    });
+                    clone.find('input, select, textarea').each(function() {
+                        var id = $(this).attr('id');
+                        var name = $(this).attr('name');
+                        $(this).attr('id', id.replace(/\d+/, formCount));
+                        $(this).attr('name', name.replace(/\d+/, formCount));
+                    });
+                    $('.form-container').last().after(clone);
+                    $('#form_count').val(formCount + 1);
+                });
+            });
+        </script>
         {% if messages %}
            {% for message in messages %}
                <div class="alert alert-{{message.tags}} m-3">

@@ -65,6 +65,7 @@ def quotations(request):
                     Q_Items_form.quotation = chosen_quotation
                     Q_Items_form.save()
 
+                #########   GENERATE PDF   #############
                 # chosen__quotation = Quotation.objects.get(id=id)
                 template_name = get_template('documents/quotation_doc.html')
                 listed_quotation_items = QuotationItems.objects.filter(quotation=chosen_quotation)
@@ -81,7 +82,7 @@ def quotations(request):
                     content_type='application/pdf')
                 chosen_quotation.save()
                 ###############################
-
+                #########   GENERATE PDF   ##################
 
                 messages.success(request, f'Added Record Successfully.')
                 return redirect('quotations')
@@ -114,6 +115,27 @@ def quotation_details(request, id):
         if form.is_valid() and formset.is_valid():
             form.save()
             formset.save()
+
+            #########   GENERATE PDF   #############
+            # chosen__quotation = Quotation.objects.get(id=id)
+            template_name = get_template('documents/quotation_doc.html')
+            listed_quotation_items = QuotationItems.objects.filter(quotation=chosen_quotation)
+            context = {
+                'selected_quotation': chosen_quotation,
+                'listed_quotation_items': listed_quotation_items,
+            }
+            rendered_html = template_name.render(context)
+            pdf_file = HTML(string=rendered_html).write_pdf()
+
+            ########## Update Quotation Model ##############
+            chosen_quotation.quotation_doc = SimpleUploadedFile(
+                'Arieshelby Quotation-' + chosen_quotation.quotation_id + '.pdf', pdf_file,
+                content_type='application/pdf')
+            chosen_quotation.save()
+            ###############################
+            #########   GENERATE PDF   ##################
+
+
             messages.success(request, f'Updated Quotation Successfully.')
             return redirect('quotations')
         else:

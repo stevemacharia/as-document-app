@@ -1,5 +1,3 @@
-{% load crispy_forms_tags %}
-{% load static %}
 <html lang="">
 <head>
     <meta charset="utf-8">
@@ -7,7 +5,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 
@@ -18,21 +16,16 @@
     <style>
         /*Invoice*/
         body{
-          font-family: 'Roboto Mono', monospace;
-          font-weight: 500;
+          font-family: "Montserrat", sans-serif;
+          font-weight: 400;
         }
-        h4, h3, caption{
-          font-family: 'Poppins', sans-serif;
-          font-weight: 500;
-          font-size: 14px;
-          color: #28286f;
-        }
+
         .table th {
           color: white;
           font-family: 'Poppins', sans-serif;
           font-weight: 400;
           font-size: 15px;
-          background-color: #28286f !important;
+          background-color:#185319 !important;
         }
         #InvoiceDetails div{
             display:inline-block;
@@ -163,7 +156,14 @@
     <!-- Styles -->
 </head>
 <body>
-<div class="container py-5 mb-5" id="CheckoutContainer">
+<div class="text-center text-white" style="background-color: #185319">
+    <section class="py-3">
+        <h1 class="fw-bolder ">ARIESHELBY</h1>
+        <h5 class="fw-bold">Email: arieshelby@gmail.com P.O Box 3952 - 00634 Parklands Nairobi Kenya</h5>
+        <h5 class="fw-bold">Location: Northern Bypass, Kahawa West, Nairobi KE. | Phone Number: +254 745 099 932</h5>
+    </section>
+</div>
+<div class="container px-0 mb-5" id="CheckoutContainer">
     <main>
         <div class="container bootstrap snippets bootdeys">
             <div class="row">
