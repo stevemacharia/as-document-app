@@ -125,7 +125,7 @@ def quotation_details(request, id):
                 'listed_quotation_items': listed_quotation_items,
             }
             rendered_html = template_name.render(context)
-            pdf_file = HTML(string=rendered_html).write_pdf()
+            pdf_file = HTML(string=rendered_html).write_pdf(stylesheets=[CSS(string='@page { size: A4; margin: 0.5cm }')])
 
             ########## Update Quotation Model ##############
             chosen_quotation.quotation_doc = SimpleUploadedFile(
