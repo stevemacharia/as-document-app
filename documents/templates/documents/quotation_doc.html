@@ -19,7 +19,11 @@
           font-family: "Montserrat", sans-serif;
           font-weight: 400;
         }
+        .letterhead-image{
 
+            background-size: cover;
+            background-position: center;
+        }
         .table th {
           color: white;
           font-family: 'Poppins', sans-serif;
@@ -136,11 +140,9 @@
     <!-- Styles -->
 </head>
 <body>
-<div class="text-center text-white" style="background-color: #185319">
+<div class="letterhead-image text-center text-white">
     <section class="py-3">
-        <h1 class="fw-bolder ">ARIESHELBY</h1>
-        <h6>Email: arieshelby@gmail.com P.O Box 3952 - 00634 Parklands Nairobi Kenya</h6>
-        <h6>Location: Northern Bypass, Kahawa West, Nairobi KE. | Phone Number: +254 745 099 932</h6>
+        <img src="https://img.freepik.com/premium-vector/b-letter-bird-shape-creative-logo-design_679026-1372.jpg" width="150px" height="150px" alt="...">
     </section>
 </div>
 <div class="container px-0 mb-5" id="CheckoutContainer">
@@ -157,7 +159,7 @@
                             </div>
                             <div class="row pt-0 pb-0" id="InvoiceHeader">
                                 <div class="col-sm-6 top-left">
-                                    <img src="https://masomoportal.com/wp-content/uploads/2022/02/20220228_121449_0000-296x296.png" width="150px" height="150px" alt="...">
+                                    <img src="https://img.freepik.com/premium-vector/b-letter-bird-shape-creative-logo-design_679026-1372.jpg" width="150px" height="150px" alt="...">
                                 </div>
                                 <div class="col-sm-6 top-right pt-5" style="padding-left: 225px;">
                                     <h3 class="marginright fw-bold">InvoiceCode-{{selected_quotation.quotation_id}}</h3>

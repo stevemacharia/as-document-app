@@ -103,7 +103,11 @@ body {
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
-
+.letterhead-image{
+            background-image: url("/static/documents/images/as_letterhead.png");
+            background-size: cover;
+            background-position: center;
+}
 hr {
   margin: 1rem 0;
   color: inherit;
