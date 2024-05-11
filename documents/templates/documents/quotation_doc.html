@@ -17,7 +17,6 @@
         /*Invoice*/
         body{
           font-family: "Montserrat", sans-serif;
-          font-weight: 400;
         }
         .letterhead-image{
 
@@ -152,39 +151,23 @@
                 <div class="col-sm-12">
                     <div class="panel panel-default invoice" id="invoice">
                         <div class="panel-body">
-                            <div class="d-flex justify-content-end">
-                                <div class="invoice-ribbon">
-                                    <div class="ribbon-inner">PAID</div>
+                            <h2 class="fw-bolder pb-0" style="color: #185319; font-weight: 900">QUOTATION</h2>
+                            <hr class="pt-0 mt-0" style="border: 3px solid #185319; opacity: 100%;">
+                            <div class="row pt-0 " id="InvoiceDetails" >
+                                <div class="col-auto me-auto from">
+                                    <p class="fw-bold">Client :</p>
+                                    <p class="fw-semibold fs-6 mb-2">Name: <span class="fw-normal text-capitalize">{{ selected_quotation.client }}</span></p>
+                                    <p class="fw-semibold fs-6 mb-2">Address: <span class="fw-normal text-capitalize">{{ selected_quotation.client.address }}</span></p>
+                                    <p class="fw-semibold fs-6  mb-2">Postal Address: <span class="fw-normal text-capitalize">{{ selected_quotation.client.postal_address }}</span></p>
                                 </div>
-                            </div>
-                            <div class="row pt-0 pb-0" id="InvoiceHeader">
-                                <div class="col-sm-6 top-left">
-                                    <img src="https://img.freepik.com/premium-vector/b-letter-bird-shape-creative-logo-design_679026-1372.jpg" width="150px" height="150px" alt="...">
-                                </div>
-                                <div class="col-sm-6 top-right pt-5" style="padding-left: 225px;">
-                                    <h3 class="marginright fw-bold">InvoiceCode-{{selected_quotation.quotation_id}}</h3>
-                                    <span class="marginright">{{selected_quotation.submission_date}}</span>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="row pt-0" id="InvoiceDetails" >
-                                <div class="col-sm-4 from">
-                                    <p class="fw-normal">From :</p>
-                                    <h4 class="fw-bold pt-0">ARIESHELBY</h4>
-                                </div>
-                                <div class="col-sm-4 to">
-                                    <p class="fw-normal">To :</p>
-                                    <h4 class="fw-bold text-uppercase">{{ selected_quotation.client }}</h4>
-                                    <p class="mb-0">{{ selected_quotation.email }}</p>
-                                    <p>{{ selected_quotation.phone_number }}</p>
-                                </div>
-                                <div class="col-sm-4 text-right payment-details">
-                                    <p class="fw-normal">Payment details</p>
-                                    <h4 class="fw-bold">Mode of Payment:</h4>
 
+                                <div class="col-auto offset-sm-4 text-right payment-details">
+                                    <p class="fw-bold mb-3 pb-3"></p>
+                                    <p class="fw-semibold fs-6 mb-2">Date:</p>
+                                    <p class="fw-semibold fs-6 mb-2">Order No:</p>
                                 </div>
                             </div>
-                            <div class="row table-row" style="padding:0px 20px 0px 20px;">
+                            <div class="row table-row" style="padding:0px 10px 0px 10px;">
                                 <table class="table table-striped">
                                 <thead>
                                     <tr class="text-center">
