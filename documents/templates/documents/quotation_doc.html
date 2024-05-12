@@ -1,3 +1,4 @@
+{% load mathfilters %}
 <html lang="">
 <head>
     <meta charset="utf-8">
@@ -25,19 +26,19 @@
         }
         .table th {
           color: white;
-          font-family: 'Poppins', sans-serif;
-          font-weight: 400;
+          font-family: "Montserrat", sans-serif;
+          font-weight: 600;
           font-size: 15px;
           background-color:#185319 !important;
         }
         #InvoiceDetails div{
             display:inline-block;
-            padding:0px 22px 0px 22px;
+            padding:0px 15px 0px 15px;
             vertical-align: text-top;
 
         }
         #InvoiceDetails P{
-          font-size: 13px;
+          font-size: 11px;
           line-height: normal;
           padding-top: 0cm;
         }
@@ -49,14 +50,14 @@
 
         }
         main{
-            font-family: 'Poppins', sans-serif;
-            font-weight: 400;
-            font-size:13px;
+            font-family: "Montserrat", sans-serif;
+            font-weight: 600;
+
         }
 
         .invoice .top-left {
             font-size:65px;
-          color:#3ba0ff;
+            color:#3ba0ff;
         }
 
         .invoice .top-right {
@@ -86,9 +87,9 @@
           border-bottom:none;
         }
 
-        .invoice .table>tbody>tr>td {
-          padding:8px 20px;
-        }
+        {#.invoice .table>tbody>tr>td {#}
+        {#  padding:8px 20px;#}
+        {#}#}
 
         .invoice .invoice-total {
           margin-right:-10px;
@@ -141,7 +142,7 @@
 <body>
 <div class="letterhead-image text-center text-white">
     <section class="py-3">
-        <img src="https://img.freepik.com/premium-vector/b-letter-bird-shape-creative-logo-design_679026-1372.jpg" width="150px" height="150px" alt="...">
+        <img src="http://shoefactory.arieshelby.com/as_letterhead.png"  style="width:200mm; height:165px " alt="...">
     </section>
 </div>
 <div class="container px-0 mb-5" id="CheckoutContainer">
@@ -155,37 +156,43 @@
                             <hr class="pt-0 mt-0" style="border: 3px solid #185319; opacity: 100%;">
                             <div class="row pt-0 " id="InvoiceDetails" >
                                 <div class="col-auto me-auto from">
-                                    <p class="fw-bold">Client :</p>
+                                    <p class="fw-bold fs-5" style="color: #185319">Client</p>
                                     <p class="fw-semibold fs-6 mb-2">Name: <span class="fw-normal text-capitalize">{{ selected_quotation.client }}</span></p>
                                     <p class="fw-semibold fs-6 mb-2">Address: <span class="fw-normal text-capitalize">{{ selected_quotation.client.address }}</span></p>
-                                    <p class="fw-semibold fs-6  mb-2">Postal Address: <span class="fw-normal text-capitalize">{{ selected_quotation.client.postal_address }}</span></p>
+                                    <p class="fw-semibold fs-6 mb-2">Postal Address: <span class="fw-normal text-capitalize">{{ selected_quotation.client.postal_address }}</span></p>
                                 </div>
 
                                 <div class="col-auto offset-sm-4 text-right payment-details">
                                     <p class="fw-bold mb-3 pb-3"></p>
-                                    <p class="fw-semibold fs-6 mb-2">Date:</p>
-                                    <p class="fw-semibold fs-6 mb-2">Order No:</p>
+                                    <p class="fw-semibold mb-2 fs-6">Date: <span class="fw-normal text-capitalize">{{selected_quotation.submission_date|date:"M d, Y"  }}</span></p>
+                                    <p class="fw-semibold mb-2 fs-6 ">Order No: <span class="fw-normal text-uppercase">{{ selected_quotation.quotation_id }}</span></p>
                                 </div>
                             </div>
-                            <div class="row table-row" style="padding:0px 10px 0px 10px;">
-                                <table class="table table-striped">
+                            <div class="row table-row" style="padding:0px 15px 0px 15px;">
+                                <table class="table table-striped table-bordered">
                                 <thead>
                                     <tr class="text-center">
-                                        <th class="text-center">#</th>
-                                        <th class="text-center">Item</th>
-                                        <th class="text-center">Item Description </th>
-                                        <th class="text-center">Quantity</th>
-                                        <th class="text-center">Price</th>
+                                        <th class="text-start">#</th>
+                                        <th class="text-start">Item</th>
+                                        <th class="text-start">Item Description </th>
+                                        <th class="text-start">Quantity</th>
+                                        <th class="text-start">Excl.</th>
+                                        <th class="text-start">Subtotal</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for quotation_item in listed_quotation_items %}
                                         <tr class="text-start">
-                                            <td class="text-center">{{ forloop.counter }}</td>
-                                            <td class="text-center">{{quotation_item.item}}</td>
-                                            <td class="text-center">{{quotation_item.item_description}}</td>
-                                            <td class="text-center">{{quotation_item.quantity}}</td>
-                                            <td class="text-center">{{quotation_item.price}}</td>
+                                            <td class="text-start">{{ forloop.counter }}</td>
+                                            <td class="text-start">{{quotation_item.item}}</td>
+                                            <td class="text-start">{{quotation_item.item_description}}</td>
+                                            <td class="text-start">{{quotation_item.quantity}}</td>
+                                            <td class="text-start">{{quotation_item.price}}</td>
+                                            <td class="text-start">
+                                                {% with result=quotation_item.quantity|mul:quotation_item.price %}
+                                                    {{result}}
+                                                {% endwith %}
+                                            </td>
                                         </tr>
                                     {% endfor %}
                                 </tbody>
@@ -196,7 +203,7 @@
                                     <p class="lead marginbottom fw-semibold fs-6">Thank You!</p>
                                 </div>
                                 <div class="col-sm-6 text-end pull-right invoice-total">
-                                    <p class="text-orange fw-bold">Total: {{customerorder.order_amount}}</p>
+                                    <p class="text-orange fw-bold">Total: {{quotation_item.price}}</p>
                                 </div>
                             </div>
                         </div>

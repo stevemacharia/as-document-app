@@ -36,16 +36,24 @@ def quotations(request):
 
         if quotation_form.is_valid():
             q_form = quotation_form.save(commit=False)
-            q_form.quotation_id = x
+            client = q_form.client
+            # string = "Hello world"
+            # string[:3]
+            client_initials = str(client)[:3]
+            q_form.quotation_id = 'AS/'+str(client_initials)+'/'+x
             q_form.save()
-
-            chosen_quotation = Quotation.objects.get(quotation_id=x)
+            new_id = 'AS/'+str(client_initials)+'/'+x
+            chosen_quotation = Quotation.objects.get(quotation_id=new_id)
 
             forms = []
             form_count = int(request.POST.get('form_count', 1))
             # quotation_forms = [QuotationForm(request.POST, prefix=str(i)) for i in range(int(request.POST['form_count']))]
+            sub_total_price = 0
             for i in range(form_count):
                 form = QuotationItemsForm(request.POST, prefix='form{}'.format(i))
+                form_replica = form.save(commit=False)
+                item_price = form_replica.price * form_replica.quantity
+                sub_total_price = sub_total_price + item_price
                 if form.is_valid():
                     forms.append(form)
                 else:
@@ -57,7 +65,9 @@ def quotations(request):
                     }
                     # If any form is invalid, render the template with all forms
                     return render(request, 'documents/quotations.html', context)
-
+            main_sub_total_price = sub_total_price
+            chosen_quotation.sub_total = main_sub_total_price
+            chosen_quotation.save()
             if forms:
                 # If all forms are valid, save them
                 for form in forms:
@@ -113,7 +123,19 @@ def quotation_details(request, id):
         form = QuotationForm(request.POST, instance=chosen_quotation)
         formset = QuotationItemFormSet(request.POST, instance=chosen_quotation)
         if form.is_valid() and formset.is_valid():
-            form.save()
+            sub_total_price = 0
+            for i in formset:
+                cd = i.cleaned_data
+                cleaned_price = cd.get('price')
+                cleaned_quantity = cd.get('quantity')
+                item_price = int(float(cleaned_price)) * int(cleaned_quantity)
+                # item_price = cd.get('price') * cd.get('quantity')
+                sub_total_price = sub_total_price + item_price
+
+            form_replica = form.save(commit=False)
+            form_replica.sub_total = sub_total_price
+            form_replica.save()
+            # form.save()
             formset.save()
 
             #########   GENERATE PDF   #############

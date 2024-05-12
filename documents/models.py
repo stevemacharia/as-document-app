@@ -27,7 +27,14 @@ class Quotation(models.Model):
     submission_date = models.DateTimeField(default=timezone.now)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
+    sub_total = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    total_price = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
 
+
+    @property
+    def total_price(self):
+        total_price = self.sub_total * (16/100)
+        return total_price
 
 class QuotationItems(models.Model):
     quotation = models.ForeignKey(Quotation, on_delete=models.CASCADE)
