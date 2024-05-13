@@ -132,7 +132,7 @@
                                       <th scope="row">{{ forloop.counter }}</th>
                                       <td class="text-uppercase">{{ quotation.quotation_id }}</td>
                                       <td>{{ quotation.client }}</td>
-                                      <td>{{ quotation.amount }}</td>
+                                      <td>{{ quotation.total_price }}</td>
                                       <td>{{ quotation.submission_date }}</td>
                                       <td>{% if quotation.status %}
                                             Final
@@ -174,7 +174,7 @@
                                       <th scope="row">{{ forloop.counter }}</th>
                                       <td class="text-uppercase">{{ quotation.quotation_id }}</td>
                                       <td>{{ quotation.client }}</td>
-                                      <td>{{ quotation.amount }}</td>
+                                      <td>{{ quotation.total_price }}</td>
                                       <td>{{ quotation.submission_date }}</td>
                                       <td>{% if quotation.status %}
                                             Final
