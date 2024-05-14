@@ -183,32 +183,32 @@
                                 <tbody>
                                     {% for quotation_item in listed_quotation_items %}
                                         <tr class="text-start">
-                                            <td class="text-start" style="border: 1px solid;">{{ forloop.counter }}</td>
-                                            <td class="text-start" style="border: 1px solid;">{{quotation_item.item}}</td>
-                                            <td class="text-start" style="border: 1px solid;">{{quotation_item.item_description}}</td>
-                                            <td class="text-start" style="border: 1px solid;">{{quotation_item.quantity}}</td>
-                                            <td class="text-start" style="border: 1px solid;">{{quotation_item.price}}</td>
-                                            <td class="text-start" style="border: 1px solid;">
+                                            <td class="text-start" style="border: 1px solid #185319;">{{ forloop.counter }}</td>
+                                            <td class="text-start" style="border: 1px solid #185319;">{{quotation_item.item}}</td>
+                                            <td class="text-start" style="border: 1px solid #185319;">{{quotation_item.item_description}}</td>
+                                            <td class="text-start" style="border: 1px solid #185319;">{{quotation_item.quantity}}</td>
+                                            <td class="text-start" style="border: 1px solid #185319;">{{quotation_item.price}}</td>
+                                            <td class="text-start" style="border: 1px solid #185319;">
                                                 {% with result=quotation_item.quantity|mul:quotation_item.price %}
                                                     {{result}}
                                                 {% endwith %}
                                             </td>
                                         </tr>
                                     {% endfor %}
-                                    <tr class="text-end fw-bold lh-5" style="border: none !important;">
-                                        <td style="border:none;" colspan="4"></td>
-                                        <td style="border:none;">Subtotal :</td>
-                                        <td style="border:none;">{{selected_quotation.sub_total}}</td>
+                                    <tr class="fw-bold lh-5" style="padding-bottom: 0cm">
+                                        <td class="pb-0" style="border:none;" colspan="4"></td>
+                                        <td class="text-end pb-0" style="border:none;">Subtotal :</td>
+                                        <td class="text-start pb-0 ps-2" style="border:none;">{{selected_quotation.sub_total}}</td>
                                     </tr>
-                                    <tr class="text-end fw-bold pt-2">
-                                        <td style="border:none;" colspan="4"></td>
-                                        <td style="border:none;">VAT (16%):</td>
-                                        <td style="border:none;">{{selected_quotation.sub_total}}</td>
+                                    <tr class="fw-bold" style="padding-bottom: 0cm">
+                                        <td class="pb-0" style="border:none;" colspan="4"></td>
+                                        <td class="text-end pb-0" style="border:none;">VAT (16%):</td>
+                                        <td class="text-start pb-0 ps-2" style="border:none;">{{selected_quotation.total_price|sub:selected_quotation.sub_total}}</td>
                                     </tr>
-                                    <tr class="text-end fw-bold">
-                                        <td colspan="4" style="border:none;"></td>
-                                        <td style="border:none;">Total: </td>
-                                        <td style="border:none;">{{selected_quotation.total_price}}</td>
+                                    <tr class="text-end fw-bold" style="padding-bottom: 0cm">
+                                        <td class="pb-0" colspan="4" style="border:none;"></td>
+                                        <td class="text-end pb-0" style="border:none;">Total: </td>
+                                        <td class="text-start ps-2 pb-0" style="border:none;">{{selected_quotation.total_price}}</td>
                                     </tr>
 
 
