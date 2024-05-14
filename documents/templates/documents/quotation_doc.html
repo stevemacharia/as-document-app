@@ -176,8 +176,8 @@
                                         <th class="text-start">Item</th>
                                         <th class="text-start">Item Description </th>
                                         <th class="text-start">Quantity</th>
-                                        <th class="text-start">Excl.</th>
-                                        <th class="text-start">Total(Incl.)</th>
+                                        <th class="text-start">Excl @</th>
+                                        <th class="text-start">Total(Excl)</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -195,19 +195,19 @@
                                             </td>
                                         </tr>
                                     {% endfor %}
-                                    <tr class="fw-bold lh-5" style="padding-bottom: 0cm">
+                                    <tr class="fw-bolder lh-5" style="padding-bottom: 0cm">
                                         <td class="pb-0" style="border:none;" colspan="4"></td>
-                                        <td class="text-end pb-0" style="border:none;">Subtotal :</td>
+                                        <td class="text-end pb-0" style="border:none;">Subtotal(Excl):</td>
                                         <td class="text-start pb-0 ps-2" style="border:none;">{{selected_quotation.sub_total}}</td>
                                     </tr>
-                                    <tr class="fw-bold" style="padding-bottom: 0cm">
+                                    <tr class="fw-bolder" style="padding-bottom: 0cm">
                                         <td class="pb-0" style="border:none;" colspan="4"></td>
                                         <td class="text-end pb-0" style="border:none;">VAT (16%):</td>
                                         <td class="text-start pb-0 ps-2" style="border:none;">{{selected_quotation.total_price|sub:selected_quotation.sub_total}}</td>
                                     </tr>
-                                    <tr class="text-end fw-bold" style="padding-bottom: 0cm">
+                                    <tr class="text-end fw-bolder" style="padding-bottom: 0cm">
                                         <td class="pb-0" colspan="4" style="border:none;"></td>
-                                        <td class="text-end pb-0" style="border:none;">Total: </td>
+                                        <td class="text-end pb-0" style="border:none;">TOTAL(Incl): </td>
                                         <td class="text-start ps-2 pb-0" style="border:none;">{{selected_quotation.total_price}}</td>
                                     </tr>
 
