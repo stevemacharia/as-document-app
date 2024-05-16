@@ -23,7 +23,7 @@ class Quotation(models.Model):
     quotation_id = models.CharField(blank=True, max_length=100)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     status = models.BooleanField(default="False", null=True, blank=True)
-    quotation_doc = models.FileField(upload_to='quotation_docs', default='default.pdf', null=True, blank=True)
+    quotation_doc = models.FileField(upload_to='quotation_docs', default='default.pdf', null=True, blank=True, max_length=500)
     submission_date = models.DateTimeField(default=timezone.now)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)

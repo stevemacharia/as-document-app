@@ -1,4 +1,5 @@
 {% load mathfilters %}
+{% load humanize %}
 <html lang="">
 <head>
     <meta charset="utf-8">
@@ -38,7 +39,6 @@
 
         }
         #InvoiceDetails P{
-          font-size: 11px;
           line-height: normal;
           padding-top: 0cm;
         }
@@ -157,21 +157,21 @@
                             <div class="row pt-0 " id="InvoiceDetails" >
                                 <div class="col-auto me-auto from">
                                     <p class="fw-bold fs-5" style="color: #185319">Client</p>
-                                    <p class="fw-semibold fs-6 mb-2">Name: <span class="fw-normal text-capitalize">{{ selected_quotation.client }}</span></p>
-                                    <p class="fw-semibold fs-6 mb-2">Address: <span class="fw-normal text-capitalize">{{ selected_quotation.client.address }}</span></p>
-                                    <p class="fw-semibold fs-6 mb-2">Postal Address: <span class="fw-normal text-capitalize">{{ selected_quotation.client.postal_address }}</span></p>
+                                    <p class="fw-semibold mb-2" style="font-size: 16px;">Name: <span class="fw-normal text-capitalize">{{ selected_quotation.client }}</span></p>
+                                    <p class="fw-semibold mb-2" style="font-size: 16px;">Address: <span class="fw-normal text-capitalize">{{ selected_quotation.client.address }}</span></p>
+                                    <p class="fw-semibold mb-2" style="font-size: 16px;">Postal Address: <span class="fw-normal text-capitalize">{{ selected_quotation.client.postal_address }}</span></p>
                                 </div>
 
                                 <div class="col-auto offset-sm-4 text-right payment-details">
                                     <p class="fw-bold mb-3 pb-3"></p>
-                                    <p class="fw-semibold mb-2 fs-6">Date: <span class="fw-normal text-capitalize">{{selected_quotation.submission_date|date:"M d, Y"  }}</span></p>
-                                    <p class="fw-semibold mb-2 fs-6 ">Order No: <span class="fw-normal text-uppercase">{{ selected_quotation.quotation_id }}</span></p>
+                                    <p class="fw-semibold mb-2" style="font-size: 16px;">Date: <span class="fw-normal text-capitalize">{{selected_quotation.submission_date|date:"d M, Y"  }}</span></p>
+                                    <p class="fw-semibold mb-2" style="font-size: 16px;">Order No: <span class="fw-normal text-uppercase">{{ selected_quotation.quotation_id }}</span></p>
                                 </div>
                             </div>
                             <div class="row table-row" style="padding:0px 15px 0px 15px;">
                                 <table class="table">
                                 <thead>
-                                    <tr class="text-center" style="border: 1px solid;">
+                                    <tr class="text-center" style="border: 1px solid #185319;;">
                                         <th class="text-start">#</th>
                                         <th class="text-start">Item</th>
                                         <th class="text-start">Item Description </th>
@@ -197,18 +197,18 @@
                                     {% endfor %}
                                     <tr class="fw-bolder lh-5" style="padding-bottom: 0cm">
                                         <td class="pb-0" style="border:none;" colspan="4"></td>
-                                        <td class="text-end pb-0" style="border:none;">Subtotal(Excl):</td>
-                                        <td class="text-start pb-0 ps-2" style="border:none;">{{selected_quotation.sub_total}}</td>
+                                        <td class="text-end pb-0" style="border:none;">Subtotal (Excl):</td>
+                                        <td class="text-end pe-3 pb-0" style="border:none;">{{selected_quotation.sub_total|floatformat:2 |intcomma }}</td>
                                     </tr>
                                     <tr class="fw-bolder" style="padding-bottom: 0cm">
                                         <td class="pb-0" style="border:none;" colspan="4"></td>
                                         <td class="text-end pb-0" style="border:none;">VAT (16%):</td>
-                                        <td class="text-start pb-0 ps-2" style="border:none;">{{selected_quotation.total_price|sub:selected_quotation.sub_total}}</td>
+                                        <td class="text-end pb-0 pe-3" style="border:none;">{{selected_quotation.total_price|sub:selected_quotation.sub_total|intcomma }}</td>
                                     </tr>
                                     <tr class="text-end fw-bolder" style="padding-bottom: 0cm">
                                         <td class="pb-0" colspan="4" style="border:none;"></td>
-                                        <td class="text-end pb-0" style="border:none;">TOTAL(Incl): </td>
-                                        <td class="text-start ps-2 pb-0" style="border:none;">{{selected_quotation.total_price}}</td>
+                                        <td class="text-end pb-0" style="border:none;">TOTAL (Incl): </td>
+                                        <td class="text-end pe-3 pb-0" style="border:none;">{{selected_quotation.total_price|intcomma }}</td>
                                     </tr>
 
 

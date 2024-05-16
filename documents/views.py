@@ -88,7 +88,7 @@ def quotations(request):
 
                 ########## Update Quotation Model ##############
                 chosen_quotation.quotation_doc = SimpleUploadedFile(
-                    'Arieshelby Quotation-' + chosen_quotation.quotation_id + '.pdf', pdf_file,
+                    'Arieshelby Quotation-'+str(chosen_quotation.quotation_id)+'.pdf', pdf_file,
                     content_type='application/pdf')
                 chosen_quotation.save()
                 ###############################
@@ -151,7 +151,7 @@ def quotation_details(request, id):
 
             ########## Update Quotation Model ##############
             chosen_quotation.quotation_doc = SimpleUploadedFile(
-                'Arieshelby Quotation-' + chosen_quotation.quotation_id + '.pdf', pdf_file,
+                'Arieshelby Quotation-' + str(chosen_quotation.quotation_id) + '.pdf', pdf_file,
                 content_type='application/pdf')
             chosen_quotation.save()
             ###############################
