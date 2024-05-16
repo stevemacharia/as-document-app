@@ -164,7 +164,7 @@
 
                                 <div class="col-auto offset-sm-4 text-right payment-details">
                                     <p class="fw-bold mb-3 pb-3"></p>
-                                    <p class="fw-semibold mb-2" style="font-size: 16px;">Date: <span class="fw-normal text-capitalize">{{selected_quotation.submission_date|date:"d M, Y"  }}</span></p>
+                                    <p class="fw-semibold mb-2" style="font-size: 16px;">Date: <span class="fw-normal text-capitalize">{{selected_quotation.submission_date|date:"d, M, Y"  }}</span></p>
                                     <p class="fw-semibold mb-2" style="font-size: 16px;">Order No: <span class="fw-normal text-uppercase">{{ selected_quotation.quotation_id }}</span></p>
                                 </div>
                             </div>
@@ -177,7 +177,7 @@
                                         <th class="text-start">Item Description </th>
                                         <th class="text-start">Quantity</th>
                                         <th class="text-start">Excl @</th>
-                                        <th class="text-start">Total(Excl)</th>
+                                        <th class="text-center">Total(Excl)</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -188,7 +188,7 @@
                                             <td class="text-start" style="border: 1px solid #185319;">{{quotation_item.item_description}}</td>
                                             <td class="text-start" style="border: 1px solid #185319;">{{quotation_item.quantity}}</td>
                                             <td class="text-start" style="border: 1px solid #185319;">{{quotation_item.price}}</td>
-                                            <td class="text-start" style="border: 1px solid #185319;">
+                                            <td class="text-end pe-3" style="border: 1px solid #185319;">
                                                 {% with result=quotation_item.quantity|mul:quotation_item.price %}
                                                     {{result}}
                                                 {% endwith %}
