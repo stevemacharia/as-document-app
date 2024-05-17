@@ -273,3 +273,7 @@ def client_delete(request, id):
     selected_client.delete()
     messages.success(request, f'Client details deleted successfully')
     return redirect('clients')
+
+
+#############start of invoices#############
+#############end of invoices#############

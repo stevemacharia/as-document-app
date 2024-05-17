@@ -54,7 +54,7 @@
         <div class="row">
             <div class="col-xl-6 p-4">
                 <table class="table table-sm caption-top table-hover table-bordered">
-                    <caption>Draft Quotations</caption>
+                    <caption>Latest Quotations</caption>
                     <thead class="table-light">
                         <tr>
                           <th scope="col">#</th>
@@ -63,17 +63,15 @@
                           <th scope="col">Total Amount</th>
                           <th scope="col">Submission Date</th>
                           <th scope="col">Status</th>
-                          <th scope="col">Edit</th>
-                          <th scope="col">Delete</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for quotation in all_quotations %}
                             <tr>
                               <th scope="row">{{ forloop.counter }}</th>
-                              <td class="text-uppercase">{{ quotation.quotation_id }}</td>
+                                <td class="text-uppercase"><a href="{% url 'quotation_details' quotation.id %}">{{ quotation.quotation_id }}</a></td>
                               <td>{{ quotation.client }}</td>
-                              <td>{{ quotation.amount }}</td>
+                              <td>{{ quotation.total_price }}</td>
                               <td>{{ quotation.submission_date }}</td>
                               <td>{% if quotation.status %}
                                     Final
@@ -81,8 +79,6 @@
                                     Draft
                                   {% endif %}
                               </td>
-                              <td><a href="{% url 'quotation_details' quotation.id %}"><button type="button" class="btn btn-primary btn-sm">Edit</button></a></td>
-                              <td><a href="{% url 'quotation_delete' quotation.id %}"><button type="button" class="btn btn-danger btn-sm">Delete</button></a></td>
                             </tr>
                         {% endfor %}
                     </tbody>
