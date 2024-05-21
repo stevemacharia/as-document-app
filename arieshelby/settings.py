@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'qr_code',
+    # 'qr_code',
     'django.contrib.humanize',
     'crispy_forms',
     "crispy_bootstrap5",
@@ -94,7 +94,7 @@ DATABASES = {
             'ENGINE': 'django.db.backends.mysql',
             'NAME': 'arieshelby',
             'USER': 'root',
-            'PASSWORD': 'Macharia_1',
+            'PASSWORD': 'toor',
             'HOST': 'localhost',
             'PORT': '3306',
         }

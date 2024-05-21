@@ -18,6 +18,7 @@ from django.shortcuts import render
 from django.template.loader import get_template
 import json
 from weasyprint import HTML, CSS
+from django.http import FileResponse
 
 
 # Create your views here.
@@ -138,24 +139,24 @@ def quotation_details(request, id):
             # form.save()
             formset.save()
 
-            #########   GENERATE PDF   #############
-            # chosen__quotation = Quotation.objects.get(id=id)
-            template_name = get_template('documents/quotation_doc.html')
-            listed_quotation_items = QuotationItems.objects.filter(quotation=chosen_quotation)
-            context = {
-                'selected_quotation': chosen_quotation,
-                'listed_quotation_items': listed_quotation_items,
-            }
-            rendered_html = template_name.render(context)
-            pdf_file = HTML(string=rendered_html, encoding="UTF-8").write_pdf(stylesheets=[CSS(string='@page { size: A4; margin: 0.5cm }')])
-
-            ########## Update Quotation Model ##############
-            chosen_quotation.quotation_doc = SimpleUploadedFile(
-                'Arieshelby Quotation-' + str(chosen_quotation.quotation_id) + '.pdf', pdf_file,
-                content_type='application/pdf')
-            chosen_quotation.save()
-            ###############################
-            #########   GENERATE PDF   ##################
+            # #########   GENERATE PDF   #############
+            # # chosen__quotation = Quotation.objects.get(id=id)
+            # template_name = get_template('documents/quotation_doc.html')
+            # listed_quotation_items = QuotationItems.objects.filter(quotation=chosen_quotation)
+            # context = {
+            #     'selected_quotation': chosen_quotation,
+            #     'listed_quotation_items': listed_quotation_items,
+            # }
+            # rendered_html = template_name.render(context)
+            # pdf_file = HTML(string=rendered_html, encoding="UTF-8").write_pdf(stylesheets=[CSS(string='@page { size: A4; margin: 0.5cm }')])
+            #
+            # ########## Update Quotation Model ##############
+            # chosen_quotation.quotation_doc = SimpleUploadedFile(
+            #     'Arieshelby Quotation-' + str(chosen_quotation.quotation_id) + '.pdf', pdf_file,
+            #     content_type='application/pdf')
+            # chosen_quotation.save()
+            # ###############################
+            # #########   GENERATE PDF   ##################
 
 
             messages.success(request, f'Updated Quotation Successfully.')
@@ -201,6 +202,18 @@ def quotation_delete(request, id):
     return redirect('quotations')
 
 
+# buffer = io.BytesIO()
+#
+# # ...
+#
+# chordsheet_html.write_pdf(buffer, stylesheets=[chordsheet_css])
+# buffer.seek(0)
+# return FileResponse(buffer, as_attachment=True, filename=song.title + "_" + song.artist + ".pdf")
+
+
+
+
+
 def generate_pdf_quotation(request, id):
     selected_quotation = Quotation.objects.get(id=id)
     template_name = get_template('documents/quotation_doc.html')
@@ -216,8 +229,16 @@ def generate_pdf_quotation(request, id):
     selected_quotation.quotation_doc = SimpleUploadedFile(
         'Arieshelby Quotation-' + selected_quotation.quotation_id + '.pdf', pdf_file, content_type='application/pdf')
     selected_quotation.save()
+    ########## Update Quotation Model ##############
+    selected_quotation.quotation_doc = SimpleUploadedFile(
+        'Arieshelby Quotation-' + str(selected_quotation.quotation_id) + '.pdf', pdf_file,
+        content_type='application/pdf')
+    selected_quotation.save()
     ###############################
-    return redirect('quotations')
+    ###############################
+    # return FileResponse(pdf_file, as_attachment=True)
+    return FileResponse(open(selected_quotation.quotation_doc.url), as_attachment=True, filename="my_filename")
+    # return redirect('quotations')
 
 
 def clients(request):
