@@ -19,11 +19,14 @@ from django.template.loader import get_template
 import json
 from weasyprint import HTML, CSS
 from django.http import FileResponse
-
+from django.core.files.base import ContentFile
+import qrcode
+from io import BytesIO
+from django.core.files.storage import default_storage
 
 # Create your views here.
 def index(request):
-    quotations=Quotation.objects.all()
+    quotations = Quotation.objects.all()
     context = {
         'all_quotations': quotations,
     }
@@ -41,9 +44,9 @@ def quotations(request):
             # string = "Hello world"
             # string[:3]
             client_initials = str(client)[:3]
-            q_form.quotation_id = 'AS/'+str(client_initials)+'/'+x
+            q_form.quotation_id = 'AS/' + str(client_initials) + '/' + x
             q_form.save()
-            new_id = 'AS/'+str(client_initials)+'/'+x
+            new_id = 'AS/' + str(client_initials) + '/' + x
             chosen_quotation = Quotation.objects.get(quotation_id=new_id)
 
             forms = []
@@ -89,7 +92,7 @@ def quotations(request):
 
                 ########## Update Quotation Model ##############
                 chosen_quotation.quotation_doc = SimpleUploadedFile(
-                    'Arieshelby Quotation-'+str(chosen_quotation.quotation_id)+'.pdf', pdf_file,
+                    'Arieshelby Quotation-' + str(chosen_quotation.quotation_id) + '.pdf', pdf_file,
                     content_type='application/pdf')
                 chosen_quotation.save()
                 ###############################
@@ -158,7 +161,6 @@ def quotation_details(request, id):
             # ###############################
             # #########   GENERATE PDF   ##################
 
-
             messages.success(request, f'Updated Quotation Successfully.')
             return redirect('quotations')
         else:
@@ -211,9 +213,6 @@ def quotation_delete(request, id):
 # return FileResponse(buffer, as_attachment=True, filename=song.title + "_" + song.artist + ".pdf")
 
 
-
-
-
 def generate_pdf_quotation(request, id):
     selected_quotation = Quotation.objects.get(id=id)
     template_name = get_template('documents/quotation_doc.html')
@@ -223,22 +222,17 @@ def generate_pdf_quotation(request, id):
         'listed_quotation_items': listed_quotation_items,
     }
     rendered_html = template_name.render(context)
-    pdf_file = HTML(string=rendered_html).write_pdf()
+    pdf_file = HTML(string=rendered_html, encoding="UTF-8").write_pdf(stylesheets=[CSS(string='@page { size: A4; margin: 0.5cm }')])
 
     ########## Update Quotation Model ##############
     selected_quotation.quotation_doc = SimpleUploadedFile(
         'Arieshelby Quotation-' + selected_quotation.quotation_id + '.pdf', pdf_file, content_type='application/pdf')
     selected_quotation.save()
-    ########## Update Quotation Model ##############
-    selected_quotation.quotation_doc = SimpleUploadedFile(
-        'Arieshelby Quotation-' + str(selected_quotation.quotation_id) + '.pdf', pdf_file,
-        content_type='application/pdf')
-    selected_quotation.save()
-    ###############################
-    ###############################
-    # return FileResponse(pdf_file, as_attachment=True)
-    return FileResponse(open(selected_quotation.quotation_doc.url), as_attachment=True, filename="my_filename")
-    # return redirect('quotations')
+    ################################################
+
+    response = FileResponse(selected_quotation.quotation_doc, as_attachment=True,
+                            filename=selected_quotation.quotation_doc.name)
+    return response
 
 
 def clients(request):
@@ -295,6 +289,32 @@ def client_delete(request, id):
     messages.success(request, f'Client details deleted successfully')
     return redirect('clients')
 
-
 #############start of invoices#############
 #############end of invoices#############
+
+
+
+def generate_qr_code(request):
+    # Data to be encoded in the QR code
+    data = "https://www.arieshelby.com"
+
+    # Create a QR code instance
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(data)
+    qr.make(fit=True)
+
+    # Create an image from the QR code instance
+    img = qr.make_image(fill_color="black", back_color="white")
+
+    # Save the image in a BytesIO buffer
+    buffer = BytesIO()
+    img.save(buffer, format="PNG")
+    img_str = buffer.getvalue().hex()
+
+    # Render the template with the QR code image
+    return render(request, 'documents/qr_code.html', {'img_str': img_str})

@@ -1,4 +1,6 @@
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 from . import views
 urlpatterns = [
     path('', views.index, name='index'),
@@ -15,4 +17,10 @@ urlpatterns = [
     # path('invoice_delete/<str:id>/', views.invoice_delete, name='invoice_delete'),
     # path('add_ivoice_item/<str:id>/', views.add_invoice_item, name='add_invoice_item'),
     #############end of invoices##############
+    path('generate_qr_code/', views.generate_qr_code, name='generate_qr_code'),
 ]
+
+# if settings.DEBUG:
+#     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

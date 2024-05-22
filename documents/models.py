@@ -2,6 +2,10 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from decimal import Decimal
+# models.py
+from django.db import models
+from qr_code.qrcode.utils  import save_qr_code
+
 import uuid
 
 
@@ -61,3 +65,24 @@ class InvoiceItems(models.Model):
     item_description = models.CharField(max_length=800)
     quantity = models.IntegerField()
     price = models.DecimalField(max_digits=15, decimal_places=2)
+
+
+
+
+class QRCode(models.Model):
+    name = models.CharField(max_length=255)
+    qr_image = models.ImageField(upload_to='qr_codes/', blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        # Save the instance to get the ID if it doesn't exist
+        if not self.id:
+            super().save(*args, **kwargs)
+
+        # Generate and save the QR code
+        save_qr_code(self, self.name)
+
+        # Save the instance again to store the QR code image path
+        super().save(*args, **kwargs)

@@ -183,7 +183,7 @@
                                             Draft
                                           {% endif %}
                                       </td>
-                                      <td><a href="{{ quotation.quotation_doc.url }}" download><button type="button" class="btn btn-success btn-sm"><i class="bi bi-file-arrow-down-fill"></i> Download</button></a></td>
+                                      <td><a href="{% url 'generate_pdf_quotation' quotation.id %}"><button type="button" class="btn btn-success btn-sm"><i class="bi bi-file-arrow-down-fill"></i> Download</button></a></td>
                                       <td><a href="{% url 'quotation_details' quotation.id %}"><button type="button" class="btn btn-primary btn-sm">Edit</button></a></td>
                                       <td><a href="{% url 'quotation_delete' quotation.id %}"><button type="button" class="btn btn-danger btn-sm">Delete</button></a></td>
                                     </tr>

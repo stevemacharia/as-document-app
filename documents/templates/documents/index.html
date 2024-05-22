@@ -69,7 +69,7 @@
                         {% for quotation in all_quotations %}
                             <tr>
                               <th scope="row">{{ forloop.counter }}</th>
-                                <td class="text-uppercase"><a href="{% url 'quotation_details' quotation.id %}">{{ quotation.quotation_id }}</a></td>
+                              <td class="text-uppercase"><a href="{% url 'quotation_details' quotation.id %}">{{ quotation.quotation_id }}</a></td>
                               <td>{{ quotation.client }}</td>
                               <td>{{ quotation.total_price }}</td>
                               <td>{{ quotation.submission_date }}</td>
@@ -86,7 +86,7 @@
             </div>
             <div class="col-xl-6 p-4">
                 <table class="table table-sm table-hover table-bordered caption-top table-responsive">
-                    <caption>Invoices</caption>
+                    <caption>Latest Invoices</caption>
                   <thead>
                     <tr>
                       <th scope="col">#</th>
