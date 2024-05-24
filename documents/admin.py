@@ -1,7 +1,7 @@
 from django.contrib import admin
 # Register your models here.
 from .models import Client, Quotation, QuotationItems
-
+from .models import QRCode
 
 # Register your models here.
 class ClientAdmin(admin.ModelAdmin):
@@ -30,3 +30,7 @@ class QuotationAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Quotation, QuotationAdmin)
+
+@admin.register(QRCode)
+class QRCodeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'qr_image')

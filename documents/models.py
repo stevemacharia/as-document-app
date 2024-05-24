@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from decimal import Decimal
 # models.py
 from django.db import models
-from qr_code.qrcode.utils  import save_qr_code
+from .utils import save_qr_code
 
 import uuid
 
@@ -65,8 +65,6 @@ class InvoiceItems(models.Model):
     item_description = models.CharField(max_length=800)
     quantity = models.IntegerField()
     price = models.DecimalField(max_digits=15, decimal_places=2)
-
-
 
 
 class QRCode(models.Model):
