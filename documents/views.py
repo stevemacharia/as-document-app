@@ -40,11 +40,37 @@ def quotations(request):
 
         if quotation_form.is_valid():
             q_form = quotation_form.save(commit=False)
+
             client = q_form.client
             # string = "Hello world"
             # string[:3]
             client_initials = str(client)[:3]
             q_form.quotation_id = 'AS/' + str(client_initials) + '/' + x
+
+            ###############QR CODE GENERATION#########
+            # Data to be encoded in the QR code
+            data = "https://www.arieshelby.com"
+
+            # Create a QR code instance
+            qr = qrcode.QRCode(
+                version=1,
+                error_correction=qrcode.constants.ERROR_CORRECT_L,
+                box_size=10,
+                border=4,
+            )
+            qr.add_data(data)
+            qr.make(fit=True)
+
+            # Create an image from the QR code instance
+            img = qr.make_image(fill_color="black", back_color="white")
+
+            # Save the image in a BytesIO buffer
+            buffer = BytesIO()
+            img.save(buffer, format="PNG")
+            img_str = buffer.getvalue().hex()
+            ###############END OF QR CODE GENERATION##
+            q_form.qr_image=img
+
             q_form.save()
             new_id = 'AS/' + str(client_initials) + '/' + x
             chosen_quotation = Quotation.objects.get(quotation_id=new_id)
