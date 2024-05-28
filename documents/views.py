@@ -22,6 +22,7 @@ from django.http import FileResponse
 from django.core.files.base import ContentFile
 import qrcode
 from io import BytesIO
+from django.core.files import File
 from django.core.files.storage import default_storage
 
 # Create your views here.
@@ -48,28 +49,29 @@ def quotations(request):
             q_form.quotation_id = 'AS/' + str(client_initials) + '/' + x
 
             ###############QR CODE GENERATION#########
-            # Data to be encoded in the QR code
-            data = "https://www.arieshelby.com"
-
-            # Create a QR code instance
             qr = qrcode.QRCode(
                 version=1,
                 error_correction=qrcode.constants.ERROR_CORRECT_L,
                 box_size=10,
                 border=4,
             )
+            data = "www.arieshelby.com"
             qr.add_data(data)
             qr.make(fit=True)
+            img = qr.make_image(fill='black', back_color='white')
 
-            # Create an image from the QR code instance
-            img = qr.make_image(fill_color="black", back_color="white")
-
-            # Save the image in a BytesIO buffer
+            # Save QR code image to a BytesIO object
             buffer = BytesIO()
-            img.save(buffer, format="PNG")
-            img_str = buffer.getvalue().hex()
+            img.save(buffer, format='PNG')
+            buffer.seek(0)
+
+            # Save the image to the ImageField
+
+            file_name = f"qr_code_{data}.png"
+            # qr_code.qr_code_image.save(file_name, File(buffer), save=False)
+            # qr_code.save()
             ###############END OF QR CODE GENERATION##
-            q_form.qr_image=img
+            q_form.qr_code_image.save(file_name, File(buffer), save=False)
 
             q_form.save()
             new_id = 'AS/' + str(client_initials) + '/' + x
@@ -320,27 +322,3 @@ def client_delete(request, id):
 
 
 
-def generate_qr_code(request):
-    # Data to be encoded in the QR code
-    data = "https://www.arieshelby.com"
-
-    # Create a QR code instance
-    qr = qrcode.QRCode(
-        version=1,
-        error_correction=qrcode.constants.ERROR_CORRECT_L,
-        box_size=10,
-        border=4,
-    )
-    qr.add_data(data)
-    qr.make(fit=True)
-
-    # Create an image from the QR code instance
-    img = qr.make_image(fill_color="black", back_color="white")
-
-    # Save the image in a BytesIO buffer
-    buffer = BytesIO()
-    img.save(buffer, format="PNG")
-    img_str = buffer.getvalue().hex()
-
-    # Render the template with the QR code image
-    return render(request, 'documents/qr_code.html', {'img_str': img_str})

@@ -28,20 +28,18 @@ class Quotation(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     status = models.BooleanField(default="False", null=True, blank=True)
     quotation_doc = models.FileField(upload_to='quotation_docs', default='default.pdf', null=True, blank=True, max_length=500)
-    qr_image = models.ImageField(upload_to='qr_codes', blank=True, null=True)
+    data = models.CharField(max_length=255, blank=True, null=True)
+    qr_code_image = models.ImageField(upload_to='qr_codes/', blank=True, null=True)
+
     submission_date = models.DateTimeField(default=timezone.now)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
     sub_total = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     total_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    name = models.CharField(max_length=255, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if self.sub_total:
             self.total_price = self.sub_total * Decimal('1.16')  # Total price is 116% of sub total
-
-        # Generate and save the QR code
-        save_qr_code(self, self.qr_image)
         super().save(*args, **kwargs)
 
 class QuotationItems(models.Model):
@@ -72,20 +70,3 @@ class InvoiceItems(models.Model):
     price = models.DecimalField(max_digits=15, decimal_places=2)
 
 
-class QRCode(models.Model):
-    name = models.CharField(max_length=255)
-    qr_image = models.ImageField(upload_to='qr_codes/', blank=True, null=True)
-
-    def __str__(self):
-        return self.name
-
-    def save(self, *args, **kwargs):
-        # Save the instance to get the ID if it doesn't exist
-        if not self.id:
-            super().save(*args, **kwargs)
-
-        # Generate and save the QR code
-        save_qr_code(self, self.name)
-
-        # Save the instance again to store the QR code image path
-        super().save(*args, **kwargs)
