@@ -3,12 +3,8 @@ from django.contrib import messages
 from .forms import QuotationForm, QuotationItemsForm, ClientForm
 from .models import Client, Quotation, QuotationItems
 import uuid
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.forms import modelformset_factory
-from django.forms import formset_factory
+from django.http import HttpResponse
 from django.forms import inlineformset_factory
-from django.http import JsonResponse
-from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django_renderpdf.views import PDFView
 import datetime
@@ -24,7 +20,9 @@ import qrcode
 from io import BytesIO
 from django.core.files import File
 from django.core.files.storage import default_storage
-
+from django.template.loader import render_to_string
+from weasyprint import HTML
+import os
 # Create your views here.
 def index(request):
     quotations = Quotation.objects.all()
@@ -241,26 +239,26 @@ def quotation_delete(request, id):
 # return FileResponse(buffer, as_attachment=True, filename=song.title + "_" + song.artist + ".pdf")
 
 
-def generate_pdf_quotation(request, id):
-    selected_quotation = Quotation.objects.get(id=id)
-    template_name = get_template('documents/quotation_doc.html')
-    listed_quotation_items = QuotationItems.objects.filter(quotation=selected_quotation)
-    context = {
-        'selected_quotation': selected_quotation,
-        'listed_quotation_items': listed_quotation_items,
-    }
-    rendered_html = template_name.render(context)
-    pdf_file = HTML(string=rendered_html, encoding="UTF-8").write_pdf(stylesheets=[CSS(string='@page { size: A4; margin: 0.5cm }')])
-
-    ########## Update Quotation Model ##############
-    selected_quotation.quotation_doc = SimpleUploadedFile(
-        'Arieshelby Quotation-' + selected_quotation.quotation_id + '.pdf', pdf_file, content_type='application/pdf')
-    selected_quotation.save()
-    ################################################
-
-    response = FileResponse(selected_quotation.quotation_doc, as_attachment=True,
-                            filename=selected_quotation.quotation_doc.name)
-    return response
+# def generate_pdf_quotation(request, id):
+#     selected_quotation = Quotation.objects.get(id=id)
+#     template_name = get_template('documents/quotation_doc.html')
+#     listed_quotation_items = QuotationItems.objects.filter(quotation=selected_quotation)
+#     context = {
+#         'selected_quotation': selected_quotation,
+#         'listed_quotation_items': listed_quotation_items,
+#     }
+#     rendered_html = template_name.render(context)
+#     pdf_file = HTML(string=rendered_html, encoding="UTF-8").write_pdf(stylesheets=[CSS(string='@page { size: A4; margin: 0.5cm }')])
+#
+#     ########## Update Quotation Model ##############
+#     selected_quotation.quotation_doc = SimpleUploadedFile(
+#         'Arieshelby Quotation-' + selected_quotation.quotation_id + '.pdf', pdf_file, content_type='application/pdf')
+#     selected_quotation.save()
+#     ################################################
+#
+#     response = FileResponse(selected_quotation.quotation_doc, as_attachment=True,
+#                             filename=selected_quotation.quotation_doc.name)
+#     return response
 
 
 def clients(request):
@@ -316,6 +314,46 @@ def client_delete(request, id):
     selected_client.delete()
     messages.success(request, f'Client details deleted successfully')
     return redirect('clients')
+
+def generate_pdf_quotation(request, id):
+    selected_quotation = Quotation.objects.get(id=id)
+    listed_quotation_items = QuotationItems.objects.filter(quotation=selected_quotation)
+    # Template context variables
+    context = {
+        'selected_quotation': selected_quotation,
+        'listed_quotation_items': listed_quotation_items,
+    }
+
+    # Path to your image
+    qr_code_url = selected_quotation.qr_code_image.url
+    # qr_code_path = os.path.join('static/images', 'qr-code.png')
+    # qr_code_url = request.build_absolute_uri(qr_code_path)
+
+    # Update context with the image URL
+    context['qr_code_url'] = qr_code_url
+
+    # Render the HTML template with context
+    html_string = render_to_string('documents/quotation_doc.html', context)
+
+    # Create a PDF
+    html = HTML(string=html_string, base_url=request.build_absolute_uri())
+    pdf = html.write_pdf(stylesheets=[CSS(string='@page { size: A4; margin: 0.5cm }')])
+
+    ########## Update Quotation Model ##############
+    selected_quotation.quotation_doc = SimpleUploadedFile(
+        'Arieshelby Quotation-' + selected_quotation.quotation_id + '.pdf', pdf, content_type='application/pdf')
+    selected_quotation.save()
+    ################################################
+
+    # Create a response object and specify the PDF content type
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="Arieshelby Quotation-' + selected_quotation.quotation_id + '.pdf"'
+
+    return response
+
+
+
+
 
 #############start of invoices#############
 #############end of invoices#############

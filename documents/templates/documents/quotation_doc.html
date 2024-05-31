@@ -20,8 +20,14 @@
         body{
           font-family: "Montserrat", sans-serif;
         }
+        .qr-code {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            width: 100px;
+            height: 100px;
+        }
         .letterhead-image{
-
             background-size: cover;
             background-position: center;
         }
@@ -29,7 +35,7 @@
           color: white;
           font-family: "Montserrat", sans-serif;
           font-weight: 600;
-          font-size: 15px;
+          font-size: 13px;
           background-color:#185319 !important;
         }
         #InvoiceDetails div{
@@ -81,57 +87,22 @@
          th, td {
           border-bottom: 1px solid #ddd;
           border-collapse: collapse;
+          font-size:12px;
         }
 
         .invoice .table-row .table>thead>tr>th {
           border-bottom:none;
         }
 
-        {#.invoice .table>tbody>tr>td {#}
-        {#  padding:8px 20px;#}
-        {#}#}
+
 
         .invoice .invoice-total {
           margin-right:-10px;
-          font-size:16px;
+          font-size:13px;
         }
 
 
-        .invoice-ribbon {
-          width:85px;
-          height:40px;
-          overflow:hidden;
-          position:absolute;
-        }
 
-        .ribbon-inner {
-          text-align:center;
-          -webkit-transform:rotate(45deg);
-          -moz-transform:rotate(45deg);
-          -ms-transform:rotate(45deg);
-          -o-transform:rotate(45deg);
-          position:relative;
-          padding:3px 0;
-          left:-5px;
-          top:11px;
-          width:120px;
-          background-color:#66c591;
-          font-size:15px;
-          color:#fff;
-        }
-
-        .ribbon-inner:before,.ribbon-inner:after {
-          content:"";
-          position:absolute;
-        }
-
-        .ribbon-inner:before {
-          left:0;
-        }
-
-        .ribbon-inner:after {
-          right:0;
-        }
 
 
       /* end of invoice */
@@ -195,23 +166,21 @@
                                             </td>
                                         </tr>
                                     {% endfor %}
-                                    <tr class="fw-bolder lh-5" style="padding-bottom: 0cm">
-                                        <td class="pb-0" style="border:none;" colspan="4"></td>
+                                    <tr class="fw-bold lh-5" style="padding-bottom: 0cm">
+                                        <td class="pb-0" style="border:none;" colspan="1"></td>
                                         <td class="text-end pb-0" style="border:none;">Subtotal (Excl):</td>
                                         <td class="text-end pe-3 pb-0" style="border:none;">{{selected_quotation.sub_total|floatformat:2 |intcomma }}</td>
                                     </tr>
-                                    <tr class="fw-bolder" style="padding-bottom: 0cm">
-                                        <td class="pb-0" style="border:none;" colspan="4"></td>
+                                    <tr class="fw-bold" style="padding-bottom: 0cm">
+                                        <td class="pb-0" style="border:none;" colspan="1"></td>
                                         <td class="text-end pb-0" style="border:none;">VAT (16%):</td>
                                         <td class="text-end pb-0 pe-3" style="border:none;">{{selected_quotation.total_price|sub:selected_quotation.sub_total|intcomma }}</td>
                                     </tr>
-                                    <tr class="text-end fw-bolder" style="padding-bottom: 0cm">
-                                        <td class="pb-0" colspan="4" style="border:none;"></td>
+                                    <tr class="text-end fw-bold" style="padding-bottom: 0cm">
+                                        <td class="pb-0" colspan="1" style="border:none;"></td>
                                         <td class="text-end pb-0" style="border:none;">TOTAL (Incl): </td>
                                         <td class="text-end pe-3 pb-0" style="border:none;">{{selected_quotation.total_price|intcomma }}</td>
                                     </tr>
-
-
 
                                 </tbody>
                                 </table>
@@ -221,6 +190,7 @@
                     </div>
                 </div>
             </div>
+            <img src="{{ qr_code_url }}" alt="QR Code" class="qr-code">
         </div>
     </main>
 </div>
