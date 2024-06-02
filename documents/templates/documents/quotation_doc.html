@@ -20,10 +20,12 @@
         body{
           font-family: "Montserrat", sans-serif;
         }
-        .qr-code {
+        .d-flex{
             position: fixed;
             bottom: 10px;
-            right: 10px;
+            left: 10px;
+        }
+        .qr-code {
             width: 100px;
             height: 100px;
         }
@@ -167,18 +169,15 @@
                                         </tr>
                                     {% endfor %}
                                     <tr class="fw-bold lh-5" style="padding-bottom: 0cm">
-                                        <td class="pb-0" style="border:none;" colspan="1"></td>
-                                        <td class="text-end pb-0" style="border:none;">Subtotal (Excl):</td>
+                                        <td class="text-end pb-0" colspan="5" style="border:none;">Subtotal (Excl):</td>
                                         <td class="text-end pe-3 pb-0" style="border:none;">{{selected_quotation.sub_total|floatformat:2 |intcomma }}</td>
                                     </tr>
                                     <tr class="fw-bold" style="padding-bottom: 0cm">
-                                        <td class="pb-0" style="border:none;" colspan="1"></td>
-                                        <td class="text-end pb-0" style="border:none;">VAT (16%):</td>
+                                        <td class="text-end pb-0" colspan="5" style="border:none;">VAT (16%):</td>
                                         <td class="text-end pb-0 pe-3" style="border:none;">{{selected_quotation.total_price|sub:selected_quotation.sub_total|intcomma }}</td>
                                     </tr>
                                     <tr class="text-end fw-bold" style="padding-bottom: 0cm">
-                                        <td class="pb-0" colspan="1" style="border:none;"></td>
-                                        <td class="text-end pb-0" style="border:none;">TOTAL (Incl): </td>
+                                        <td class="text-end pb-0" colspan="5" style="border:none;">TOTAL (Incl): </td>
                                         <td class="text-end pe-3 pb-0" style="border:none;">{{selected_quotation.total_price|intcomma }}</td>
                                     </tr>
 
@@ -190,7 +189,10 @@
                     </div>
                 </div>
             </div>
-            <img src="{{ qr_code_url }}" alt="QR Code" class="qr-code">
+            <div class="d-flex align-items-center shadow-sm">
+                <div class="flex-shrink-0"><img src="{{ qr_code_url }}" alt="QR Code" class="qr-code"></div>
+                <div class="flex-grow-1 ms-1"><p style="color:#185319 !important; font-size: 14px; font-weight: 800;           font-family: Montserrat, sans-serif;">Scan Qr Code to verify this document</p></div>
+            </div>
         </div>
     </main>
 </div>
