@@ -30,10 +30,11 @@ class Quotation(models.Model):
     quotation_doc = models.FileField(upload_to='quotation_docs', default='default.pdf', null=True, blank=True, max_length=500)
     data = models.CharField(max_length=255, blank=True, null=True)
     qr_code_image = models.ImageField(upload_to='qr_codes/', blank=True, null=True)
-
+    note = models.CharField(null=True, blank=True, max_length=240)
     submission_date = models.DateTimeField(default=timezone.now)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
+    taxable = models.BooleanField(default=True, null=True, blank=True)
     sub_total = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     total_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 

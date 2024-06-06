@@ -21,13 +21,13 @@
           font-family: "Montserrat", sans-serif;
         }
         .d-flex{
-            position: fixed;
+            position: absolute;
             bottom: 10px;
             left: 10px;
         }
         .qr-code {
-            width: 100px;
-            height: 100px;
+            width: 70px;
+            height: 70px;
         }
         .letterhead-image{
             background-size: cover;
@@ -150,7 +150,7 @@
                                         <th class="text-start">Item Description </th>
                                         <th class="text-start">Quantity</th>
                                         <th class="text-start">Excl @</th>
-                                        <th class="text-center">Total(Excl)</th>
+                                        <th class="text-end pe-3">Total(Excl)</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -168,14 +168,16 @@
                                             </td>
                                         </tr>
                                     {% endfor %}
-                                    <tr class="fw-bold lh-5" style="padding-bottom: 0cm">
-                                        <td class="text-end pb-0" colspan="5" style="border:none;">Subtotal (Excl):</td>
-                                        <td class="text-end pe-3 pb-0" style="border:none;">{{selected_quotation.sub_total|floatformat:2 |intcomma }}</td>
-                                    </tr>
-                                    <tr class="fw-bold" style="padding-bottom: 0cm">
-                                        <td class="text-end pb-0" colspan="5" style="border:none;">VAT (16%):</td>
-                                        <td class="text-end pb-0 pe-3" style="border:none;">{{selected_quotation.total_price|sub:selected_quotation.sub_total|intcomma }}</td>
-                                    </tr>
+                                    {% if selected_quotation.taxable is True %}
+                                        <tr class="fw-bold lh-5" style="padding-bottom: 0cm">
+                                            <td class="text-end pb-0" colspan="5" style="border:none;">Subtotal (Excl):</td>
+                                            <td class="text-end pe-3 pb-0" style="border:none;">{{selected_quotation.sub_total|floatformat:2 |intcomma }}</td>
+                                        </tr>
+                                        <tr class="fw-bold" style="padding-bottom: 0cm">
+                                            <td class="text-end pb-0" colspan="5" style="border:none;">VAT (16%):</td>
+                                            <td class="text-end pb-0 pe-3" style="border:none;">{{selected_quotation.total_price|sub:selected_quotation.sub_total|intcomma }}</td>
+                                        </tr>
+                                    {% endif %}
                                     <tr class="text-end fw-bold" style="padding-bottom: 0cm">
                                         <td class="text-end pb-0" colspan="5" style="border:none;">TOTAL (Incl): </td>
                                         <td class="text-end pe-3 pb-0" style="border:none;">{{selected_quotation.total_price|intcomma }}</td>
@@ -189,9 +191,18 @@
                     </div>
                 </div>
             </div>
+            {% if selected_quotation.note %}
+                <div class="card" style="border: 1px solid #185319; margin-top: 20px; width: 40rem;">
+                  <div class="card-body" style="padding-bottom:0cm !important; padding-top:0.2cm !important;">
+                      <div>*Notes</div>
+                      <p class="fw-normal" style="font-size:10px;">{{ selected_quotation.note }}</p>
+                  </div>
+                </div>
+            {% endif %}
+
             <div class="d-flex align-items-center shadow-sm">
                 <div class="flex-shrink-0"><img src="{{ qr_code_url }}" alt="QR Code" class="qr-code"></div>
-                <div class="flex-grow-1 ms-1"><p style="color:#185319 !important; font-size: 14px; font-weight: 800;           font-family: Montserrat, sans-serif;">Scan Qr Code to verify this document</p></div>
+                <div class="flex-grow-1 ms-1"><p style="color:#185319 !important; font-size: 13px; font-weight: 800;           font-family: Montserrat, sans-serif;">Scan Qr Code to verify this document</p></div>
             </div>
         </div>
     </main>
