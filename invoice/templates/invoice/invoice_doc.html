@@ -1,13 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>{% load mathfilters %}
+{% load mathfilters %}
 {% load humanize %}
 <html lang="">
 <head>
@@ -53,7 +44,6 @@
             display:inline-block;
             padding:0px 15px 0px 15px;
             vertical-align: text-top;
-
         }
         #InvoiceDetails P{
           line-height: normal;
@@ -63,7 +53,6 @@
             display:inline-block;
             /* padding:0px 15px 0px 15px; */
             vertical-align: text-top;
-
 
         }
         main{
@@ -106,14 +95,10 @@
         }
 
 
-
         .invoice .invoice-total {
           margin-right:-10px;
           font-size:13px;
         }
-
-
-
 
 
       /* end of invoice */
@@ -134,20 +119,20 @@
                 <div class="col-sm-12">
                     <div class="panel panel-default invoice" id="invoice">
                         <div class="panel-body">
-                            <h2 class="fw-bolder pb-0" style="color: #185319; font-weight: 200">QUOTATION</h2>
+                            <h2 class="fw-bolder pb-0" style="color: #185319; font-weight: 200">INVOICES</h2>
                             <hr class="pt-0 mt-0" style="border: 3px solid #185319; opacity: 100%;">
                             <div class="row pt-0 " id="InvoiceDetails" >
                                 <div class="col-auto me-auto from">
                                     <p class="fw-bold fs-5" style="color: #185319">Client</p>
-                                    <p class="fw-semibold mb-2" style="font-size: 16px;">Name: <span class="fw-normal text-capitalize">{{ selected_quotation.client }}</span></p>
-                                    <p class="fw-semibold mb-2" style="font-size: 16px;">Address: <span class="fw-normal text-capitalize">{{ selected_quotation.client.address }}</span></p>
-                                    <p class="fw-semibold mb-2" style="font-size: 16px;">Postal Address: <span class="fw-normal text-capitalize">{{ selected_quotation.client.postal_address }}</span></p>
+                                    <p class="fw-semibold mb-2" style="font-size: 16px;">Name: <span class="fw-normal text-capitalize">{{ selected_invoice.client }}</span></p>
+                                    <p class="fw-semibold mb-2" style="font-size: 16px;">Address: <span class="fw-normal text-capitalize">{{ selected_invoice.client.address }}</span></p>
+                                    <p class="fw-semibold mb-2" style="font-size: 16px;">Postal Address: <span class="fw-normal text-capitalize">{{ selected_invoice.client.postal_address }}</span></p>
                                 </div>
 
                                 <div class="col-auto offset-sm-4 text-right payment-details">
                                     <p class="fw-bold mb-3 pb-3"></p>
-                                    <p class="fw-semibold mb-2" style="font-size: 16px;">Date: <span class="fw-normal text-capitalize">{{selected_quotation.submission_date|date:"d, M, Y"  }}</span></p>
-                                    <p class="fw-semibold mb-2" style="font-size: 16px;">Order No: <span class="fw-normal text-uppercase">{{ selected_quotation.quotation_id }}</span></p>
+                                    <p class="fw-semibold mb-2" style="font-size: 16px;">Date: <span class="fw-normal text-capitalize">{{selected_invoice.submission_date|date:"d, M, Y"  }}</span></p>
+                                    <p class="fw-semibold mb-2" style="font-size: 16px;">Order No: <span class="fw-normal text-uppercase">{{ selected_invoice.invoice_id }}</span></p>
                                 </div>
                             </div>
                             <div class="row table-row" style="padding:0px 15px 0px 15px;">
@@ -163,33 +148,33 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for quotation_item in listed_quotation_items %}
+                                    {% for invoice_item in listed_invoice_items %}
                                         <tr class="text-start">
                                             <td class="text-start" style="border: 1px solid #185319;">{{ forloop.counter }}</td>
-                                            <td class="text-start" style="border: 1px solid #185319;">{{quotation_item.item}}</td>
-                                            <td class="text-start" style="border: 1px solid #185319;">{{quotation_item.item_description}}</td>
-                                            <td class="text-start" style="border: 1px solid #185319;">{{quotation_item.quantity}}</td>
-                                            <td class="text-start" style="border: 1px solid #185319;">{{quotation_item.price}}</td>
+                                            <td class="text-start" style="border: 1px solid #185319;">{{invoice_item.item}}</td>
+                                            <td class="text-start" style="border: 1px solid #185319;">{{invoice_item.item_description}}</td>
+                                            <td class="text-start" style="border: 1px solid #185319;">{{invoice_item.quantity}}</td>
+                                            <td class="text-start" style="border: 1px solid #185319;">{{invoice_item.price}}</td>
                                             <td class="text-end pe-3" style="border: 1px solid #185319;">
-                                                {% with result=quotation_item.quantity|mul:quotation_item.price %}
+                                                {% with result=invoice_item.quantity|mul:invoice_item.price %}
                                                     {{result}}
                                                 {% endwith %}
                                             </td>
                                         </tr>
                                     {% endfor %}
-                                    {% if selected_quotation.taxable is True %}
+                                    {% if selected_invoice.taxable is True %}
                                         <tr class="fw-bold lh-5" style="padding-bottom: 0cm">
                                             <td class="text-end pb-0" colspan="5" style="border:none;">Subtotal (Excl):</td>
-                                            <td class="text-end pe-3 pb-0" style="border:none;">{{selected_quotation.sub_total|floatformat:2 |intcomma }}</td>
+                                            <td class="text-end pe-3 pb-0" style="border:none;">{{selected_invoice.sub_total|floatformat:2 |intcomma }}</td>
                                         </tr>
                                         <tr class="fw-bold" style="padding-bottom: 0cm">
                                             <td class="text-end pb-0" colspan="5" style="border:none;">VAT (16%):</td>
-                                            <td class="text-end pb-0 pe-3" style="border:none;">{{selected_quotation.total_price|sub:selected_quotation.sub_total|intcomma }}</td>
+                                            <td class="text-end pb-0 pe-3" style="border:none;">{{selected_invoice.total_price|sub:selected_invoice.sub_total|intcomma }}</td>
                                         </tr>
                                     {% endif %}
                                     <tr class="text-end fw-bold" style="padding-bottom: 0cm">
                                         <td class="text-end pb-0" colspan="5" style="border:none;">TOTAL (Incl): </td>
-                                        <td class="text-end pe-3 pb-0" style="border:none;">{{selected_quotation.total_price|intcomma }}</td>
+                                        <td class="text-end pe-3 pb-0" style="border:none;">{{selected_invoice.total_price|intcomma }}</td>
                                     </tr>
 
                                 </tbody>
@@ -200,11 +185,11 @@
                     </div>
                 </div>
             </div>
-            {% if selected_quotation.note %}
+            {% if selected_invoice.note %}
                 <div class="card" style="border: 1px solid #185319; margin-top: 20px; width: 40rem;">
                   <div class="card-body" style="padding-bottom:0cm !important; padding-top:0.2cm !important;">
                       <div>*Notes</div>
-                      <p class="fw-normal" style="font-size:10px;">{{ selected_quotation.note }}</p>
+                      <p class="fw-normal" style="font-size:10px;">{{ selected_invoice.note }}</p>
                   </div>
                 </div>
             {% endif %}

@@ -15,11 +15,11 @@ urlpatterns = [
     path('client_delete/<str:id>/', views.client_delete, name='client_delete'),
     path('quotation_verification/<str:id>/', views.quotation_verification, name='quotation_verification'),
     # path('generate-pdf/', generate_pdf, name='generate-pdf'),
-    ############start of invoices###########
+    ############start of invoice###########
     # path('invoice_details/<str:id>/', views.invoice_details, name='invoice_details'),
     # path('invoice_delete/<str:id>/', views.invoice_delete, name='invoice_delete'),
     # path('add_ivoice_item/<str:id>/', views.add_invoice_item, name='add_invoice_item'),
-    #############end of invoices##############
+    #############end of invoice##############
 
 ]
 
