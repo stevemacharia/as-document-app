@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('documents.urls')),
     path('invoice/', include('invoice.urls')),
+    path('delivery_note/', include('deliverynote.urls')),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:

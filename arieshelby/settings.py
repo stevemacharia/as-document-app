@@ -35,6 +35,7 @@ ALLOWED_HOSTS = ['192.168.100.14', '127.0.0.1']
 INSTALLED_APPS = [
     'documents.apps.DocumentsConfig',
     'invoice.apps.InvoiceConfig',
+    'deliverynote.apps.DeliverynoteConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

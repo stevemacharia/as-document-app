@@ -128,10 +128,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for d_note in all_delivery_notes %}
+                                {% for d_note in delivery_notes %}
                                     <tr>
                                       <th scope="row">{{ forloop.counter }}</th>
-                                      <td class="text-uppercase">{{ d_note.delivery_note_id }}</td>
+                                      <td class="text-uppercase">{{ d_note.dnote_id }}</td>
                                       <td>{{ d_note.client }}</td>
                                       <td>{{ d_note.total_price|intcomma }}</td>
                                       <td>{{ d_note.submission_date }}</td>
@@ -141,8 +141,8 @@
                                             Draft
                                           {% endif %}
                                       </td>
-                                      <td><a href="{% url 'delivery_note_details' delivery_note.id %}"><button type="button" class="btn btn-primary btn-sm">Edit</button></a></td>
-                                      <td><a href="{% url 'delivery_note_delete' delivery_note.id %}"><button type="button" class="btn btn-danger btn-sm">Delete</button></a></td>
+                                      <td><a href="{% url 'delivery_note_details' d_note.id %}"><button type="button" class="btn btn-primary btn-sm">Edit</button></a></td>
+                                      <td><a href="{% url 'delivery_note_delete' d_note.id %}"><button type="button" class="btn btn-danger btn-sm">Delete</button></a></td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -170,10 +170,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for dnote in all_delivery_notes %}
+                                {% for d_note in delivery_notes %}
                                     <tr>
                                       <th scope="row">{{ forloop.counter }}</th>
-                                      <td class="text-uppercase">{{ d_note.delivery_note_id }}</td>
+                                      <td class="text-uppercase">{{ d_note.dnote_id }}</td>
                                       <td>{{ d_note.client }}</td>
                                       <td>{{ d_note.total_price|intcomma }}</td>
                                       <td>{{ d_note.submission_date }}</td>
@@ -183,9 +183,9 @@
                                             Draft
                                           {% endif %}
                                       </td>
-                                      <td><a href="{% url 'generate_pdf_delivery_note' delivery_note.id %}"><button type="button" class="btn btn-success btn-sm"><i class="bi bi-file-arrow-down-fill"></i> Download</button></a></td>
-                                      <td><a href="{% url 'delivery_note_details' delivery_note.id %}"><button type="button" class="btn btn-primary btn-sm">Edit</button></a></td>
-                                      <td><a href="{% url 'delivery_note_delete' delivery_note.id %}"><button type="button" class="btn btn-danger btn-sm">Delete</button></a></td>
+                                      <td><a href="{% url 'generate_pdf_delivery_note' d_note.id %}"><button type="button" class="btn btn-success btn-sm"><i class="bi bi-file-arrow-down-fill"></i> Download</button></a></td>
+                                      <td><a href="{% url 'delivery_note_details' d_note.id %}"><button type="button" class="btn btn-primary btn-sm">Edit</button></a></td>
+                                      <td><a href="{% url 'delivery_note_delete' d_note.id %}"><button type="button" class="btn btn-danger btn-sm">Delete</button></a></td>
                                     </tr>
                                 {% endfor %}
                             </tbody>

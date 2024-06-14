@@ -4,9 +4,9 @@ from django.conf.urls.static import static
 from . import views
 # from .views import generate_pdf
 urlpatterns = [
-    path('delivery_note', views.delivery_note, name='delivery_note'),
+    path('', views.delivery_note, name='delivery_note'),
     path('delivery_note_details/<str:id>/', views.delivery_note_details, name='delivery_note_details'),
-    path('delivery_note_delete/<str:id>/', views.invoice_delete, name='delivery_note_delete'),
+    path('delivery_note_delete/<str:id>/', views.delivery_note_delete, name='delivery_note_delete'),
     path('add_delivery_note_item/<str:id>/', views.add_delivery_note_item, name='add_delivery_note_item'),
     path('generate_pdf_delivery_note/<str:id>/', views.generate_pdf_delivery_note, name='generate_pdf_delivery_note'),
     path('delivery_note_verification/<str:id>/', views.delivery_note_verification, name='delivery_note_verification'),
