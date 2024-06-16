@@ -29,7 +29,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['192.168.100.14', '127.0.0.1']
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -42,12 +41,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     # 'qr_code',
     'qr_code',
     'django.contrib.humanize',
     'crispy_forms',
     "crispy_bootstrap5",
     "mathfilters",
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.microsoft',
+    'allauth.socialaccount.providers.facebook',
+    'django_otp',
+    'django_otp.plugins.otp_email',
 ]
 
 MIDDLEWARE = [
@@ -58,7 +65,66 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "allauth.account.middleware.AccountMiddleware",
+    'django_otp.middleware.OTPMiddleware',
 ]
+
+SITE_ID = 1
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # For testing purposes
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # For testing purposes
+
+# Configure allauth
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_EMAIL_REQUIRED = True
+LOGIN_REDIRECT_URL = '/'
+
+# Socialaccount providers configuration
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': ['profile', 'email'],
+        'AUTH_PARAMS': {'access_type': 'online'},
+    },
+    'facebook': {
+        'METHOD': 'oauth2',
+        'SCOPE': ['email'],
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+        'FIELDS': [
+            'id',
+            'email',
+            'name',
+            'first_name',
+            'last_name',
+            'verified',
+            'locale',
+            'timezone',
+            'link',
+            'gender',
+            'updated_time',
+        ],
+        'EXCHANGE_TOKEN': True,
+    },
+    'microsoft': {
+        'SCOPE': ['User.Read'],
+        'AUTH_PARAMS': {'response_type': 'code'},
+    },
+}
+
+
+
+
+
+
+
+
+
+
+
 
 ROOT_URLCONF = 'arieshelby.urls'
 
@@ -74,6 +140,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # `allauth` needs this from django
+                'django.template.context_processors.request',
             ],
         },
     },
@@ -157,5 +225,6 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
-
 USE_THOUSAND_SEPARATOR = True
+
+

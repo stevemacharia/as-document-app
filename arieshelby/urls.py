@@ -21,9 +21,12 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('allauth.urls')),  # Allauth routes
+    path('user/', include('user.urls')),  # Allauth routes
     path('', include('documents.urls')),
     path('invoice/', include('invoice.urls')),
     path('delivery_note/', include('deliverynote.urls')),
+    path('accounts/', include('allauth.urls')),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:
