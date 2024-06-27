@@ -43,10 +43,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     # 'qr_code',
+    "crispy_forms",
+    "crispy_bootstrap5",
     'qr_code',
     'django.contrib.humanize',
-    'crispy_forms',
-    "crispy_bootstrap5",
     "mathfilters",
     'allauth',
     'allauth.account',
@@ -236,3 +236,8 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'info@arieshelby.com'
 EMAIL_HOST_PASSWORD = 'Q%CCxu-eM7Bp'
+
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"
