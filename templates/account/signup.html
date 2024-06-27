@@ -1,0 +1,50 @@
+{% extends "account/base_entrance.html" %}
+{% load allauth i18n %}
+{% block head_title %}
+{% load crispy_forms_tags %}
+    {% trans "Signup" %}
+{% endblock head_title %}
+{% block content %}
+    <div class="row">
+        <div class="col-sm-3">
+
+        </div>
+        <div class="col-sm-6">
+            <section class="w-100 m-auto py-4">
+                {% element h1 %}
+                    {% trans "Sign Up" %}
+                {% endelement %}
+                {% setvar link %}
+                    <a href="{{ login_url }}">
+                    {% endsetvar %}
+                    {% setvar end_link %}
+                    </a>
+                {% endsetvar %}
+                {% element p %}
+                    {% blocktranslate %}Already have an account? Then please {{ link }}sign in{{ end_link }}.{% endblocktranslate %}
+                {% endelement %}
+                {% if not SOCIALACCOUNT_ONLY %}
+                    {% url 'account_signup' as action_url %}
+                    {% element form form=form|crispy method="post" action=action_url tags="entrance,signup" %}
+                        {% slot body %}
+                            {% csrf_token %}
+                            {% element fields form=form unlabeled=True %}
+                            {% endelement %}
+                            {{ redirect_field }}
+                        {% endslot %}
+                        {% slot actions %}
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-primary" type="submit">Sign Up</button>
+                            </div>
+                        {% endslot %}
+                    {% endelement %}
+                {% endif %}
+                {% if SOCIALACCOUNT_ENABLED %}
+                    {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
+                {% endif %}
+            </section>
+        </div>
+        <div class="col-sm-3">
+        </div>
+    </div>
+{% endblock content %}
