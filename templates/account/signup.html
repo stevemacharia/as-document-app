@@ -11,34 +11,27 @@
         </div>
         <div class="col-sm-6">
             <section class="w-100 m-auto py-4">
-                {% element h1 %}
-                    {% trans "Sign Up" %}
-                {% endelement %}
-                {% setvar link %}
-                    <a href="{{ login_url }}">
-                    {% endsetvar %}
-                    {% setvar end_link %}
-                    </a>
-                {% endsetvar %}
-                {% element p %}
-                    {% blocktranslate %}Already have an account? Then please {{ link }}sign in{{ end_link }}.{% endblocktranslate %}
-                {% endelement %}
                 {% if not SOCIALACCOUNT_ONLY %}
                     {% url 'account_signup' as action_url %}
-                    {% element form form=form|crispy method="post" action=action_url tags="entrance,signup" %}
-                        {% slot body %}
+                        <form method="POST" action={% url 'account_signup'%}>
                             {% csrf_token %}
-                            {% element fields form=form unlabeled=True %}
-                            {% endelement %}
-                            {{ redirect_field }}
-                        {% endslot %}
-                        {% slot actions %}
-                            <div class="d-grid gap-2">
-                                <button class="btn btn-primary" type="submit">Sign Up</button>
+                            <div class="card shadow-sm border-0 mb-3">
+                              <img src="/static/documents/images/as_logo.jpeg" class="card-img-top" alt="...">
+                              <div class="card-body">
+                                    <h4 class="card-title fw-bold pb-3">Sign Up</h4>
+                                    <fieldset class="form-group">
+                                      {{ form|crispy}}
+                                    </fieldset>
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-primary" type="submit">Sign Up</button>
+                                    </div>
+                                  <p class="card-text mt-3"><small class="text-body-secondary">Already have an account? Then please <a href="{{ login_url }}">Sign in</a></small></p>
+                              </div>
                             </div>
-                        {% endslot %}
-                    {% endelement %}
+
+                        </form>
                 {% endif %}
+
                 {% if SOCIALACCOUNT_ENABLED %}
                     {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
                 {% endif %}

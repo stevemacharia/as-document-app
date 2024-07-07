@@ -211,6 +211,9 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'documents/static')]
 
 
 
+
+
+
 # Base url to serve media files
 MEDIA_URL = '/media/'
 
