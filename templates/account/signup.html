@@ -15,7 +15,7 @@
                     {% url 'account_signup' as action_url %}
                         <form method="POST" action={% url 'account_signup'%}>
                             {% csrf_token %}
-                            <div class="card shadow-sm border-0 mb-3">
+                            <div class="card shadow border-0 mb-3">
                               <img src="/static/documents/images/as_logo.jpeg" class="card-img-top" alt="...">
                               <div class="card-body">
                                     <h4 class="card-title fw-bold pb-3">Sign Up</h4>
@@ -23,12 +23,11 @@
                                       {{ form|crispy}}
                                     </fieldset>
                                     <div class="d-grid gap-2">
-                                        <button class="btn btn-primary" type="submit">Sign Up</button>
+                                        <button class="btn btn-success" style="background-color: #185319 !important;" type="submit">Sign Up</button>
                                     </div>
-                                  <p class="card-text mt-3"><small class="text-body-secondary">Already have an account? Then please <a href="{{ login_url }}">Sign in</a></small></p>
+                                  <p class="card-text mt-3"><small class="text-body-secondary">Already have an account? Then please <a href="{{ login_url }}" style="color: #185319" class="fw-bold">Sign in</a></small></p>
                               </div>
                             </div>
-
                         </form>
                 {% endif %}
 

@@ -26,6 +26,12 @@
             <div>
                 <strong>{% trans "Menu:" %}</strong>
                 <ul>
+                    <nav class="shadow-sm p-2" style="--bs-breadcrumb-divider: '';" aria-label="breadcrumb">
+                      <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Library</li>
+                      </ol>
+                    </nav>
                     {% if user.is_authenticated %}
                         {% url 'account_email' as email_url %}
                         {% if email_url %}
