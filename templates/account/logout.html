@@ -1,12 +1,12 @@
 {% extends "account/base_manage.html" %}
 {% load allauth i18n %}
+{% load crispy_forms_tags %}
 {% block head_title %}
     {% trans "Sign Out" %}
 {% endblock head_title %}
 {% block content %}
-    {% element h1 %}
-        {% trans "Sign Out" %}
-    {% endelement %}
+     <h3 class="fw-bold" style="color:#185319;">Sign Out</h3>
+
     {% element p %}
         {% trans 'Are you sure you want to sign out?' %}
     {% endelement %}
@@ -14,12 +14,11 @@
     {% element form method="post" action=action_url no_visible_fields=True %}
         {% slot body %}
             {% csrf_token %}
-            {{ redirect_field }}
+            {{form|crispy}}
         {% endslot %}
         {% slot actions %}
-            {% element button type="submit" %}
-                {% trans 'Sign Out' %}
-            {% endelement %}
+
+            <button class="btn btn-success" style="background-color: #185319 !important;" type="submit">Sign Out</button>
         {% endslot %}
     {% endelement %}
 {% endblock content %}

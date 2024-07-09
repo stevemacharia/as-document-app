@@ -24,7 +24,9 @@ from django.template.loader import render_to_string
 from weasyprint import HTML
 from invoice.models import Invoice, InvoiceItems
 import os
+from django.contrib.auth.decorators import login_required
 # Create your views here.
+@login_required
 def index(request):
     quotations = Quotation.objects.all()
     invoices = Invoice.objects.all()
@@ -34,7 +36,7 @@ def index(request):
     }
     return render(request, 'documents/index.html', context)
 
-
+@login_required
 def quotations(request):
     if request.method == 'POST':
         quotation_form = QuotationForm(request.POST)
@@ -146,7 +148,7 @@ def quotations(request):
         return render(request, 'documents/quotations.html',
                       {'forms': [form], 'quotation_form': quotation_form, 'all_quotations': all_quotations})
 
-
+@login_required
 def quotation_details(request, id):
     chosen_quotation = Quotation.objects.get(id=id)
     listed_quotation_items = QuotationItems.objects.filter(quotation=chosen_quotation)
@@ -189,7 +191,7 @@ def quotation_details(request, id):
         }
     return render(request, 'documents/quotation_details.html', context)
 
-
+@login_required
 def add_quotation_item(request, id):
     selected_quotation = Quotation.objects.get(id=id)
     if request.method == "POST":
@@ -207,7 +209,7 @@ def add_quotation_item(request, id):
         messages.warning(request, f'Not post request')
         return redirect('quotations')
 
-
+@login_required
 def quotation_delete(request, id):
     selected_quotation = Quotation.objects.get(id=id)
     selected_quotation.delete()
@@ -216,7 +218,7 @@ def quotation_delete(request, id):
 
 
 
-
+@login_required
 def clients(request):
     if request.method == "POST":
         client_form = ClientForm(request.POST)
@@ -239,7 +241,7 @@ def clients(request):
         }
         return render(request, 'documents/clients.html', context)
 
-
+@login_required
 def client_details(request, id):
     chosen_client = Client.objects.get(id=id)
     if request.method == "POST":
@@ -264,13 +266,14 @@ def client_details(request, id):
         }
         return render(request, 'documents/client_details.html', context)
 
-
+@login_required
 def client_delete(request, id):
     selected_client = Client.objects.get(id=id)
     selected_client.delete()
     messages.success(request, f'Client details deleted successfully')
     return redirect('clients')
 
+@login_required
 def generate_pdf_quotation(request, id):
     selected_quotation = Quotation.objects.get(id=id)
     listed_quotation_items = QuotationItems.objects.filter(quotation=selected_quotation)
@@ -307,6 +310,7 @@ def generate_pdf_quotation(request, id):
 
     return response
 
+@login_required
 def quotation_verification(request, id):
     if Quotation.objects.filter(id=id):
         context = {

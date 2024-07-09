@@ -1,12 +1,12 @@
 {% extends "account/base_manage_email.html" %}
 {% load allauth i18n %}
+{% load crispy_forms_tags %}
 {% block head_title %}
     {% trans "Email Addresses" %}
 {% endblock head_title %}
 {% block content %}
-    {% element h1 %}
-        {% trans "Email Addresses" %}
-    {% endelement %}
+    <h3 class="fw-bold" style="color:#185319;">Email Addresses</h3>
+
     {% if emailaddresses %}
         {% element p %}
             {% trans 'The following email addresses are associated with your account:' %}
@@ -40,35 +40,29 @@
                 {% endfor %}
             {% endslot %}
             {% slot actions %}
-                {% element button type="submit" name="action_primary" %}
-                    {% trans 'Make Primary' %}
-                {% endelement %}
-                {% element button tags="secondary" type="submit" name="action_send" %}
-                    {% trans 'Re-send Verification' %}
-                {% endelement %}
-                {% element button tags="danger,delete" type="submit" name="action_remove" %}
-                    {% trans 'Remove' %}
-                {% endelement %}
+            <button class="btn btn-success" name="action_primary" style="background-color: #185319 !important;" type="submit">Make Primary</button>
+
+            <button class="btn btn-success" name="action_send" style="background-color: #185319 !important;" type="submit">Re-send Verification</button>
+
+            <button class="btn btn-danger" name="action_remove"  type="submit">Re-send Verification</button>
             {% endslot %}
         {% endelement %}
     {% else %}
         {% include "account/snippets/warn_no_email.html" %}
     {% endif %}
     {% if can_add_email %}
-        {% element h2 %}
-            {% trans "Add Email Address" %}
-        {% endelement %}
+        <h5 class="fw-bold mt-3" style="color:#185319;">Add Email Address</h5>
+
         {% url 'account_email' as action_url %}
         {% element form form=form method="post" action=action_url tags="email,add" %}
             {% slot body %}
                 {% csrf_token %}
-                {% element fields form=form %}
-                {% endelement %}
+                {{form|crispy}}
             {% endslot %}
             {% slot actions %}
-                {% element button name="action_add" type="submit" %}
-                    {% trans "Add Email" %}
-                {% endelement %}
+                <div class="d-grid gap-2">
+                    <button class="btn btn-success" style="background-color: #185319 !important;" type="submit">Add Email</button>
+                </div>
             {% endslot %}
         {% endelement %}
     {% endif %}

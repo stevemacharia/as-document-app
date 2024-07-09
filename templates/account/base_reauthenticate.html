@@ -5,9 +5,7 @@
     {% trans "Confirm Access" %}
 {% endblock head_title %}
 {% block content %}
-    {% element h1 %}
-        {% trans "Confirm Access" %}
-    {% endelement %}
+    <h3 class="fw-bold" style="color:#185319;">Confirm Access</h3>
     {% element p %}
         {% blocktranslate %}Please reauthenticate to safeguard your account.{% endblocktranslate %}
     {% endelement %}
@@ -15,9 +13,7 @@
     {% if reauthentication_alternatives %}
         {% element hr %}
         {% endelement %}
-        {% element h2 %}
-            {% translate "Alternative options" %}
-        {% endelement %}
+        <h4 class="fw-bold" style="color:#185319;">Alternative options</h4>
         <ul>
             {% for alt in reauthentication_alternatives %}
                 <li>

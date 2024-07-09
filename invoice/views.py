@@ -25,11 +25,12 @@ from django.core.files import File
 from django.core.files.storage import default_storage
 from django.template.loader import render_to_string
 from weasyprint import HTML
+from django.contrib.auth.decorators import login_required
 import os
 # Create your views here.
 
 
-
+@login_required
 def invoice(request):
     if request.method == 'POST':
         invoice_form = InvoiceForm(request.POST)
@@ -135,7 +136,7 @@ def invoice(request):
         return render(request, 'invoice/invoice.html',
                       {'forms': [form], 'invoice_form': invoice_form, 'all_invoice': all_invoices})
 
-
+@login_required
 def invoice_details(request, id):
     chosen_invoice = Invoice.objects.get(id=id)
     listed_invoice_items = InvoiceItems.objects.filter(invoice=chosen_invoice)
@@ -178,7 +179,7 @@ def invoice_details(request, id):
         }
     return render(request, 'invoice/invoice_details.html', context)
 
-
+@login_required
 def add_invoice_item(request, id):
     selected_invoice = Invoice.objects.get(id=id)
     if request.method == "POST":
@@ -196,7 +197,7 @@ def add_invoice_item(request, id):
         messages.warning(request, f'Not post request')
         return redirect('invoice')
 
-
+@login_required
 def invoice_delete(request, id):
     selected_invoice = Invoice.objects.get(id=id)
     selected_invoice.delete()
@@ -205,7 +206,7 @@ def invoice_delete(request, id):
 
 
 
-
+@login_required
 def generate_pdf_invoice(request, id):
     selected_invoice = Invoice.objects.get(id=id)
     listed_invoice_items = InvoiceItems.objects.filter(invoice=selected_invoice)
@@ -241,7 +242,7 @@ def generate_pdf_invoice(request, id):
     response['Content-Disposition'] = 'attachment; filename="Arieshelby Invoice-' + selected_invoice.invoice_id + '.pdf"'
 
     return response
-
+@login_required
 def invoice_verification(request, id):
     if Invoice.objects.filter(id=id):
         context = {

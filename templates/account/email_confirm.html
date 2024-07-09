@@ -6,9 +6,8 @@
     {% trans "Confirm Email Address" %}
 {% endblock head_title %}
 {% block content %}
-    {% element h1 %}
-        {% trans "Confirm Email Address" %}
-    {% endelement %}
+    <h3 class="fw-bold" style="color:#185319;">Confirm Email Address</h3>
+
     {% if confirmation %}
         {% user_display confirmation.email_address.user as user_display %}
         {% if can_confirm %}
@@ -20,7 +19,7 @@
                 {% slot actions %}
                     {% csrf_token %}
                     {{ redirect_field }}
-                    {% element button type="submit" %}
+                    {% element button type="submit" class="btn btn-success" style="background-color: #185319 !important;" %}
                         {% trans 'Confirm' %}
                     {% endelement %}
                 {% endslot %}

@@ -2,33 +2,30 @@
 {% load i18n %}
 {% load allauth account %}
 {% block head_title %}
+{% load crispy_forms_tags %}
     {% translate "Sign In" %}
 {% endblock head_title %}
 {% block content %}
-    {% element h1 %}
-        {% translate "Mail me a sign-in code" %}
-    {% endelement %}
-    {% element p %}
-        {% blocktranslate %}You will receive an email containing a special code for a password-free sign-in.{% endblocktranslate %}
-    {% endelement %}
+
     {% url 'account_request_login_code' as login_url %}
-    {% element form form=form method="post" action=login_url tags="entrance,login" %}
-        {% slot body %}
-            {% csrf_token %}
-            {% element fields form=form unlabeled=True %}
-            {% endelement %}
-            {{ redirect_field }}
-        {% endslot %}
-        {% slot actions %}
-            {% element button type="submit" tags="prominent,login" %}
-                {% translate "Request Code" %}
-            {% endelement %}
-        {% endslot %}
-    {% endelement %}
-    {% element h2 %}
-        {% url 'account_login' as login_url %}
-        {% element button href=login_url tags="link" %}
-            {% translate "Other sign-in options" %}
-        {% endelement %}
-    {% endelement %}
+    
+    <form method="POST" action={% url 'account_request_login_code'%}>
+        {% csrf_token %}
+        <h3 class="fw-bold" style="color: #185319">Mail me a sign-in code</h3>
+        <h5 class="fw-bold" style="color: #185319">You will receive an email containing a special code for a password-free sign-in.</h5>
+        <fieldset class="form-group">
+          {{ form|crispy}}
+        </fieldset>
+        <div class="d-grid gap-2">
+            <button class="btn btn-success" style="background-color: #185319 !important;" type="submit">Request Code</button>
+        </div>
+        <p class="card-text mt-3"><small class="text-body-secondary"><a href="{{ login_url }}" style="color: #185319" class="fw-bold">Forgot Password?</a></small></p>
+    </form>
+    
+    
+    <div class="d-grid gap-2">
+        <a href={% url 'account_login' %}><button class="btn btn-success" style="background-color: #185319 !important;" type="submit">Other sign-in options</button></a>
+    </div>
+    
+
 {% endblock content %}
