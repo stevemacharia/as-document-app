@@ -52,7 +52,7 @@ def invoice(request):
                 box_size=10,
                 border=4,
             )
-            data = "www.arieshelby.com/"+x
+            data = "www.document.arieshelby.com/invoice/invoice_verification/"+x
             qr.add_data(data)
             qr.make(fit=True)
             img = qr.make_image(fill='black', back_color='white')

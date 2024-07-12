@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-3hli6q3w-rwn8nh)19q*q0&b#pia4pvg@b(h=o0#y8#=l9@i2n
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.100.14', '127.0.0.1']
+ALLOWED_HOSTS = ['192.168.100.14', '127.0.0.1','0.0.0.0']
 
 # Application definition
 
@@ -35,7 +35,9 @@ INSTALLED_APPS = [
     'documents.apps.DocumentsConfig',
     'invoice.apps.InvoiceConfig',
     'deliverynote.apps.DeliverynoteConfig',
-    'django.contrib.admin',
+    'material',
+    'material.admin',
+    # 'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -244,3 +246,27 @@ EMAIL_HOST_PASSWORD = 'Q%CCxu-eM7Bp'
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+
+
+MATERIAL_ADMIN_SITE = {
+    'HEADER': ('AS-GROUP DOCUMENTS'),  # Admin site header
+    'TITLE':('AS-GROUP DOCUMENTS'),  # Admin site title
+    'FAVICON':  'path/to/favicon',  # Admin site favicon (path to static should be specified)
+    'MAIN_BG_COLOR':  '#185319',  # Admin site main color, css color should be specified
+    'MAIN_HOVER_COLOR':  '#022503',  # Admin site main hover color, css color should be specified
+    'PROFILE_PICTURE':  'documents/images/as-group-logo.png',  # Admin site profile picture (path to static should be specified)
+    'PROFILE_BG':  'documents/images/as_logo_green_bg.jpeg',  # Admin site profile background (path to static should be specified)
+    'LOGIN_LOGO':  'documents/images/as-group-logo.png',  # Admin site logo on login page (path to static should be specified)
+    'LOGOUT_BG':  'documents/images/as-group-logo.png',  # Admin site background on login/logout pages (path to static should be specified)
+    'SHOW_THEMES':  False,  #  Show default admin themes button
+    'TRAY_REVERSE': True,  # Hide object-tools and additional-submit-line by default
+    'NAVBAR_REVERSE': True,  # Hide side navbar by default
+    'SHOW_COUNTS': True, # Show instances counts for each model
+    'APP_ICONS': {  # Set icons for applications(lowercase), including 3rd party apps, {'application_name': 'material_icon_name', ...}
+        'sites': 'send',
+    },
+    'MODEL_ICONS': {  # Set icons for models(lowercase), including 3rd party models, {'model_name': 'material_icon_name', ...}
+        'site': 'contact_mail',
+    }
+}
