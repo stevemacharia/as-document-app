@@ -120,14 +120,6 @@ SOCIALACCOUNT_PROVIDERS = {
 
 
 
-
-
-
-
-
-
-
-
 ROOT_URLCONF = 'arieshelby.urls'
 
 TEMPLATES = [
