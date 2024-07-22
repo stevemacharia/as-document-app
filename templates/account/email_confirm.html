@@ -19,9 +19,8 @@
                 {% slot actions %}
                     {% csrf_token %}
                     {{ redirect_field }}
-                    {% element button type="submit" class="btn btn-success" style="background-color: #185319 !important;" %}
-                        {% trans 'Confirm' %}
-                    {% endelement %}
+                    <button class="btn btn-success" style="background-color: #185319 !important;" type="submit"> Confirm </button>
+
                 {% endslot %}
             {% endelement %}
         {% else %}
