@@ -11245,3 +11245,11 @@ body {
   font-size: 0.75rem;
   border-radius: 0.375rem !important;
 }
+
+
+.PrimaryColor{
+  color:#185319;
+}
+.BgPrimaryColor{
+  background-color: #185319;
+}

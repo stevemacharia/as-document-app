@@ -18,7 +18,7 @@
 {#        <script>#}
 {#            setInterval(function(){ $(".alert").fadeOut(); }, 3000);#}
 {#        </script>#}
-        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <nav class="sb-topnav navbar navbar-expand navbar-dark BgPrimaryColor">
             <!-- Navbar Brand-->
             <a class="navbar-brand ps-3" href="{% url 'index' %}">ARIESHELBY</a>
             <!-- Sidebar Toggle-->
@@ -45,29 +45,29 @@
         </nav>
         <div id="layoutSidenav">
             <div id="layoutSidenav_nav">
-                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <nav class="sb-sidenav accordion sb-sidenav-dark BgPrimaryColor" id="sidenavAccordion">
                     <div class="sb-sidenav-menu">
                         <div class="nav">
-                            <div class="sb-sidenav-menu-heading">Core</div>
-                            <a class="nav-link" href="{% url 'index' %} ">
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            <div class="sb-sidenav-menu-heading text-light">Core</div>
+                            <a class="nav-link text-light" href="{% url 'index' %} ">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt text-light"></i></div>
                                 Dashboard
                             </a>
-                            <a class="nav-link" href="{% url 'clients' %}">
-                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                            <a class="nav-link text-light" href="{% url 'clients' %}">
+                                <div class="sb-nav-link-icon text-light"><i class="fas fa-columns text-light"></i></div>
                                 Clients
                             </a>
-                            <div class="sb-sidenav-menu-heading">Documents</div>
-                            <a class="nav-link" href="{% url 'quotations' %}">
-                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                            <div class="sb-sidenav-menu-heading text-light">Documents</div>
+                            <a class="nav-link text-light" href="{% url 'quotations' %}">
+                                <div class="sb-nav-link-icon text-light"><i class="fas fa-columns text-light"></i></div>
                                 Quotations
                             </a>
-                            <a class="nav-link" href="{% url 'invoice' %}">
-                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                            <a class="nav-link text-light" href="{% url 'invoice' %}">
+                                <div class="sb-nav-link-icon text-light"><i class="fas fa-columns text-light"></i></div>
                                 Invoices
                             </a>
-                            <a class="nav-link" href="{% url 'delivery_note' %}">
-                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                            <a class="nav-link text-light" href="{% url 'delivery_note' %}">
+                                <div class="sb-nav-link-icon text-light"><i class="fas fa-columns text-light"></i></div>
                                 Delivery Notes
                             </a>
 
