@@ -23,6 +23,7 @@ from django.core.files.storage import default_storage
 from django.template.loader import render_to_string
 from weasyprint import HTML
 from invoice.models import Invoice, InvoiceItems
+from deliverynote.models import DeliveryNote, DeliveryNoteItems
 import os
 from django.contrib.auth.decorators import login_required
 # Create your views here.
@@ -30,9 +31,11 @@ from django.contrib.auth.decorators import login_required
 def index(request):
     quotations = Quotation.objects.all()
     invoices = Invoice.objects.all()
+    delivery_notes = DeliveryNote.objects.all()
     context = {
         'all_quotations': quotations,
         'all_invoices': invoices,
+        'delivery_notes': delivery_notes,
     }
     return render(request, 'documents/index.html', context)
 

@@ -114,14 +114,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for quotation in all_quotations %}
+                        {% for d_note in delivery_notes %}
                             <tr>
                               <th scope="row">{{ forloop.counter }}</th>
                               <td class="text-uppercase"><a href="{% url 'quotation_details' quotation.id %}">{{ quotation.quotation_id }}</a></td>
-                              <td>{{ quotation.client }}</td>
-                              <td>{{ quotation.total_price }}</td>
-                              <td>{{ quotation.submission_date }}</td>
-                              <td>{% if quotation.status %}
+                              <td>{{ d_note.client }}</td>
+                              <td>{{ d_note.total_price }}</td>
+                              <td>{{ d_note.submission_date }}</td>
+                              <td>{% if d_note.status %}
                                     Final
                                   {% else %}
                                     Draft
