@@ -19,36 +19,40 @@
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
+                        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                            <form class="d-flex" role="search">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control rounded-start-5" placeholder="Search" aria-label="Search" aria-describedby="button-addon2">
+                                    <button class="btn btn-outline-success rounded-end-5" type="button" id="button-addon2"><i class="bi bi-search"></i></button>
+                                </div>
+                            </form>
+                            <li class="nav-item">
+                                <p class="h5"><a class="nav-link PrimaryColor" href="#"><i class="bi bi-person-fill PrimaryColor"></i> Account <i class="bi bi-caret-down-fill"></i></a></p>
+                              </li>
                         </ul>
-                        <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
-                        </form>
                     </div>
                 </div>
             </nav>
            <div class="row"> 
             <div class="col-sm-2 px-4">
                 <nav class="nav flex-column mt-4">
-                    <a class="nav-link active BgPrimaryColor rounded-5 mb-4" aria-current="page" href="#">
+                    <a class="nav-link active BgPrimaryColor rounded-5 mb-4" aria-current="page" href="{% url 'index' %}">
                         <h6 class="text-white fw-bold mb-0 py-2"> <i class="bi bi-speedometer2 pe-2"></i> Dashboard</h6>
                     </a>
-                    <a class="nav-link pb-5 " aria-current="page" href="#">
+                    <a class="nav-link pb-5 " aria-current="page" href="{% url 'clients' %}">
                         <h6 class="PrimaryColor fw-bold"> <i class="bi bi-people-fill pe-2"></i> Client Profiles</h6>
                     </a>
 
                     <a class="nav-link pt-3 pb-0 border-top mb-2" aria-current="page" href="#">
                         <h6 class="PrimaryColor fw-bold">Documents</h6>
                     </a>
-                    <a class="nav-link ps-4 " aria-current="page" href="#">
+                    <a class="nav-link ps-4 " aria-current="page" href="{% url 'quotations' %}">
                         <h6 class="PrimaryColor fw-semibold"> <i class="bi bi-file-earmark-bar-graph pe-2"></i> Quotations</h6>
                     </a>
-                    <a class="nav-link ps-4 " aria-current="page" href="#">
+                    <a class="nav-link ps-4 " aria-current="page" href="{% url 'invoice' %}">
                         <h6 class="PrimaryColor fw-semibold"><i class="bi bi-file-earmark-medical pe-2"></i> Invoices</h6>
                     </a>
-                    <a class="nav-link ps-4 " aria-current="page" href="#"> 
+                    <a class="nav-link ps-4 " aria-current="page" href="{% url 'delivery_note' %}"> 
                         <h6 class="PrimaryColor fw-semibold"><i class="bi bi-file-earmark-check pe-2"></i> Delivery Notes</h6>
                     </a>
 

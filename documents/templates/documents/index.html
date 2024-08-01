@@ -3,7 +3,7 @@
 <main>
         {% if messages %}
            {% for message in messages %}
-               <div class="alert alert-{{message.tags}} m-3">
+               <div class="alert alert-{{message.tags}} m-3 rounded-4">
                    {{message}}
                </div>
            {% endfor %}
@@ -61,35 +61,46 @@
         <div class="container-fluid px-3 py-3 mb-4 shadow-sm bg-white rounded-4">
             <h5 class="fw-semibold text-danger"> <i class="bi bi-alarm pe-2"></i> Pending Invoices</h5>
             <div class="table-responsive">
-                <table class="table table-borderless">
-                    <thead class="table-light">
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Invoice Code</th>
-                            <th scope="col">Client</th>
-                            <th scope="col">Total Amount</th>
-                            <th scope="col">Submission Date</th>
-                            <th scope="col">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for invoice in all_invoices %}
+                {% if all_invoices %}
+                    <table class="table table-borderless">
+                        <thead class="table-light">
                             <tr>
-                              <th scope="row">{{ forloop.counter }}</th>
-                              <td class="text-uppercase"><a href="{% url 'invoice_details' invoice.id %}">{{ invoice.invoice_id }}</a></td>
-                              <td>{{ invoice.client }}</td>
-                              <td>{{ invoice.total_price }}</td>
-                              <td>{{ invoice.submission_date }}</td>
-                              <td>{% if invoice.status %}
-                                    Final
-                                  {% else %}
-                                    Draft
-                                  {% endif %}
-                              </td>
+                                <th scope="col">#</th>
+                                <th scope="col">Invoice Code</th>
+                                <th scope="col">Client</th>
+                                <th scope="col">Total Amount</th>
+                                <th scope="col">Submission Date</th>
+                                <th scope="col">Status</th>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                                {% for invoice in all_invoices %}
+                                    <tr>
+                                    <th scope="row">{{ forloop.counter }}</th>
+                                    <td class="text-uppercase"><a href="{% url 'invoice_details' invoice.id %}">{{ invoice.invoice_id }}</a></td>
+                                    <td>{{ invoice.client }}</td>
+                                    <td>{{ invoice.total_price }}</td>
+                                    <td>{{ invoice.submission_date }}</td>
+                                    <td>{% if invoice.status %}
+                                            Final
+                                        {% else %}
+                                            Draft
+                                        {% endif %}
+                                    </td>
+                                    </tr>
+                                {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <div class="py-1">
+                        <div class="py-4">
+                            <div>
+                                <img src="/static/documents/images/as-empty-data.svg" class="d-block mx-lg-auto img-fluid" alt="Empty!" width="110" height="65" loading="lazy">
+                            </div>
+                            <p class="fs-6 pt-2 fst-italic text-center">You have no pending Invoices!.</p>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
         </div>
 
@@ -102,35 +113,46 @@
         <div class="container-fluid px-3 py-3 mb-4 shadow-sm bg-white rounded-4">
             <h5 class="fw-semibold text-info"> <i class="bi bi-truck pe-2"></i> Delivery Notes</h5>
             <div class="table-responsive">
-                <table class="table table-borderless">
-                    <thead class="table-light">
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Delivery Code Note</th>
-                            <th scope="col">Client</th>
-                            <th scope="col">Total Amount</th>
-                            <th scope="col">Submission Date</th>
-                            <th scope="col">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for d_note in delivery_notes %}
+                {% if d_note %}
+                    <table class="table table-borderless">
+                        <thead class="table-light">
                             <tr>
-                              <th scope="row">{{ forloop.counter }}</th>
-                              <td class="text-uppercase"><a href="{% url 'quotation_details' quotation.id %}">{{ quotation.quotation_id }}</a></td>
-                              <td>{{ d_note.client }}</td>
-                              <td>{{ d_note.total_price }}</td>
-                              <td>{{ d_note.submission_date }}</td>
-                              <td>{% if d_note.status %}
-                                    Final
-                                  {% else %}
-                                    Draft
-                                  {% endif %}
-                              </td>
+                                <th scope="col">#</th>
+                                <th scope="col">Delivery Code Note</th>
+                                <th scope="col">Client</th>
+                                <th scope="col">Total Amount</th>
+                                <th scope="col">Submission Date</th>
+                                <th scope="col">Status</th>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {% for d_note in delivery_notes %}
+                                <tr>
+                                <th scope="row">{{ forloop.counter }}</th>
+                                <td class="text-uppercase"><a href="{% url 'quotation_details' quotation.id %}">{{ quotation.quotation_id }}</a></td>
+                                <td>{{ d_note.client }}</td>
+                                <td>{{ d_note.total_price }}</td>
+                                <td>{{ d_note.submission_date }}</td>
+                                <td>{% if d_note.status %}
+                                        Final
+                                    {% else %}
+                                        Draft
+                                    {% endif %}
+                                </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <div class="py-1">
+                        <div class="py-4">
+                            <div>
+                                <img src="/static/documents/images/as-delivery.svg" class="d-block mx-lg-auto img-fluid" alt="Empty!" width="110" height="65" loading="lazy">
+                            </div>
+                            <p class="fs-6 pt-2 fst-italic text-center">You have no Delivery notes!.</p>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
         </div>
 
@@ -141,35 +163,46 @@
         <div class="container-fluid px-3 py-3 mb-4 shadow-sm bg-white rounded-4">
             <h5 class="fw-semibold text-success"> <i class="bi bi-card-checklist pe-2"></i> Latest Quotations</h5>
             <div class="table-responsive">
-                <table class="table table-borderless">
-                    <thead class="table-light">
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Quotation Code</th>
-                            <th scope="col">Client</th>
-                            <th scope="col">Total Amount</th>
-                            <th scope="col">Submission Date</th>
-                            <th scope="col">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for quotation in all_quotations %}
+                {% if all_quotations %}
+                    <table class="table table-borderless">
+                        <thead class="table-light">
                             <tr>
-                              <th scope="row">{{ forloop.counter }}</th>
-                              <td class="text-uppercase"><a href="{% url 'quotation_details' quotation.id %}">{{ quotation.quotation_id }}</a></td>
-                              <td>{{ quotation.client }}</td>
-                              <td>{{ quotation.total_price }}</td>
-                              <td>{{ quotation.submission_date }}</td>
-                              <td>{% if quotation.status %}
-                                    Final
-                                  {% else %}
-                                    Draft
-                                  {% endif %}
-                              </td>
+                                <th scope="col">#</th>
+                                <th scope="col">Quotation Code</th>
+                                <th scope="col">Client</th>
+                                <th scope="col">Total Amount</th>
+                                <th scope="col">Submission Date</th>
+                                <th scope="col">Status</th>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {% for quotation in all_quotations %}
+                                <tr>
+                                <th scope="row">{{ forloop.counter }}</th>
+                                <td class="text-uppercase"><a href="{% url 'quotation_details' quotation.id %}">{{ quotation.quotation_id }}</a></td>
+                                <td>{{ quotation.client }}</td>
+                                <td>{{ quotation.total_price }}</td>
+                                <td>{{ quotation.submission_date }}</td>
+                                <td>{% if quotation.status %}
+                                        Final
+                                    {% else %}
+                                        Draft
+                                    {% endif %}
+                                </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <div class="py-1">
+                        <div class="py-4">
+                            <div>
+                                <img src="/static/documents/images/as-no-quotation.svg" class="d-block mx-lg-auto img-fluid" alt="Empty!" width="110" height="65" loading="lazy">
+                            </div>
+                            <p class="fs-6 pt-2 fst-italic text-center">You have not created any Quotations!.</p>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
         </div>
 
