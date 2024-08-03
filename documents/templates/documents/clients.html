@@ -4,25 +4,24 @@
 
 {% block content %}
     <main>
-        {% if messages %}
-           {% for message in messages %}
-               <div class="alert alert-{{message.tags}} m-3">
-                   {{message}}
-               </div>
-           {% endfor %}
-        {% endif %}
-        <div class="container-fluid bg-body-tertiary rounded-4 p-4">
-
+        <div class="container-fluid vh-100 bg-body-tertiary rounded-4 p-4">
             <div class="container-fluid px-3 py-2 mb-4 shadow-sm bg-white rounded-4" id="icon-grid">
-                <h2 class="my-2 PrimaryColor fw-bold">Clients</h2>
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert rounded-5 mb-3 alert-{{message.tags}} m-3">
+                            {{message}}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                <h2 class="my-2 PrimaryColor fw-bold">Client Profiles</h2>
                 <ol class="breadcrumb mb-4">
                     <li class="breadcrumb-item active">Create Client billing address</li>
                 </ol>
 
-                <div class="card bg-warning mb-4">
+                <div class="card BgPrimaryColor rounded-5 mb-4">
                     <a class="text-decoration-none text-dark" href="#">
                         <div class="card-body" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            <h5 class="text-center fw-bolder"><i class="bi bi-upload pe-2"></i> Create Client address</h5>
+                            <h5 class="text-center text-white fw-bolder"><i class="bi bi-upload pe-2"></i> Create Client address</h5>
                         </div>
                     </a>
                 </div>
@@ -34,7 +33,7 @@
                             <form method="POST" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Enter Client Details</h1>
+                                    <h5 class="modal-title fs-5 fw-semibold PrimaryColor" id="exampleModalLabel">Enter Client Details</h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
@@ -42,7 +41,7 @@
                                 </div>
                                 <div class="p-3">
                                     <div class="d-grid gap-2">
-                                        <button class="btn btn-success" type="submit">Submit</button>
+                                        <button class="btn btn-outline-dark rounded-5" type="submit">Submit</button>
                                     </div>
                                 </div>
                             </form>
@@ -56,7 +55,7 @@
                 {#start of client tables#}
                     <section class="p-4">
                         <div class="table-responsive">
-                            <table class="table table-sm caption-top table-hover table-bordered">
+                            <table class="table table-sm caption-top table-hover table-borderless">
                                 <caption>Client list</caption>
                                 <thead class="table-light">
                                     <tr>
