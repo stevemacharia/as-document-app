@@ -26,6 +26,7 @@ from invoice.models import Invoice, InvoiceItems
 from deliverynote.models import DeliveryNote, DeliveryNoteItems
 import os
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 # Create your views here.
 @login_required
 def index(request):
@@ -331,3 +332,30 @@ def quotation_verification(request, id):
         return render(request, 'documents/quotation_confirmation.html', context)
 
 
+
+
+# start of search
+def search(request):
+    query = request.GET.get('q')
+    if query:
+        invoice_results = Invoice.objects.filter(
+            Q(number__icontains=query) | Q(customer_name__icontains=query) | Q(date__icontains=query)
+        )
+        quotation_results = Quotation.objects.filter(
+            Q(number__icontains=query) | Q(customer_name__icontains=query) | Q(date__icontains=query)
+        )
+        delivery_note_results = DeliveryNote.objects.filter(
+            Q(number__icontains=query) | Q(customer_name__icontains=query) | Q(date__icontains=query)
+        )
+    else:
+        invoice_results = Invoice.objects.none()
+        quotation_results = Quotation.objects.none()
+        delivery_note_results = DeliveryNote.objects.none()
+
+    context = {
+        'query': query,
+        'invoice_results': invoice_results,
+        'quotation_results': quotation_results,
+        'delivery_note_results': delivery_note_results,
+    }
+    return render(request, 'search_results.html', context)

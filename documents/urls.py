@@ -14,6 +14,7 @@ urlpatterns = [
     path('client_details/<str:id>/', views.client_details, name='client_details'),
     path('client_delete/<str:id>/', views.client_delete, name='client_delete'),
     path('quotation_verification/<str:id>/', views.quotation_verification, name='quotation_verification'),
+    path('search/', views.search, name='search'),
     # path('generate-pdf/', generate_pdf, name='generate-pdf'),
     ############start of invoice###########
     # path('invoice_details/<str:id>/', views.invoice_details, name='invoice_details'),

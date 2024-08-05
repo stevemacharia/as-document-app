@@ -30,8 +30,9 @@ class InvoiceItemsForm(forms.ModelForm):
     item_description = forms.CharField(required=True, label="Description", widget=forms.Textarea)
     quantity = forms.IntegerField(required=True)
     price = forms.CharField(required=True, label="Unit cost")
+    unit = forms.CharField(required=True, label="Unit of Measurement")
 
 
     class Meta:
         model = InvoiceItems
-        fields = ['item', 'item_description', 'quantity', 'price']
+        fields = ['item', 'item_description', 'quantity', 'price', 'unit']

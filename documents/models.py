@@ -64,10 +64,21 @@ class Invoice(models.Model):
 
 
 class InvoiceItems(models.Model):
+    QUANTITY_UNITS = [
+        ('kg', 'Kilograms'),
+        ('lb', 'Pounds'),
+        ('g', 'Grams'),
+        ('oz', 'Ounces'),
+    ]
+        
     invoice = models.ForeignKey(Quotation, on_delete=models.CASCADE)
     item = models.CharField(max_length=300)
     item_description = models.CharField(max_length=800)
     quantity = models.IntegerField()
+    unit = models.CharField(max_length=2, choices=QUANTITY_UNITS, null=True)
     price = models.DecimalField(max_digits=15, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.quantity} {self.get_unit_display()}"
 
 

@@ -4,23 +4,23 @@
 
 {% block content %}
     <main>
-        {% if messages %}
-           {% for message in messages %}
-               <div class="alert alert-{{message.tags}} m-3">
-                   {{message}}
-               </div>
-           {% endfor %}
-        {% endif %}
-        <div class="container-fluid">
-            <div class="container my-5">
-                  <div class="position-relative p-5 text-start text-muted bg-body border border-dashed rounded-5">
-                      <h4 class="text-body-emphasis text-capitalize">Update {{ chosen_client.name }} details</h4>
+        <div class="container-fluid bg-body-tertiary rounded-4 p-4">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert rounded-4 alert-{{message.tags}} m-3">
+                        {{message}}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <div class="container-fluid p-3 mb-4 shadow-sm bg-white rounded-4">
+                  <div class="position-relative p-5 text-start text-muted">
+                      <h4 class="my-2 pb-3 PrimaryColor fw-bold">Update {{ chosen_client.name }} details</h4>
                       <form method="POST" enctype="multipart/form-data">
                             {% csrf_token %}
                             {{ client_form|crispy }}
                             <div class="p-3">
                                 <div class="d-grid gap-2">
-                                    <button class="btn btn-success" type="submit">Submit</button>
+                                    <button class="btn btn-outline-dark rounded-4" type="submit">Submit</button>
                                 </div>
                             </div>
                       </form>
