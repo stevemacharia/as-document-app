@@ -339,13 +339,13 @@ def search(request):
     query = request.GET.get('q')
     if query:
         invoice_results = Invoice.objects.filter(
-            Q(number__icontains=query) | Q(customer_name__icontains=query) | Q(date__icontains=query)
+            Q(invoice_id__icontains=query) | Q(client__name__icontains=query)
         )
         quotation_results = Quotation.objects.filter(
-            Q(number__icontains=query) | Q(customer_name__icontains=query) | Q(date__icontains=query)
+            Q(quotation_id__icontains=query) | Q(client__name__icontains=query)
         )
         delivery_note_results = DeliveryNote.objects.filter(
-            Q(number__icontains=query) | Q(customer_name__icontains=query) | Q(date__icontains=query)
+            Q(dnote_id__icontains=query) | Q(client__name__icontains=query)
         )
     else:
         invoice_results = Invoice.objects.none()
