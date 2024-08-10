@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'deliverynote.apps.DeliverynoteConfig',
     'material',
     'material.admin',
+    'user.apps.UserConfig',
     # 'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

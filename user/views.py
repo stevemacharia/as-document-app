@@ -8,6 +8,9 @@ from django.urls import reverse
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django_otp.plugins.otp_email.models import EmailDevice
+from django.contrib.auth.decorators import login_required
+from .forms import UserProfileUpdateForm
+from django.contrib import messages
 
 # Create your views here.
 def send_otp_via_email(user):
@@ -41,3 +44,24 @@ def password_reset_confirm(request, uidb64=None, token=None):
         else:
             return HttpResponse('Password reset link is invalid.')
     return render(request, 'password_reset_confirm.html')
+
+
+
+@login_required
+def profile(request):
+    if request.method == 'POST':
+        u_form = UserProfileUpdateForm(request.POST, instance=request.user)
+        if u_form.is_valid():
+            u_form.save()
+            messages.success(request, f'Your account has been updated!')
+            return redirect('profile')
+        else:
+            messages.warning(request, f'Failed to update your details, Kindly retry again. ')
+            return redirect('profile')
+    else:
+        u_form = UserProfileUpdateForm(instance=request.user)
+        context = {
+                'u_form': u_form,
+        }
+
+    return render(request, 'user/profile.html', context)
