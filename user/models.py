@@ -17,8 +17,9 @@ class PaymentOption(models.Model):
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255, blank=True)
     payment_option = models.ForeignKey(PaymentOption, on_delete=models.CASCADE)
-    notes = models.CharField(max_length=255, blank=True, null=True)
+    notes = models.CharField(max_length=255, blank=True)
     
 
     def __str__(self):
