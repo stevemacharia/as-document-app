@@ -1,13 +1,15 @@
 from django import forms
 from django.contrib.auth.models import User
-from user.models import PaymentOption, UserProfile
+from user.models import PaymentOption, Account
 from django.contrib.auth.forms import UserCreationForm
 
 
-class UserProfileUpdateForm(forms.ModelForm):
-    payment_option = forms.CharField(max_length=20)
-    notes = forms.CharField(max_length=100)
+class AccountForm(forms.ModelForm):
+    business_name = forms.CharField(max_length=20)
+    address = forms.CharField(max_length=100)
+    email = forms.CharField(max_length=100)
+    # phone_number = forms.CharField(max_length=100)
 
     class Meta:
-        model = UserProfile
-        fields = ['payment_option', 'notes']
+        model = Account
+        fields = ['business_name', 'address', 'email']
