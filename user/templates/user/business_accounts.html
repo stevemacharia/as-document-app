@@ -34,11 +34,11 @@
                             <form method="POST" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <div class="modal-header">
-                                    <h5 class="modal-title fs-5 fw-semibold PrimaryColor" id="exampleModalLabel">Enter Client Details</h1>
+                                    <h5 class="modal-title fs-5 fw-semibold PrimaryColor" id="exampleModalLabel">Enter New Business details</h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    {{ client_form|crispy }}
+                                    {{ u_form|crispy }}
                                 </div>
                                 <div class="p-3">
                                     <div class="d-grid gap-2">
@@ -55,13 +55,12 @@
                     <section class="p-3">
                         <div class="table-responsive">
                             <table class="table table-sm caption-top table-hover table-borderless">
-                                <caption>Client list</caption>
                                 <thead class="table-light">
                                     <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Address</th>
-                                    <th scope="col">Postal Address</th>
+                                    <th scope="col">Business</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Payment</th>
                                     <th scope="col">Edit</th>
                                     <th scope="col">Delete</th>
                                     </tr>
