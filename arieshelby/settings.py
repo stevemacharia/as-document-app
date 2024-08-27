@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'documents.apps.DocumentsConfig',
     'invoice.apps.InvoiceConfig',
     'deliverynote.apps.DeliverynoteConfig',
+    'accounts.apps.AccountsConfig',
     'material',
     'material.admin',
     'user.apps.UserConfig',
