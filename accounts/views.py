@@ -1,15 +1,16 @@
 from django.shortcuts import render
-from .forms import AccountForm
+from .forms import BusinessAccountForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+
 
 
 # Create your views here.
 @login_required
 def profile(request):
     if request.method == 'POST':
-        u_form = AccountForm(request.POST, instance=request.user)
+        u_form = BusinessAccountForm(request.POST, instance=request.user)
         if u_form.is_valid():
             u_form.save()
             messages.success(request, f'Your account has been updated!')
@@ -18,7 +19,7 @@ def profile(request):
             messages.warning(request, f'Failed to update your details, Kindly retry again. ')
             return redirect('profile')
     else:
-        u_form = AccountForm(instance=request.user)
+        u_form = BusinessAccountForm(instance=request.user)
         context = {
                 'u_form': u_form,
         }
@@ -30,7 +31,7 @@ def profile(request):
 
 def business_account(request):
     if request.method == 'POST':
-        u_form = AccountForm(request.POST, instance=request.user)
+        u_form = BusinessAccountForm(request.POST, instance=request.user)
         if u_form.is_valid():
             b_form = u_form.save(commit=False)
             b_form.user = request.user
@@ -41,7 +42,7 @@ def business_account(request):
             messages.warning(request, f'Failed to update your details, Kindly retry again. ')
             return redirect('business-account')
     else:
-        u_form = AccountForm(instance=request.user)
+        u_form = BusinessAccountForm(instance=request.user)
         context = {
                 'u_form': u_form,
         }
