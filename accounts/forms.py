@@ -6,8 +6,8 @@ from django.contrib.auth.forms import UserCreationForm
 
 
 class BusinessAccountForm(forms.ModelForm):
-    name = forms.CharField(max_length=20)
-    address = forms.CharField(max_length=100)
+    name = forms.CharField(max_length=255)
+    address = forms.CharField(max_length=255)
     email = forms.CharField(max_length=100)
     # phone_number = forms.CharField(max_length=100)
 

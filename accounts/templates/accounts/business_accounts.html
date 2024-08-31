@@ -105,12 +105,15 @@
         </nav>
         <main>
             <div class="container my-5">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert rounded-5 mb-3 alert-{{message.tags}} m-3">
+                            {{message}}
+                        </div>
+                    {% endfor %}
+                {% endif %}
                 <div class="position-relative p-5 text-center text-muted bg-body border border-dashed rounded-5">
-
-                <h1 class="text-body-emphasis">Choose Account to proceed</h1>
-
-
-
+                    <h1 class="text-body-emphasis">Choose Account to proceed</h1>
                     <div class="d-flex flex-column flex-md-row p-4 gap-4 pb-md-5 align-items-center justify-content-center">
                     <div class="list-group list-group-checkable d-grid gap-2 border-0">
                         <input class="list-group-item-check pe-none" type="radio" name="listGroupCheckableRadios" id="listGroupCheckableRadios1" value="" checked>
@@ -121,10 +124,43 @@
 
                     </div>
                     </div>
-                    
-                <button class="btn btn-primary rounded-4 px-5 mb-5" type="button">
-                    Create a new business account
-                </button>
+                    <button class="btn btn-primary rounded-4 px-5 mb-5" data-bs-toggle="modal" data-bs-target="#exampleModal" type="button">
+                        Create a new business account
+                    </button>
+                    <!-- Modal -->
+                        <div class="modal fade text-start" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <form id="original-form" method="post" action="{% url 'business-account' %}">
+                                    <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Enter new business details</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        {% csrf_token %}
+                                        <div class="row g-3">
+                                            <div class="col-sm-12">
+                                                {{ u_form.name|as_crispy_field }}
+                                            </div>
+                                        </div>
+                                        <div class="row g-3">
+                                            <div class="col-sm-6">
+                                                {{ u_form.address|as_crispy_field }}
+                                            </div>
+                                            <div class="col-sm-6">
+                                                {{ u_form.email|as_crispy_field }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                            </div>
+                        </div>
+                    <!-- End of Modal -->
                 </div>
             </div>
         </main>
