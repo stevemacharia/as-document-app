@@ -31,11 +31,11 @@ def profile(request):
 
 def business_account(request):
     if request.method == 'POST':
-        u_form = BusinessAccountForm(request.POST, instance=request.user)
+        u_form = BusinessAccountForm(request.POST)
         if u_form.is_valid():
-            # b_form = u_form.save(commit=False)
-            # b_form.user = request.user
-            # b_form.save()
+            b_form = u_form.save(commit=False)
+            b_form.user = request.user
+            b_form.save()
             u_form.save()
             messages.success(request, f'Your account has been updated!')
             return redirect('business-account')

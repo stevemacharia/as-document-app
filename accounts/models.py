@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 class BusinessAccount(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255, blank=True)
+    name = models.CharField(max_length=300, blank=True)
     email= models.CharField(max_length=100, blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
     location = models.CharField(max_length=255, blank=True, null=True)

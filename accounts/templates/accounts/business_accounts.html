@@ -145,10 +145,20 @@
                                         </div>
                                         <div class="row g-3">
                                             <div class="col-sm-6">
-                                                {{ u_form.address|as_crispy_field }}
+                                                {{ u_form.email|as_crispy_field }}
                                             </div>
                                             <div class="col-sm-6">
-                                                {{ u_form.email|as_crispy_field }}
+                                                {{ u_form.phone_number|as_crispy_field }}
+                                            </div>
+                                        </div>
+                                        <div class="row g-3">
+                                            <div class="col-sm-12">
+                                                {{ u_form.address|as_crispy_field }}
+                                            </div>
+                                        </div>
+                                        <div class="row g-3">
+                                            <div class="col-sm-12">
+                                                {{ u_form.location|as_crispy_field }}
                                             </div>
                                         </div>
                                     </div>
