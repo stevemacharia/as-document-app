@@ -1,4 +1,5 @@
 {% load crispy_forms_tags %}
+{% load humanize %}
 {% load static %}
 <!doctype html>
 <html lang="en">
@@ -114,17 +115,18 @@
                 {% endif %}
                 <div class="position-relative p-5 text-center text-muted bg-body border border-dashed rounded-5">
                     <h1 class="text-body-emphasis">Choose Account to proceed</h1>
-                    <div class="d-flex flex-column flex-md-row p-4 gap-4 pb-md-5 align-items-center justify-content-center">
-                    <div class="list-group list-group-checkable d-grid gap-2 border-0">
-                        <input class="list-group-item-check pe-none" type="radio" name="listGroupCheckableRadios" id="listGroupCheckableRadios1" value="" checked>
-                        <label class="list-group-item rounded-3 py-3" for="listGroupCheckableRadios1">
-                        First radio
-                        <span class="d-block small opacity-50">With support text underneath to add more detail</span>
-                        </label>
-
-                    </div>
-                    </div>
-                    <button class="btn btn-primary rounded-4 px-5 mb-5" data-bs-toggle="modal" data-bs-target="#exampleModal" type="button">
+                        {% for account in business_profiles %}
+                            <div class="d-flex flex-column flex-md-row p-2 gap-4 pb-md-1 align-items-center justify-content-center">
+                                <div class="list-group list-group-checkable d-grid gap-2 border-0">
+                                    <input class="list-group-item-check pe-none" type="radio" name="listGroupCheckableRadios" id="listGroupCheckableRadios1" value="" checked>
+                                    <label class="list-group-item rounded-3 py-3" for="listGroupCheckableRadios1">
+                                        <span class="text-capitalize fs-4 fw-semi-bold">{{ account.name }}</span>
+                                        <span class="d-block small opacity-50">{{ account.phone_number }}, {{ account.email }}</span>
+                                    </label>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    <button class="btn btn-primary rounded-4 px-5 mt-5" data-bs-toggle="modal" data-bs-target="#exampleModal" type="button">
                         Create a new business account
                     </button>
                     <!-- Modal -->

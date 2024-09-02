@@ -3,7 +3,8 @@ from .forms import BusinessAccountForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-
+from .models import BusinessAccount
+from deliverynote.models import DeliveryNote
 
 
 # Create your views here.
@@ -44,7 +45,9 @@ def business_account(request):
             return redirect('business-account')
     else:
         u_form = BusinessAccountForm(instance=request.user)
+        business_profiles = BusinessAccount.objects.all()
         context = {
                 'u_form': u_form,
+                'business_profiles': business_profiles,
         }
     return render(request, 'accounts/business_accounts.html', context)
