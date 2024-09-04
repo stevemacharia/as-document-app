@@ -25,7 +25,7 @@ def profile(request):
                 'u_form': u_form,
         }
 
-    return render(request, 'accounts/profile.html', context)
+    return render(request, 'accounts/business_profile.html', context)
 
 
 
