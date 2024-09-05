@@ -9,7 +9,7 @@ from deliverynote.models import DeliveryNote
 
 # Create your views here.
 @login_required
-def profile(request):
+def business_profile(request, id):
     if request.method == 'POST':
         u_form = BusinessAccountForm(request.POST, instance=request.user)
         if u_form.is_valid():
@@ -21,8 +21,10 @@ def profile(request):
             return redirect('profile')
     else:
         u_form = BusinessAccountForm(instance=request.user)
+        selected_business_account = BusinessAccount.objects.get(id=id)
         context = {
                 'u_form': u_form,
+                'business_account':selected_business_account
         }
 
     return render(request, 'accounts/business_profile.html', context)

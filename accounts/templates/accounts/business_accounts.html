@@ -15,7 +15,7 @@
                 <h2 class="my-2 PrimaryColor fw-bold">Choose Account to proceed</h2>
                 <div class="d-grid mt-4 align-items-center justify-content-center">
                     {% for account in business_profiles %}
-                        <a class="text-decoration-none "href="{% url 'business-profile' %}">
+                        <a class="text-decoration-none "href="{% url 'business-profile' account.id %}">
                             <div class="card border mb-3" style="max-width: 26rem;">
                                 <div class="card-body text-start py-3">
                                     <h5 class="card-title text-capitalize text-dark fw-medium">{{ account.name }}</h5>
