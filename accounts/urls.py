@@ -6,5 +6,5 @@ from . import views
 
 urlpatterns = [
     path('business-profile/<str:id>/', views.business_profile, name='business-profile'),
-    path('/', views.business_account, name='business-account'),
+    path('', views.business_account, name='business-account'),
 ]

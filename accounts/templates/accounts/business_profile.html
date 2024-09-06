@@ -11,8 +11,90 @@
                 </div>
             {% endfor %}
             {% endif %}
-            <div class="position-relative p-5 text-center text-muted bg-white shadow-sm rounded-5">
-                <h2 class="my-2 PrimaryColor text-capitalize fw-bold">Edit {{ business_account.name }} Business Account<h2>
+            <div class="container position-relative p-5 bg-white shadow-sm rounded-5">
+                <h2 class="PrimaryColor text-capitalize pb-4 fw-bold">{{ business_account.name }} Business Account</h2>
+                    <div class="row gy-5">
+                        <div class="col-sm-4">
+                          <div class="p-3 bg-white">
+                              <div class="card border-0">
+                                  <img src="/static/documents/images/arieshelby_profile.svg" class="card-img-top" alt="..." style="width:22rem;">
+                                  <div class="card-body">
+                                    <h5 class="card-title fw-bold text-center text-uppercase">{{ business_account.name }}</h5>
+                                
+                                  </div>
+                                </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="row p-3 border-bottom">
+                                <div class="col-sm-12">Account Name: <span class="fw-semibold">{{ business_account.name }}</span>
+                                </div>
+                            </div>
+                            <div class="row p-3 border-bottom">
+                                <div class="col-sm-6">Tel: <span class="fw-semibold">{{ business_account.name }}</span>
+                                </div>
+                                <div class="col-sm-6">Phone Number: <span class="fw-semibold">{{ business_account.name }}</span>
+                                </div>
+                            </div>
+                            <div class="row p-3 border-bottom">
+                                <div class="col-sm-6">Email: <span class="fw-semibold">{{ business_account.name }}</span>
+                                </div>
+                                <div class="col-sm-6">P.O Box Address: <span class="fw-semibold">{{ business_account.name }}</span>
+                                </div>
+                            </div>
+                            <div class="row p-3 border-bottom">
+                                <div class="col-sm-12">Physical Location: <span class="fw-semibold">{{ business_account.name }}</span>
+                                </div>
+                            </div>
+                            <div class="row p-3 border-bottom">
+                                <div class="col-sm-6">Logo: <span class="fw-semibold">{{ business_account.name }}</span>
+                                </div>
+                                <div class="col-sm-6 d-flex">
+                                    <label for="exampleColorInput" class="form-label pe-3">PrimaryColor:</label>
+                                    <input type="color" class="form-control form-control-color" id="exampleColorInput" value="#563d7c" title="Choose your color">
+                                </div>
+                            </div>
+
+
+
+                            <div class="card BgPrimaryColor rounded-5 my-4">
+                                <a class="text-decoration-none text-dark" href="#">
+                                    <div class="card-body py-1" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                        <h6 class="text-center text-white fw-bold mb-0"><i class="bi bi-upload pe-2"></i> Edit Business Profile Details</h5>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <!-- Start of Modal -->
+                            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-xl">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                        ...
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-primary">Save changes</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End of Modal -->
+
+
+
+
+
+
+
+
+
+                        </div>
+                    </div>
             </div>
         </div>
     </main>

@@ -34,7 +34,7 @@ def business_profile(request, id):
 
 def business_account(request):
     if request.method == 'POST':
-        u_form = BusinessAccountForm(request.POST)
+        u_form = BusinessAccountForm(request.POST, request.FILES)
         if u_form.is_valid():
             b_form = u_form.save(commit=False)
             b_form.user = request.user
