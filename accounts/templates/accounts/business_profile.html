@@ -17,7 +17,7 @@
                         <div class="col-sm-4">
                           <div class="p-3 bg-white">
                               <div class="card border-0">
-                                  <img src="/static/documents/images/arieshelby_profile.svg" class="card-img-top" alt="..." style="width:22rem;">
+                                  <img src="{{ business_account.logo.url}}" class="card-img-top" alt="..." style="width:22rem;">
                                   <div class="card-body">
                                     <h5 class="card-title fw-bold text-center text-uppercase">{{ business_account.name }}</h5>
                                 
@@ -27,31 +27,31 @@
                         </div>
                         <div class="col-sm-8">
                             <div class="row p-3 border-bottom">
-                                <div class="col-sm-12">Account Name: <span class="fw-semibold">{{ business_account.name }}</span>
+                                <div class="col-sm-12">Account Name: <span class="fw-semibold text-capitalize">{{ business_account.name }}</span>
                                 </div>
                             </div>
                             <div class="row p-3 border-bottom">
-                                <div class="col-sm-6">Tel: <span class="fw-semibold">{{ business_account.name }}</span>
+                                <div class="col-sm-6">Tel: <span class="fw-semibold text-capitalize">{{ business_account.tel }}</span>
                                 </div>
-                                <div class="col-sm-6">Phone Number: <span class="fw-semibold">{{ business_account.name }}</span>
-                                </div>
-                            </div>
-                            <div class="row p-3 border-bottom">
-                                <div class="col-sm-6">Email: <span class="fw-semibold">{{ business_account.name }}</span>
-                                </div>
-                                <div class="col-sm-6">P.O Box Address: <span class="fw-semibold">{{ business_account.name }}</span>
+                                <div class="col-sm-6">Phone Number: <span class="fw-semibold text-capitalize">{{ business_account.phone_number }}</span>
                                 </div>
                             </div>
                             <div class="row p-3 border-bottom">
-                                <div class="col-sm-12">Physical Location: <span class="fw-semibold">{{ business_account.name }}</span>
+                                <div class="col-sm-6">Email: <span class="fw-semibold text-capitalize">{{ business_account.name }}</span>
+                                </div>
+                                <div class="col-sm-6">P.O Box Address: <span class="fw-semibold text-capitalize">{{ business_account.address }}</span>
                                 </div>
                             </div>
                             <div class="row p-3 border-bottom">
-                                <div class="col-sm-6">Logo: <span class="fw-semibold">{{ business_account.name }}</span>
+                                <div class="col-sm-12">Physical Location: <span class="fw-semibold text-capitalize">{{ business_account.location }}</span>
+                                </div>
+                            </div>
+                            <div class="row p-3 border-bottom">
+                                <div class="col-sm-6">Logo: <span class="fw-semibold text-capitalize">{{ business_account.logo }}</span>
                                 </div>
                                 <div class="col-sm-6 d-flex">
                                     <label for="exampleColorInput" class="form-label pe-3">PrimaryColor:</label>
-                                    <input type="color" class="form-control form-control-color" id="exampleColorInput" value="#563d7c" title="Choose your color">
+                                    <input type="color" class="form-control form-control-color" id="exampleColorInput" value={{ business_account.theme_color }} title="Choose your color">
                                 </div>
                             </div>
 
@@ -60,7 +60,7 @@
                             <div class="card BgPrimaryColor rounded-5 my-4">
                                 <a class="text-decoration-none text-dark" href="#">
                                     <div class="card-body py-1" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                                        <h6 class="text-center text-white fw-bold mb-0"><i class="bi bi-upload pe-2"></i> Edit Business Profile Details</h5>
+                                        <h6 class="text-center text-white fw-bold mb-0"><i class="bi bi-upload pe-2"></i> Edit Business Account Details</h5>
                                     </div>
                                 </a>
                             </div>
@@ -69,17 +69,21 @@
                             <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-xl">
                                     <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                        ...
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-primary">Save changes</button>
-                                        </div>
+                                            <div class="modal-header">
+                                                <h1 class="modal-title PrimaryColor fw-bold fs-5" id="exampleModalLabel">Edit 
+                                                   {{ business_account.name}} Account details</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                        <form id="original-form" method="post" action="{% url 'business-profile' business_account.id %}">
+                                            <div class="modal-body">
+                                                {% csrf_token %}
+                                                {{ u_form|crispy}}
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Save changes</button>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
