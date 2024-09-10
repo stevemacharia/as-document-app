@@ -4,14 +4,14 @@
 {% block content %}
     <main>
         <div class="container-fluid bg-body-tertiary rounded-top-4 p-4">
-            {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{message.tags}} m-3">
-                    {{message}}
-                </div>
-            {% endfor %}
-            {% endif %}
             <div class="container position-relative p-5 bg-white shadow-sm rounded-5">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert rounded-5 mb-3 alert-{{message.tags}} m-3">
+                            {{message}}
+                        </div>
+                    {% endfor %}
+                {% endif %}
                 <h2 class="PrimaryColor text-capitalize pb-4 fw-bold">{{ business_account.name }} Business Account</h2>
                     <div class="row gy-5">
                         <div class="col-sm-4">
@@ -20,7 +20,7 @@
                                   <img src="{{ business_account.logo.url}}" class="card-img-top" alt="..." style="width:22rem;">
                                   <div class="card-body">
                                         <h5 class="card-title fw-bold text-start text-uppercase">{{ business_account.name }}</h5>
-                                        <h6><button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop1">Delete Account</button></h6>
+                                        <h6 class="text-center"><button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop1">Delete Account</button></h6>
                                         <!-- Modal -->
                                         <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                           <div class="modal-dialog">

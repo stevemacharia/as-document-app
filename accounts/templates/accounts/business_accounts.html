@@ -5,11 +5,11 @@
     <main>
         <div class="container my-5">
             {% if messages %}
-                {% for message in messages %}
-                    <div class="alert rounded-5 mb-3 alert-{{message.tags}} m-3">
-                        {{message}}
-                    </div>
-                {% endfor %}
+            {% for message in messages %}
+                <div class="alert alert-{{message.tags}} m-3">
+                    {{message}}
+                </div>
+            {% endfor %}
             {% endif %}
             <div class="position-relative p-5 text-center text-muted bg-white shadow-sm rounded-5">
                 <h2 class="my-2 PrimaryColor fw-bold">Choose Account to proceed</h2>

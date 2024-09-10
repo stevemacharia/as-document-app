@@ -5,6 +5,7 @@ from decimal import Decimal
 # models.py
 from django.db import models
 from .utils import save_qr_code
+from accounts.models import BusinessAccount
 from PIL import Image
 import uuid
 
@@ -26,6 +27,7 @@ class Client(models.Model):
 class Quotation(models.Model):
     quotation_id = models.CharField(blank=True, max_length=100)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    BusinessAccount = models.ForeignKey(BusinessAccount, on_delete=models.CASCADE, related_name='Bizprofile')
     status = models.BooleanField(default="False", null=True, blank=True)
     quotation_doc = models.FileField(upload_to='quotation_docs', default='default.pdf', null=True, blank=True, max_length=500)
     data = models.CharField(max_length=255, blank=True, null=True)
@@ -54,6 +56,7 @@ class QuotationItems(models.Model):
 class Invoice(models.Model):
     invoice_id = models.CharField(blank=True, max_length=100)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    BusinessAccount = models.ForeignKey(BusinessAccount, on_delete=models.CASCADE, related_name='Bizprofile')
     status = models.BooleanField(default="False", null=True, blank=True)
     quotation_doc = models.FileField(upload_to='quotation_docs', default='default.pdf', null=True, blank=True, max_length=500)
     submission_date = models.DateTimeField(default=timezone.now)
