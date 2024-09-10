@@ -54,3 +54,10 @@ def business_account(request):
                 'business_profiles': business_profiles,
         }
     return render(request, 'accounts/business_accounts.html', context)
+
+@login_required
+def business_account_deletion(request, id):
+    selected_business_account = BusinessAccount.objects.get(id=id)
+    selected_business_account.delete()
+    messages.success(request, f'Business account deleted successfully')
+    return redirect('business-account')

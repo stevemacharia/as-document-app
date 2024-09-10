@@ -19,12 +19,12 @@ class BusinessAccountForm(forms.ModelForm):
         fields = ['name', 'email', 'address', 'location', 'phone_number', 'tel', 'theme_color', 'logo']
 
 
-
         widgets = {
             'theme_color': forms.TextInput(attrs={
                 'type': 'color',  # Bootstrap color picker
                 'class': 'form-control form-control-color',  # Bootstrap 5 classes for styling
-                'title': 'Choose your color'
+                'title': 'Choose your color',
+                'label': 'select your primary color'
             }),
         }
 
