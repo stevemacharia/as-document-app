@@ -24,19 +24,22 @@ from django.template.loader import render_to_string
 from weasyprint import HTML
 from invoice.models import Invoice, InvoiceItems
 from deliverynote.models import DeliveryNote, DeliveryNoteItems
+from accounts.models import BusinessAccount
 import os
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 # Create your views here.
 @login_required
-def index(request):
-    quotations = Quotation.objects.all()
-    invoices = Invoice.objects.all()
-    delivery_notes = DeliveryNote.objects.all()
+def index(request, id):
+    selected_business_account = BusinessAccount.objects.filter(id=id, user=request.user)
+    quotations = Quotation.objects.filter(business_account=selected_business_account)
+    invoices = Invoice.objects.filter(business_account=selected_business_account)
+    delivery_notes = DeliveryNote.objects.filter(business_account=selected_business_account)
     context = {
         'all_quotations': quotations,
         'all_invoices': invoices,
         'delivery_notes': delivery_notes,
+        'selected_business_account': selected_business_account
     }
     return render(request, 'documents/index.html', context)
 

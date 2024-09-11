@@ -32,7 +32,7 @@ def business_profile(request, id):
 
 
 
-
+@login_required
 def business_account(request):
     if request.method == 'POST':
         u_form = BusinessAccountForm(request.POST, request.FILES)

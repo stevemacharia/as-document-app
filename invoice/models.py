@@ -20,7 +20,7 @@ from accounts.models import BusinessAccount
 class Invoice(models.Model):
     invoice_id = models.CharField(blank=True, max_length=100)
     client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='invoiced_client')
-    BusinessAccount = models.ForeignKey(BusinessAccount, on_delete=models.CASCADE, related_name='Bizprofile')
+    business_account = models.ForeignKey(BusinessAccount, on_delete=models.CASCADE)
     status = models.BooleanField(default="False", null=True, blank=True)
     invoice_doc = models.FileField(upload_to='invoice_docs', default='default.pdf', null=True, blank=True, max_length=500)
     data = models.CharField(max_length=255, blank=True, null=True)

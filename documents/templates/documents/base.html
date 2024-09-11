@@ -45,10 +45,10 @@
            <div class="row"> 
             <div class="col-sm-2 px-4">
                 <nav class="nav flex-column mt-4">
-                    <a class="nav-link active  mb-2" aria-current="page" href="{% url 'index' %}">
+                    <a class="nav-link active  mb-2" aria-current="page" href="{% url 'business-account' %}">
                         <h6 class="PrimaryColor fw-bold mb-0 py-2"> <i class="bi bi-speedometer2 pe-2"></i> Dashboard</h6>
                     </a>
-                    <a class="nav-link " aria-current="page" href="{% url 'business-account' %}">
+                    <a class="nav-link " aria-current="page" href="{% url 'business-account' selected_business_account.id %}">
                         <h6 class="PrimaryColor fw-bold"><i class="bi bi-briefcase pe-2"></i>Business Accounts</h6>
                     </a>
                     <a class="nav-link pb-5 " aria-current="page" href="{% url 'clients' %}">

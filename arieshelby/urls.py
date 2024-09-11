@@ -27,7 +27,7 @@ urlpatterns = [
     path('invoice/', include('invoice.urls')),
     path('delivery_note/', include('deliverynote.urls')),
     path('accounts/', include('allauth.urls')),
-    path('business_accounts/', include('accounts.urls')),
+    path('', include('accounts.urls')),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:

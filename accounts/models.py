@@ -25,7 +25,7 @@ class BusinessAccount(models.Model):
     phone_number = models.CharField(max_length=100, blank=True, null=True)
     tel = models.CharField(max_length=100, blank=True, null=True)
     theme_color = models.CharField(max_length=100, blank=True, null=True)
-    logo = models.ImageField(upload_to="business_logos/",  blank=True, null=True, default='AS_LOGO.png')
+    logo = models.ImageField(upload_to="business_logos/",  blank=True, null=True, default='business_logos/AS_LOGO.png')
     # payment_option = models.ForeignKey(PaymentOption, on_delete=models.CASCADE)
 
     def __str__(self):

@@ -11,6 +11,7 @@ from .utils import save_qr_code
 from PIL import Image
 import uuid
 from documents.models import Client
+from accounts.models import BusinessAccount
 
 
 # Create your models here.
@@ -19,6 +20,7 @@ from documents.models import Client
 class DeliveryNote(models.Model):
     dnote_id = models.CharField(blank=True, max_length=100)
     client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='delivery_note_client')
+    business_account = models.ForeignKey(BusinessAccount, on_delete=models.CASCADE)
     status = models.BooleanField(default="False", null=True, blank=True)
     dnote_doc = models.FileField(upload_to='delivery_note_docs', default='default.pdf', null=True, blank=True, max_length=500)
     data = models.CharField(max_length=255, blank=True, null=True)
