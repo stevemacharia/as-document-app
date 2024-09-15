@@ -26,6 +26,7 @@ from django.core.files.storage import default_storage
 from django.template.loader import render_to_string
 from weasyprint import HTML
 from django.contrib.auth.decorators import login_required
+from accounts.models import BusinessAccount
 import os
 # Create your views here.
 
@@ -38,7 +39,11 @@ def invoice(request):
 
         if invoice_form.is_valid():
             q_form = invoice_form.save(commit=False)
+            # Retrieve a business account value from the session
+            business_account = request.session.get('selected_business_account')
+            selected_business_account = BusinessAccount.objects.get(id=business_account) 
 
+            q_form.business_account = selected_business_account
             client = q_form.client
             # string = "Hello world"
             # string[:3]
@@ -127,7 +132,6 @@ def invoice(request):
         else:
             messages.warning(request, f'Failed to add record.')
             return redirect('invoice')
-
 
     else:
         form = InvoiceItemsForm(prefix='form0')

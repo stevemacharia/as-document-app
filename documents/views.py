@@ -31,10 +31,12 @@ from django.db.models import Q
 # Create your views here.
 @login_required
 def index(request, id):
-    selected_business_account = BusinessAccount.objects.filter(id=id, user=request.user)
+    selected_business_account = BusinessAccount.objects.get(id=id, user=request.user)
     quotations = Quotation.objects.filter(business_account=selected_business_account)
     invoices = Invoice.objects.filter(business_account=selected_business_account)
     delivery_notes = DeliveryNote.objects.filter(business_account=selected_business_account)
+    # Store a value in the session
+    request.session['selected_business_account'] = selected_business_account.id
     context = {
         'all_quotations': quotations,
         'all_invoices': invoices,
