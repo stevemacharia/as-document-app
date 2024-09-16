@@ -53,6 +53,9 @@ def quotations(request):
 
         if quotation_form.is_valid():
             q_form = quotation_form.save(commit=False)
+            business_account = request.session.get('selected_business_account')
+            selected_business_account = BusinessAccount.objects.get(id=business_account) 
+            q_form.business_account = selected_business_account
 
             client = q_form.client
             # string = "Hello world"

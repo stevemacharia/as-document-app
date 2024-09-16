@@ -27,6 +27,7 @@ from django.template.loader import render_to_string
 from weasyprint import HTML
 import os
 from django.contrib.auth.decorators import login_required
+from accounts.models import BusinessAccount
 # Create your views here.
 
 
@@ -38,6 +39,9 @@ def delivery_note(request):
 
         if delivery_note_form.is_valid():
             q_form = delivery_note_form.save(commit=False)
+            business_account = request.session.get('selected_business_account')
+            selected_business_account = BusinessAccount.objects.get(id=business_account) 
+            q_form.business_account = selected_business_account
 
             client = q_form.client
             # string = "Hello world"
