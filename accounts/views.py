@@ -48,7 +48,7 @@ def business_account(request):
             return redirect('business-account')
     else:
         u_form = BusinessAccountForm(instance=request.user)
-        business_profiles = BusinessAccount.objects.all()
+        business_profiles = BusinessAccount.objects.filter(user=request.user)
         context = {
                 'u_form': u_form,
                 'business_profiles': business_profiles,
