@@ -5,7 +5,7 @@ from . import views
 # from .views import generate_pdf
 urlpatterns = [
     path('index/<str:id>/', views.index, name='index'),
-    path('quotations/<str:id>/', views.quotations, name='quotations'),
+    path('quotations', views.quotations, name='quotations'),
     path('quotation_details/<str:id>/', views.quotation_details, name='quotation_details'),
     path('quotation_delete/<str:id>/', views.quotation_delete, name='quotation_delete'),
     path('add_quotation_item/<str:id>/', views.add_quotation_item, name='add_quotation_item'),

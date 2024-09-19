@@ -235,7 +235,11 @@ def clients(request):
     if request.method == "POST":
         client_form = ClientForm(request.POST)
         if client_form.is_valid():
-            client_form.save()
+            business_account = request.session.get('selected_business_account')
+            selected_business_account = BusinessAccount.objects.get(id=business_account) 
+            c_form = client_form.save(commit=False)
+            c_form.business_account = selected_business_account
+            c_form.save()
             context = {
                 'client_form': client_form,
             }
@@ -246,7 +250,9 @@ def clients(request):
             return redirect('clients')
     else:
         client_form = ClientForm()
-        client_list = Client.objects.all()
+        business_account = request.session.get('selected_business_account')
+        selected_business_account = BusinessAccount.objects.get(id=business_account) 
+        client_list = Client.objects.filter(business_account=selected_business_account)
         context = {
             'client_form': client_form,
             'client_list': client_list,

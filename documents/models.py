@@ -15,6 +15,7 @@ class Client(models.Model):
     name = models.CharField(max_length=100)
     address = models.CharField(max_length=400)
     postal_address = models.CharField(max_length=400)
+    business_account = models.ForeignKey(BusinessAccount, on_delete=models.CASCADE)
 
     def __str__(self):
         return f'{self.name}'
