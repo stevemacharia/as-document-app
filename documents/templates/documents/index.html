@@ -10,7 +10,6 @@
         {% endif %}
     <div class="container-fluid p-4 bg-body-tertiary rounded-4">
         <h2 class="my-3 PrimaryColor fw-bold">Dashboard</h2>
-        {{ selected_business_account.id }}
         <div class="container-fluid px-3 py-2 mb-4 shadow-sm bg-white rounded-4" id="icon-grid">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 py-4">
               <div class="col d-flex align-items-start">
@@ -20,7 +19,7 @@
                   </svg>
                 <div>
                   <h3 class="fw-bold mb-0 fs-5 PrimaryColor">Invoices</h3>
-                  <p class="mb-0"><span class="pe-2 text-secondary">265 Generated </span> <span class="text-danger pe-2"> 265 Pending</span></p>
+                  <p class="mb-0"><span class="pe-2 text-secondary">{{ invoice_count }} Generated </span> <span class="text-danger pe-2"> {{ invoice_count }} Pending</span></p>
 
                 </div>
               </div>
@@ -30,7 +29,7 @@
                     </svg>
                 <div>
                   <h3 class="fw-bold mb-0 fs-5 PrimaryColor">Delivery Notes</h3>
-                  <p class="mb-0 text-secondary">265 Deliveries Completed</p>
+                  <p class="mb-0 text-secondary">{{ d_note_count }} Deliveries Completed</p>
                 </div>
               </div>
               <div class="col d-flex align-items-start">
@@ -40,7 +39,7 @@
                     </svg>
                 <div>
                   <h3 class="fw-bold mb-0 fs-5 PrimaryColor">Quotations</h3>
-                  <p class="mb-0 text-secondary">265 Quotations Generated</p>
+                  <p class="mb-0 text-secondary">{{ quotation_count }} Quotations Generated</p>
                 </div>
               </div>
               <div class="col d-flex align-items-start">
@@ -50,7 +49,7 @@
                     </svg>
                 <div>
                   <h3 class="fw-bold mb-0 fs-5 PrimaryColor">Client Profiles</h3>
-                  <p class="mb-0 text-secondary">265 Invoices Generated</p>
+                  <p class="mb-0 text-secondary">{{ client_count }} Available Client(s)</p>
                 </div>
               </div>
 
@@ -80,7 +79,7 @@
                                     <td class="text-uppercase"><a href="{% url 'invoice_details' invoice.id %}">{{ invoice.invoice_id }}</a></td>
                                     <td>{{ invoice.client }}</td>
                                     <td>{{ invoice.total_price }}</td>
-                                    <td>{{ invoice.submission_date }}</td>
+                                    <td>{{ invoice.submission_date|date:"d M Y"  }}</td>
                                     <td>{% if invoice.status %}
                                             Final
                                         {% else %}
@@ -113,7 +112,7 @@
         <div class="container-fluid px-3 py-3 mb-4 shadow-sm bg-white rounded-4">
             <h5 class="fw-semibold text-info"> <i class="bi bi-truck pe-2"></i> Delivery Notes</h5>
             <div class="table-responsive">
-                {% if d_note %}
+                {% if delivery_notes %}
                     <table class="table table-borderless">
                         <thead class="table-light">
                             <tr>
@@ -129,10 +128,10 @@
                             {% for d_note in delivery_notes %}
                                 <tr>
                                 <th scope="row">{{ forloop.counter }}</th>
-                                <td class="text-uppercase"><a href="{% url 'quotation_details' quotation.id %}">{{ quotation.quotation_id }}</a></td>
+                                <td class="text-uppercase"><a href="{% url 'delivery_note_details' d_note.id %}">{{ d_note.dnote_id }}</a></td>
                                 <td>{{ d_note.client }}</td>
                                 <td>{{ d_note.total_price }}</td>
-                                <td>{{ d_note.submission_date }}</td>
+                                <td>{{ d_note.submission_date|date:"d M Y"  }}</td>
                                 <td>{% if d_note.status %}
                                         Final
                                     {% else %}
@@ -182,7 +181,7 @@
                                 <td class="text-uppercase"><a href="{% url 'quotation_details' quotation.id %}">{{ quotation.quotation_id }}</a></td>
                                 <td>{{ quotation.client }}</td>
                                 <td>{{ quotation.total_price }}</td>
-                                <td>{{ quotation.submission_date }}</td>
+                                <td>{{ quotation.submission_date|date:"d M Y"  }}</td>
                                 <td>{% if quotation.status %}
                                         Final
                                     {% else %}

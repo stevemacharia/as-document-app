@@ -35,13 +35,25 @@ def index(request, id):
     quotations = Quotation.objects.filter(business_account=selected_business_account)
     invoices = Invoice.objects.filter(business_account=selected_business_account)
     delivery_notes = DeliveryNote.objects.filter(business_account=selected_business_account)
+    clients = Client.objects.filter(business_account=selected_business_account)
     # Store a value in the session
     request.session['selected_business_account'] = selected_business_account.id
+    quotation_count = quotations.count()
+    invoice_count = invoices.count()
+    d_note_count = delivery_notes.count()
+    client_count = clients.count()
+
     context = {
         'all_quotations': quotations,
         'all_invoices': invoices,
         'delivery_notes': delivery_notes,
-        'selected_business_account': selected_business_account
+        'selected_business_account': selected_business_account,
+        'quotation_count' : quotation_count,
+        'invoice_count': invoice_count,
+        'd_note_count': d_note_count,
+        'client_count': client_count,
+
+
     }
     return render(request, 'documents/index.html', context)
 
@@ -151,7 +163,9 @@ def quotations(request):
     else:
         form = QuotationItemsForm(prefix='form0')
         quotation_form = QuotationForm()
-        all_quotations = Quotation.objects.all()
+        business_account = request.session.get('selected_business_account')
+        selected_business_account = BusinessAccount.objects.get(id=business_account) 
+        all_quotations = Quotation.objects.filter(business_account=selected_business_account)
         # quotation_items_form = QuotationItemsForm(prefix='form0')
         # context = {
         #     'form': [quotation_items_form],

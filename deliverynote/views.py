@@ -136,7 +136,9 @@ def delivery_note(request):
     else:
         form = DeliveryNoteItemsForm(prefix='form0')
         delivery_note_form = DeliveryNoteForm()
-        delivery_notes = DeliveryNote.objects.all()
+        business_account = request.session.get('selected_business_account')
+        selected_business_account = BusinessAccount.objects.get(id=business_account) 
+        delivery_notes = DeliveryNote.objects.filter(business_account=selected_business_account)
         return render(request, 'deliverynote/delivery_note.html',
                       {'forms': [form], 'delivery_note_form': delivery_note_form, 'delivery_notes': delivery_notes})
 
