@@ -160,10 +160,12 @@
         <div class="header">
             <img src="media/business_logos/AS_LOGO.png" alt="Company Logo">
             <div class="company-details">
-                <strong>ARIESHELBY</strong><br>
-                P.O Box 39452 - 00634<br>
-                arieshelby@gmail.com | 
-                +254711253491
+                <strong>{{ selected_business_account.name }}</strong><br>
+                {{ selected_business_account.email }}<br>
+                {{ selected_business_account.email }} | 
+                {{ selected_business_account.phone_number }}, {{ selected_business_account.tel }}<br>
+                {{ selected_business_account.address }} | 
+                {{ selected_business_account.location }}
             </div>
         </div>
 

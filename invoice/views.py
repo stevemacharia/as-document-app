@@ -112,9 +112,11 @@ def invoice(request):
 
                 template_name = get_template('invoice/invoice_doc.html')
                 listed_invoice_items = InvoiceItems.objects.filter(invoice=chosen_invoice)
+                selected_business_account = request.session.get('selected_business_account')
                 context = {
                     'selected_invoice': chosen_invoice,
                     'listed_invoice_items': listed_invoice_items,
+                    'selected_business_account': selected_business_account,
                 }
                 rendered_html = template_name.render(context)
                 pdf_file = HTML(string=rendered_html).write_pdf()
@@ -216,8 +218,10 @@ def invoice_delete(request, id):
 def generate_pdf_invoice(request, id):
     selected_invoice = Invoice.objects.get(id=id)
     listed_invoice_items = InvoiceItems.objects.filter(invoice=selected_invoice)
+    selected_business_account = request.session.get('selected_business_account')
     # Template context variables
     context = {
+        'selected_business_account': selected_business_account,
         'selected_invoice': selected_invoice,
         'listed_invoice_items': listed_invoice_items,
     }
