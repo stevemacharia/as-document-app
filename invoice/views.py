@@ -218,7 +218,8 @@ def invoice_delete(request, id):
 def generate_pdf_invoice(request, id):
     selected_invoice = Invoice.objects.get(id=id)
     listed_invoice_items = InvoiceItems.objects.filter(invoice=selected_invoice)
-    selected_business_account = request.session.get('selected_business_account')
+    business_account = request.session.get('selected_business_account')
+    selected_business_account = BusinessAccount.objects.get(id=business_account) 
     # Template context variables
     context = {
         'selected_business_account': selected_business_account,

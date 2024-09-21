@@ -147,6 +147,15 @@
           font-size:13px;
         }
 
+        .d-flex{
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+        }
+        .qr-code {
+            width: 70px;
+            height: 70px;
+        }
     </style>
 </head>
 <body>
@@ -230,6 +239,22 @@
 
             </tbody>
             </table>
+
+
+
+        {% if selected_invoice.note %}
+            <div class="card" style="border: 1px solid #185319; margin-top: 20px; width: 40rem;">
+              <div class="card-body" style="padding-bottom:0cm !important; padding-top:0.2cm !important;">
+                  <div>*Notes</div>
+                  <p class="fw-normal" style="font-size:10px;">{{ selected_invoice.note }}</p>
+              </div>
+            </div>
+        {% endif %}
+
+        <div class="d-flex align-items-center shadow-sm">
+            <div class="flex-shrink-0"><img src="{{ qr_code_url }}" alt="QR Code" class="qr-code"></div>
+            <div class="flex-grow-1 ms-1"><p style="color:#185319 !important; font-size: 13px; font-weight: 800;           font-family: Montserrat, sans-serif;">Scan Qr Code to verify this document</p></div>
+        </div>
     </div>
 </body>
 </html>
