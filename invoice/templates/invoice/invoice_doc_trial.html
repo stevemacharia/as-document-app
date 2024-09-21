@@ -1,0 +1,176 @@
+{% load mathfilters %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm;
+        }
+
+        body {
+            font-family: "Poppins", sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .invoice-box {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #eee;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header img {
+            max-width: 150px;
+            height: auto;
+        }
+
+        .header .company-details {
+            margin-top: 10px;
+            line-height: 1.2;
+            color: #333;
+        }
+
+        .info-table {
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        .info-table td {
+            padding: 5px;
+            vertical-align: top;
+        }
+
+        .info-table td:nth-child(2) {
+            text-align: right;
+        }
+
+        .heading {
+            background: #eee;
+            border-bottom: 1px solid #ddd;
+            font-weight: bold;
+        }
+
+        .item {
+            border-bottom: 1px solid #eee;
+        }
+
+        .item.last {
+            border-bottom: none;
+        }
+
+        .total {
+            font-weight: bold;
+            border-top: 2px solid #eee;
+        }
+
+        /* PAID Ribbon */
+        .ribbon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 150px;
+            height: 150px;
+            overflow: hidden;
+        }
+
+        .ribbon span {
+            position: absolute;
+            display: block;
+            width: 225px;
+            padding: 10px 0;
+            background: #4CAF50;
+            color: #fff;
+            font-size: 18px;
+            text-align: center;
+            text-transform: uppercase;
+            font-weight: bold;
+            transform: rotate(45deg);
+            top: 30px;
+            right: -50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-box">
+        <!-- PAID Ribbon -->
+        <div class="ribbon">
+            <span>PAID</span>
+        </div>
+
+        <!-- Logo and Company Contact Info -->
+        <div class="header">
+            <img src="/home/steve/Documents/as-document-app/media/business_logos/AS_LOGO.png" alt="Company Logo">
+            <div class="company-details">
+                <strong>ARIESHELBY</strong><br>
+                P.O Box 39452 - 00634<br>
+                arieshelby@gmail.com | 
+                +254711253491
+            </div>
+        </div>
+
+        <!-- Client Information and Invoice Details -->
+        <table class="info-table" style="padding-top:30px">
+            <tr>
+                <td>
+                    <strong>Billed To:</strong><br>
+                    {{ selected_invoice.client }}<br>
+                    {{ selected_invoice.client.address }}<br>
+                    {{ selected_invoice.client.postal_address }}
+                </td>
+                <td>
+                    <strong>Invoice No:</strong> {{ selected_invoice.invoice_id }}<br>
+                    <strong>Date:</strong> {{selected_invoice.submission_date|date:"d, M, Y"  }}<br>
+                    <strong>Order No:</strong> {{ selected_invoice.invoice_id }}
+                </td>
+            </tr>
+        </table>
+
+        <!-- Invoice Items -->
+        <table cellpadding="0" cellspacing="0" style="font-size:12px; padding:0px 15px 0px 15px;">
+            <tr class="heading">
+                <td>#</td>
+                <td>Item</td>
+                <td>Item Description</td>
+                <td>Quantity</td>
+                <td>Excl @</td>
+                <td>Total(Excl)</td>
+            </tr>
+
+            {% for invoice_item in listed_invoice_items %}
+            <tr class="item {% if forloop.last %}last{% endif %}">
+                <td>{{ forloop.counter }}</td>
+                <td>{{invoice_item.item}}</td>
+                <td>{{invoice_item.item_description}}</td>
+                <td>{{invoice_item.quantity}}</td>
+                <td>{{invoice_item.price}}</td>
+                <td> {% with result=invoice_item.quantity|mul:invoice_item.price %}
+                    {{result}}
+                {% endwith %}</td>
+            </tr>
+            {% endfor %}
+
+            <!-- Total Amount -->
+            <tr class="total">
+                <td></td>
+                <td>Total: {{ total_amount }}</td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
