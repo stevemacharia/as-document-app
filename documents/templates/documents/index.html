@@ -10,6 +10,36 @@
         {% endif %}
     <div class="container-fluid p-4 bg-body-tertiary rounded-4">
         <h2 class="my-3 PrimaryColor fw-bold">Dashboard</h2>
+        <div class="container-fluid px-3 py-3 mb-4 shadow-sm bg-white rounded-4">
+            <h5 class="fw-semibold text-primary"> <i class="bi bi-person-bounding-box pe-2"></i> Account</h5>
+            <div class="table-responsive">
+                {% if all_invoices %}
+                    <table class="table table-borderless">
+
+                        <tbody>
+                            <tr>
+                                <td><a href="{% url 'business-profile' selected_business_account.id %}">{{ selected_business_account.name }}</a></td>
+                                <td>{{ selected_business_account.email }}</td>
+                                <td>{{ selected_business_account.phone_number }}</td>
+                                <td>{{ selected_business_account.address }}</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                {% else %}
+                    <div class="py-1">
+                        <div class="py-4">
+                            <div>
+                                <img src="/static/documents/images/as-empty-data.svg" class="d-block mx-lg-auto img-fluid" alt="Empty!" width="110" height="65" loading="lazy">
+                            </div>
+                            <p class="fs-6 pt-2 fst-italic text-center">You have no pending Invoices!.</p>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+
         <div class="container-fluid px-3 py-2 mb-4 shadow-sm bg-white rounded-4" id="icon-grid">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 py-4">
               <div class="col d-flex align-items-start">
@@ -104,11 +134,6 @@
         </div>
 
 
-
-
-
-
-
         <div class="container-fluid px-3 py-3 mb-4 shadow-sm bg-white rounded-4">
             <h5 class="fw-semibold text-info"> <i class="bi bi-truck pe-2"></i> Delivery Notes</h5>
             <div class="table-responsive">
@@ -154,9 +179,6 @@
                 {% endif %}
             </div>
         </div>
-
-
-
 
 
         <div class="container-fluid px-3 py-3 mb-4 shadow-sm bg-white rounded-4">
