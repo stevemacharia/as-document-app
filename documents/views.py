@@ -30,8 +30,10 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 # Create your views here.
 @login_required
-def index(request, id):
-    selected_business_account = BusinessAccount.objects.get(id=id, user=request.user)
+def index(request):
+    business_account = request.session.get('selected_business_account')
+    selected_business_account = BusinessAccount.objects.get(id=business_account) 
+    # selected_business_account = BusinessAccount.objects.get(id=id, user=request.user)
     quotations = Quotation.objects.filter(business_account=selected_business_account)
     invoices = Invoice.objects.filter(business_account=selected_business_account)
     delivery_notes = DeliveryNote.objects.filter(business_account=selected_business_account)
