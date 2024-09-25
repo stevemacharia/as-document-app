@@ -56,6 +56,15 @@ def business_account(request):
     return render(request, 'accounts/business_accounts.html', context)
 
 @login_required
+def business_account_dashboard(request, id):
+    selected_business_account = BusinessAccount.objects.get(id=id, user=request.user)
+    # Store a value in the session
+    request.session['selected_business_account'] = selected_business_account.id
+
+    return redirect('index')
+
+
+@login_required
 def business_account_deletion(request, id):
     selected_business_account = BusinessAccount.objects.get(id=id)
     selected_business_account.delete()

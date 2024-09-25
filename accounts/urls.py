@@ -7,5 +7,6 @@ from . import views
 urlpatterns = [
     path('business-profile/<str:id>/', views.business_profile, name='business-profile'),
     path('', views.business_account, name='business-account'),
+    path('business-account-dashbaord/<str:id>/', views.business_account_dashboard, name='business-account-dashboard'),
     path('business-account-delete/<str:id>/', views.business_account_deletion, name='business-account-deletion'),
 ]

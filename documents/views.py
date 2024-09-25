@@ -32,14 +32,13 @@ from django.db.models import Q
 @login_required
 def index(request):
     business_account = request.session.get('selected_business_account')
-    selected_business_account = BusinessAccount.objects.get(id=business_account) 
+    selected_business_account = BusinessAccount.objects.get(id=business_account)
     # selected_business_account = BusinessAccount.objects.get(id=id, user=request.user)
     quotations = Quotation.objects.filter(business_account=selected_business_account)
     invoices = Invoice.objects.filter(business_account=selected_business_account)
     delivery_notes = DeliveryNote.objects.filter(business_account=selected_business_account)
     clients = Client.objects.filter(business_account=selected_business_account)
-    # Store a value in the session
-    request.session['selected_business_account'] = selected_business_account.id
+
     quotation_count = quotations.count()
     invoice_count = invoices.count()
     d_note_count = delivery_notes.count()
@@ -54,8 +53,6 @@ def index(request):
         'invoice_count': invoice_count,
         'd_note_count': d_note_count,
         'client_count': client_count,
-
-
     }
     return render(request, 'documents/index.html', context)
 
