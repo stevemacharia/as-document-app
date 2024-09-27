@@ -152,7 +152,9 @@ def invoice_details(request, id):
 
     if request.method == "POST":
         form = InvoiceForm(request.POST, instance=chosen_invoice)
+
         formset = InvoiceItemFormSet(request.POST, instance=chosen_invoice)
+        
         if form.is_valid() and formset.is_valid():
             sub_total_price = 0
             for i in formset:
@@ -164,7 +166,9 @@ def invoice_details(request, id):
                 sub_total_price = sub_total_price + item_price
 
             form_replica = form.save(commit=False)
-            form_replica.sub_total = sub_total_price
+            main_sub_total_price = sub_total_price
+            form_replica.sub_total = main_sub_total_price
+            
             form_replica.save()
             # form.save()
             formset.save()
@@ -194,6 +198,34 @@ def add_invoice_item(request, id):
         invoice_item_form = InvoiceItemsForm(request.POST)
         if invoice_item_form.is_valid():
             QI_form = invoice_item_form.save(commit=False)
+
+            price = invoice_item_form.cleaned_data['price']
+            quantity = invoice_item_form.cleaned_data['quantity']
+  
+            item_price = int(float(price)) * int(quantity)
+            total_iten_price = item_price
+
+
+
+            # Load a specific person
+            person = Person.objects.get(id=1)
+
+            # Change the 'age' field
+            person.age = 35
+
+            # Save only the 'age' field to the database
+            person.save(update_fields=['age'])
+
+
+
+            new_invoice_price = selected_invoice.sub_total + total_iten_price
+
+
+
+            
+            selected_invoice.sub_total = new_invoice_price
+            selected_invoice.save(update_fields=['sub_total'])
+
             QI_form.invoice = selected_invoice
             QI_form.save()
             messages.success(request, f'Successfully added invoice item')
