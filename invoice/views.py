@@ -27,6 +27,7 @@ from django.template.loader import render_to_string
 from weasyprint import HTML
 from django.contrib.auth.decorators import login_required
 from accounts.models import BusinessAccount
+from decimal import Decimal
 import os
 # Create your views here.
 
@@ -148,7 +149,7 @@ def invoice(request):
 def invoice_details(request, id):
     chosen_invoice = Invoice.objects.get(id=id)
     listed_invoice_items = InvoiceItems.objects.filter(invoice=chosen_invoice)
-    InvoiceItemFormSet = inlineformset_factory(Invoice, InvoiceItems, form=InvoiceItemsForm, extra=0)
+    InvoiceItemFormSet = inlineformset_factory(Invoice, InvoiceItems, can_delete=True, form=InvoiceItemsForm, extra=0)
 
     if request.method == "POST":
         form = InvoiceForm(request.POST, instance=chosen_invoice)
@@ -159,18 +160,31 @@ def invoice_details(request, id):
             sub_total_price = 0
             for i in formset:
                 cd = i.cleaned_data
-                cleaned_price = cd.get('price')
-                cleaned_quantity = cd.get('quantity')
-                item_price = int(float(cleaned_price)) * int(cleaned_quantity)
-                # item_price = cd.get('price') * cd.get('quantity')
-                sub_total_price = sub_total_price + item_price
+            #     cleaned_price = cd.get('price')
+            #     cleaned_quantity = cd.get('quantity')
+            #     item_price = int(float(cleaned_price)) * int(cleaned_quantity)
+            #     # item_price = cd.get('price') * cd.get('quantity')
+            #     sub_total_price = sub_total_price + item_price
+            #
+            # form_replica = form.save(commit=False)
+            # main_sub_total_price = sub_total_price
+            # form_replica.sub_total = main_sub_total_price
+            #
+            # form_replica.save()
+            # # form.save()
+            # formset.save()
+
+                # Only add to subtotal if the form is not marked for deletion
+                if not cd.get('DELETE', False):
+                    cleaned_price = cd.get('price', 0)
+                    cleaned_quantity = cd.get('quantity', 0)
+                    # item_price = float(cleaned_price) * int(cleaned_quantity)
+                    item_price = Decimal(cleaned_price) * Decimal(cd.get('quantity', 0))
+                    sub_total_price = sub_total_price + item_price
 
             form_replica = form.save(commit=False)
-            main_sub_total_price = sub_total_price
-            form_replica.sub_total = main_sub_total_price
-            
+            form_replica.sub_total = sub_total_price  # Update the subtotal
             form_replica.save()
-            # form.save()
             formset.save()
 
 
@@ -205,30 +219,14 @@ def add_invoice_item(request, id):
             item_price = int(float(price)) * int(quantity)
             total_iten_price = item_price
 
+            new_sub_total_price = selected_invoice.sub_total + total_iten_price
 
-
-            # Load a specific person
-            person = Person.objects.get(id=1)
-
-            # Change the 'age' field
-            person.age = 35
-
-            # Save only the 'age' field to the database
-            person.save(update_fields=['age'])
-
-
-
-            new_invoice_price = selected_invoice.sub_total + total_iten_price
-
-
-
-            
-            selected_invoice.sub_total = new_invoice_price
-            selected_invoice.save(update_fields=['sub_total'])
+            selected_invoice.sub_total = new_sub_total_price
+            selected_invoice.save()
 
             QI_form.invoice = selected_invoice
             QI_form.save()
-            messages.success(request, f'Successfully added invoice item')
+            messages.success(request, f'Successfully added invoice item2')
             return redirect(reverse('invoice_details', kwargs={'id': id}))
         else:
             messages.warning(request, f'Failed to add invoice item')

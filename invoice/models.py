@@ -30,12 +30,12 @@ class Invoice(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
     taxable = models.BooleanField(default=True, null=True, blank=True)
-    sub_total = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
-    total_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    sub_total = models.DecimalField(max_digits=15, decimal_places=2, default=0, null=True, blank=True)
+    total_price = models.DecimalField(max_digits=10, default=0,  decimal_places=2, blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        if self.sub_total:
-            self.total_price = self.sub_total * Decimal('1.16')  # Total price is 116% of sub total
+        # Automatically update total_price whenever subtotal is updated
+        self.total_price = self.sub_total * Decimal('1.16')  # Assuming total_price is 1.16 times the subtotal
         super().save(*args, **kwargs)
 
 class InvoiceItems(models.Model):

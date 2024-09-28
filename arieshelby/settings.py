@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'material',
     'material.admin',
     'user.apps.UserConfig',
-    # 'django.contrib.admin',
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -161,7 +161,7 @@ DATABASES = {
             'ENGINE': 'django.db.backends.mysql',
             'NAME': 'arieshelby',
             'USER': 'root',
-            'PASSWORD': 'toor',
+            'PASSWORD': 'Macharia_1',
             'HOST': 'localhost',
             'PORT': '3306',
         }
