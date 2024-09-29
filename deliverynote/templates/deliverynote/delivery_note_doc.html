@@ -1,6 +1,7 @@
 {% load mathfilters %}
 {% load humanize %}
-<html lang="">
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,56 +14,126 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css">
     <title>ARIESHELBY</title>
-<!-- Styles -->
-
     <style>
-        /*Invoice*/
-        body{
-          font-family: "Montserrat", sans-serif;
+
+        body {
+            font-family: "Poppins", sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #555;
+            line-height: 1.6;
+            font-size:12px;
         }
-        .d-flex{
+        th, td {
+            padding: 8px;
+            text-align: left;
+          }
+          
+          table, thead, tbody {
+            page-break-inside: auto;
+          }
+          
+          tr {
+            page-break-inside: avoid; /* Avoid breaking a row in the middle */
+            page-break-after: auto;
+          }
+          
+          thead {
+            display: table-header-group; /* Ensures the table header repeats on the next page */
+          }
+          
+          tfoot {
+            display: table-footer-group; /* Adds footer (like a bottom border) */
+          }
+          
+          table {
+            width: 100%;
+            border-collapse: collapse;
+          }
+        .invoice-box {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #eee;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header img {
+            max-width: 150px;
+            height: auto;
+        }
+
+        .header .company-details {
+            margin-top: 10px;
+            line-height: 1.2;
+            color: #333;
+        }
+
+        .info-table {
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        .info-table td {
+            padding: 5px;
+            vertical-align: top;
+        }
+
+        .info-table td:nth-child(2) {
+            text-align: right;
+        }
+
+        .heading {
+            background: #eee;
+            border-bottom: 1px solid #ddd;
+            font-weight: bold;
+        }
+
+        .item {
+            border-bottom: 1px solid #eee;
+        }
+
+        .item.last {
+            border-bottom: none;
+        }
+
+        .total {
+            font-weight: bold;
+            border-top: 2px solid #eee;
+        }
+
+        /* PAID Ribbon */
+        .ribbon {
             position: absolute;
-            bottom: 10px;
-            left: 10px;
-        }
-        .qr-code {
-            width: 70px;
-            height: 70px;
-        }
-        .letterhead-image{
-            background-size: cover;
-            background-position: center;
-        }
-        .table th {
-          color: white;
-          font-family: "Montserrat", sans-serif;
-          font-weight: 600;
-          font-size: 13px;
-          background-color:#185319 !important;
-        }
-        #InvoiceDetails div{
-            display:inline-block;
-            padding:0px 15px 0px 15px;
-            vertical-align: text-top;
-
-        }
-        #InvoiceDetails P{
-          line-height: normal;
-          padding-top: 0cm;
-        }
-        #InvoiceHeader div{
-            display:inline-block;
-            /* padding:0px 15px 0px 15px; */
-            vertical-align: text-top;
-
-
-        }
-        main{
-            font-family: "Montserrat", sans-serif;
-            font-weight: 600;
-
+            top: 10px;
+            right: 10px;
+            width: 150px;
+            height: 150px;
+            overflow: hidden;
         }
 
+        .ribbon span {
+            position: absolute;
+            display: block;
+            width: 225px;
+            padding: 10px 0;
+            background: #4CAF50;
+            color: #fff;
+            font-size: 18px;
+            text-align: center;
+            text-transform: uppercase;
+            font-weight: bold;
+            transform: rotate(45deg);
+            top: 30px;
+            right: -50px;
+        }
         .invoice .top-left {
             font-size:65px;
             color:#3ba0ff;
@@ -83,107 +154,129 @@
           font-weight:500;
         }
 
-        /* .invoice .table-row .table>thead {
-          border-top:1px solid #ddd;
-        } */
-         th, td {
-          border-bottom: 1px solid #ddd;
-          border-collapse: collapse;
-          font-size:12px;
-        }
 
-        .invoice .table-row .table>thead>tr>th {
-          border-bottom:none;
-        }
-
-
+        .table th {
+            color: white;
+            font-family: "Montserrat", sans-serif;
+            font-weight: 600;
+            font-size: 13px;
+            background-color:{{ selected_business_account.theme_color }} !important;
+          }
 
         .invoice .invoice-total {
           margin-right:-10px;
           font-size:13px;
         }
 
-
-
-
-
-      /* end of invoice */
-
+        .d-flex{
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+        }
+        .qr-code {
+            width: 70px;
+            height: 70px;
+        }
     </style>
-    <!-- Styles -->
 </head>
 <body>
-<div class="letterhead-image text-center text-white">
-    <section class="py-3">
-        <img src="http://shoefactory.arieshelby.com/as_letterhead.png"  style="width:200mm; height:165px " alt="...">
-    </section>
-</div>
-<div class="container px-0 mb-5" id="CheckoutContainer">
-    <main>
-        <div class="container bootstrap snippets bootdeys">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="panel panel-default invoice" id="invoice">
-                        <div class="panel-body">
-                            <h2 class="fw-bolder pb-0" style="color: #185319; font-weight: 200">DELIVERY NOTE</h2>
-                            <hr class="pt-0 mt-0" style="border: 3px solid #185319; opacity: 100%;">
-                            <div class="row pt-0 " id="InvoiceDetails" >
-                                <div class="col-auto me-auto from">
-                                    <p class="fw-bold fs-5" style="color: #185319">Client</p>
-                                    <p class="fw-semibold mb-2" style="font-size: 16px;">Name: <span class="fw-normal text-capitalize">{{ selected_delivery_note.client }}</span></p>
-                                    <p class="fw-semibold mb-2" style="font-size: 16px;">Address: <span class="fw-normal text-capitalize">{{ selected_delivery_note.client.address }}</span></p>
-                                    <p class="fw-semibold mb-2" style="font-size: 16px;">Postal Address: <span class="fw-normal text-capitalize">{{ selected_delivery_note.client.postal_address }}</span></p>
-                                </div>
+    <div class="invoice-box">
+        <!-- PAID Ribbon -->
+        <div class="ribbon">
+            <span>PAID</span>
+        </div>
 
-                                <div class="col-auto offset-sm-4 text-right payment-details">
-                                    <p class="fw-bold mb-3 pb-3"></p>
-                                    <p class="fw-semibold mb-2" style="font-size: 16px;">Date: <span class="fw-normal text-capitalize">{{selected_selected_delivery_note.submission_date|date:"d, M, Y"  }}</span></p>
-                                    <p class="fw-semibold mb-2" style="font-size: 16px;">Order No: <span class="fw-normal text-uppercase">{{ selected_delivery_note.dnote_id }}</span></p>
-                                </div>
-                            </div>
-                            <div class="row table-row" style="padding:0px 15px 0px 15px;">
-                                <table class="table">
-                                <thead>
-                                    <tr class="text-center" style="border: 1px solid #185319;;">
-                                        <th class="text-start">#</th>
-                                        <th class="text-start">Item</th>
-                                        <th class="text-start">Item Description </th>
-                                        <th class="text-start">Quantity</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for dnote_item in listed_delivery_note_items %}
-                                        <tr class="text-start">
-                                            <td class="text-start" style="border: 1px solid #185319;">{{ forloop.counter }}</td>
-                                            <td class="text-start" style="border: 1px solid #185319;">{{dnote_item.item}}</td>
-                                            <td class="text-start" style="border: 1px solid #185319;">{{dnote_item.item_description}}</td>
-                                            <td class="text-start" style="border: 1px solid #185319;">{{dnote_item.quantity}}</td>
-
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                                </table>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% if selected_delivery_note.note %}
-                <div class="card" style="border: 1px solid #185319; margin-top: 20px; width: 40rem;">
-                  <div class="card-body" style="padding-bottom:0cm !important; padding-top:0.2cm !important;">
-                      <div>*Notes</div>
-                      <p class="fw-normal" style="font-size:10px;">{{ selected_delivery_note.note }}</p>
-                  </div>
-                </div>
-            {% endif %}
-
-            <div class="d-flex align-items-center shadow-sm">
-                <div class="flex-shrink-0"><img src="{{ qr_code_url }}" alt="QR Code" class="qr-code"></div>
-                <div class="flex-grow-1 ms-1"><p style="color:#185319 !important; font-size: 13px; font-weight: 800;           font-family: Montserrat, sans-serif;">Scan Qr Code to verify this document</p></div>
+        <!-- Logo and Company Contact Info -->
+        <div class="header">
+            <img src="{{ selected_business_account.logo.url}}" alt="Company Logo">
+            <div class="company-details">
+                <strong style="color:{{ selected_business_account.theme_color }}; font-size:18px; ">{{ selected_business_account.name }}</strong><br>
+                {{ selected_business_account.email }}<br>
+                {{ selected_business_account.email }} | 
+                {{ selected_business_account.phone_number }}, {{ selected_business_account.tel }}<br>
+                {{ selected_business_account.address }} | 
+                {{ selected_business_account.location }}<br><br>
+                <strong style="color:{{ selected_business_account.theme_color }}; font-size:16px; ">DELIVERY NOTE</strong>
             </div>
         </div>
-    </main>
-</div>
+
+        <!-- Client Information and Delivery note details -->
+        <table class="info-table" style="margin-top:40px">
+            <tr>
+                <td>
+                    <strong>Billed To:</strong><br>
+                    {{ selected_delivery_note.client }}<br>
+                    {{ selected_delivery_note.client.address }}<br>
+                    {{ selected_delivery_note.client.postal_address }}
+                </td>
+                <td>
+                    <strong>Delivery Note No:</strong> {{ selected_delivery_note.dnote_id }}<br>
+                    <strong>Date:</strong> {{selected_delivery_note.submission_date|date:"d M. Y" }}<br>
+                    <strong>Order No:</strong> {{ selected_delivery_note.dnote_id }}
+                </td>
+            </tr>
+        </table>
+
+        <!-- Delivery Note Items -->
+        <table class="table">
+            <thead>
+                <tr class="text-center" style="border: 1px solid {{ selected_business_account.theme_color }};">
+                    <th class="text-start">#</th>
+                    <th class="text-start">Item</th>
+                    <th class="text-start">Item Description </th>
+                    <th class="text-start">Quantity</th>
+                    <th class="text-start">Excl @</th>
+                    <th class="text-end pe-3">Total(Excl)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for d_note_item in listed_delivery_note_items %}
+                    <tr class="text-start">
+                        <td class="text-start" style="border: 1px solid {{ selected_business_account.theme_color }};">{{ forloop.counter }}</td>
+                        <td class="text-start" style="border: 1px solid {{ selected_business_account.theme_color }} ">{{d_note_item.item}}</td>
+                        <td class="text-start" style="border: 1px solid {{ selected_business_account.theme_color }} ;">{{d_note_item.item_description|linebreaks }}</td>
+                        <td class="text-start" style="border: 1px solid {{ selected_business_account.theme_color }} ;">{{d_note_item.quantity}}</td>
+                        <td class="text-start" style="border: 1px solid {{ selected_business_account.theme_color }} ;">{{d_note_item.price}}</td>
+                        <td class="text-end pe-3" style="border: 1px solid {{ selected_business_account.theme_color }} ;">
+                            {% with result=d_note_item.quantity|mul:d_note_item.price %}
+                                {{result}}
+                            {% endwith %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                {% if selected_delivery_note.taxable is True %}
+                    <tr class="fw-bold lh-5" style="padding-bottom: 0cm">
+                        <td class="text-end pb-0" colspan="5" style="border:none;">Subtotal (Excl):</td>
+                        <td class="text-end pe-3 pb-0" style="border:none;">{{selected_delivery_note.sub_total|floatformat:2 |intcomma }}</td>
+                    </tr>
+                    <tr class="fw-bold" style="padding-bottom: 0cm">
+                        <td class="text-end pb-0" colspan="5" style="border:none;">VAT (16%):</td>
+                        <td class="text-end pb-0 pe-3" style="border:none;">{{selected_delivery_note.total_price|sub:selected_delivery_note.sub_total|intcomma }}</td>
+                    </tr>
+                {% endif %}
+                <tr class="text-end fw-bold" style="padding-bottom: 0cm">
+                    <td class="text-end pb-0" colspan="5" style="border:none;">TOTAL (Incl): </td>
+                    <td class="text-end pe-3 pb-0" style="border:none;">{{selected_delivery_note.total_price|intcomma }}</td>
+                </tr>
+
+            </tbody>
+            </table>
+
+
+
+        {% if selected_delivery_note.note %}
+            <div class="card" style="border: 1px solid {{ selected_business_account.theme_color }} ; margin-top: 20px; width: 40rem;">
+              <div class="card-body" style="padding-bottom:0cm !important; padding-top:0.2cm !important;">
+                  <div>*Notes</div>
+                  <p class="fw-normal" style="font-size:10px;">{{ selected_delivery_note.note }}</p>
+              </div>
+            </div>
+        {% endif %}
+
+        <div class="d-flex align-items-center shadow-sm">
+            <div class="flex-shrink-0"><img src="{{ qr_code_url }}" alt="QR Code" class="qr-code"></div>
+            <div class="flex-grow-1 ms-1"><p style="color:{{ selected_business_account.theme_color }}  !important; font-size: 13px; font-weight: 800;           font-family: Montserrat, sans-serif;">Scan Qr Code to verify this document</p></div>
+        </div>
+    </div>
 </body>
 </html>

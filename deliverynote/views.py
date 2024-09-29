@@ -28,6 +28,7 @@ from weasyprint import HTML
 import os
 from django.contrib.auth.decorators import login_required
 from accounts.models import BusinessAccount
+from decimal import Decimal
 # Create your views here.
 
 
@@ -111,9 +112,11 @@ def delivery_note(request):
 
                 template_name = get_template('deliverynote/delivery_note_doc.html')
                 listed_delivery_note_items = DeliveryNoteItems.objects.filter(dnote=chosen_delivery_note)
+                selected_business_account = request.session.get('selected_business_account')
                 context = {
                     'selected_delivery_note': chosen_delivery_note,
                     'listed_delivery_note_items': listed_delivery_note_items,
+                    'selected_business_account': selected_business_account,
                 }
                 rendered_html = template_name.render(context)
                 pdf_file = HTML(string=rendered_html).write_pdf()
@@ -155,11 +158,13 @@ def delivery_note_details(request, id):
             sub_total_price = 0
             for i in formset:
                 cd = i.cleaned_data
-                cleaned_price = cd.get('price')
-                cleaned_quantity = cd.get('quantity')
-                item_price = int(float(cleaned_price)) * int(cleaned_quantity)
-                # item_price = cd.get('price') * cd.get('quantity')
-                sub_total_price = sub_total_price + item_price
+                # Only add to subtotal if the form is not marked for deletion
+                if not cd.get('DELETE', False):
+                    cleaned_price = cd.get('price', 0)
+                    cleaned_quantity = cd.get('quantity', 0)
+                    # item_price = float(cleaned_price) * int(cleaned_quantity)
+                    item_price = Decimal(cleaned_price) * Decimal(cd.get('quantity', 0))
+                    sub_total_price = sub_total_price + item_price
 
             form_replica = form.save(commit=False)
             form_replica.sub_total = sub_total_price
@@ -179,7 +184,7 @@ def delivery_note_details(request, id):
         delivery_note_items_form = DeliveryNoteItemsForm()
         context = {
             'delivery_note_form': form,
-            'delivery_items_form': delivery_note_items_form,
+            'delivery_note_items_form': delivery_note_items_form,
             'DIformset': formset,
             'chosen_delivery_note': chosen_delivery_note
         }
@@ -191,7 +196,22 @@ def add_delivery_note_item(request, id):
     if request.method == "POST":
         delivery_note_item_form = DeliveryNoteItemsForm(request.POST)
         if delivery_note_item_form.is_valid():
+
             DI_form = delivery_note_item_form.save(commit=False)
+
+            price = delivery_note_item_form.cleaned_data['price']
+            quantity = delivery_note_item_form.cleaned_data['quantity']
+
+
+            item_price = int(float(price)) * int(quantity)
+            total_iten_price = item_price
+
+            new_sub_total_price = selected_delivery_note.sub_total + total_iten_price
+
+            selected_delivery_note.sub_total = new_sub_total_price
+            selected_delivery_note.save()
+  
+
             DI_form.dnote = selected_delivery_note
             DI_form.save()
             messages.success(request, f'Successfully added delivery note item')
@@ -216,10 +236,13 @@ def delivery_note_delete(request, id):
 def generate_pdf_delivery_note(request, id):
     selected_delivery_note = DeliveryNote.objects.get(id=id)
     listed_delivery_note_items = DeliveryNoteItems.objects.filter(dnote=selected_delivery_note)
+    business_account = request.session.get('selected_business_account')
+    selected_business_account = BusinessAccount.objects.get(id=business_account) 
     # Template context variables
     context = {
         'selected_delivery_note': selected_delivery_note,
         'listed_delivery_note_items': listed_delivery_note_items,
+        'selected_business_account': selected_business_account,
     }
 
     # Path to your image

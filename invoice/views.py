@@ -160,20 +160,6 @@ def invoice_details(request, id):
             sub_total_price = 0
             for i in formset:
                 cd = i.cleaned_data
-            #     cleaned_price = cd.get('price')
-            #     cleaned_quantity = cd.get('quantity')
-            #     item_price = int(float(cleaned_price)) * int(cleaned_quantity)
-            #     # item_price = cd.get('price') * cd.get('quantity')
-            #     sub_total_price = sub_total_price + item_price
-            #
-            # form_replica = form.save(commit=False)
-            # main_sub_total_price = sub_total_price
-            # form_replica.sub_total = main_sub_total_price
-            #
-            # form_replica.save()
-            # # form.save()
-            # formset.save()
-
                 # Only add to subtotal if the form is not marked for deletion
                 if not cd.get('DELETE', False):
                     cleaned_price = cd.get('price', 0)

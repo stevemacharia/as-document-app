@@ -28,6 +28,8 @@ from accounts.models import BusinessAccount
 import os
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from decimal import Decimal
+
 # Create your views here.
 @login_required
 def index(request):
@@ -100,6 +102,7 @@ def quotations(request):
             q_form.qr_code_image.save(file_name, File(buffer), save=False)
 
             q_form.save()
+            
             new_id = 'AS-' + str(client_initials) + '-' + x
             chosen_quotation = Quotation.objects.get(quotation_id=new_id)
 
@@ -186,11 +189,13 @@ def quotation_details(request, id):
             sub_total_price = 0
             for i in formset:
                 cd = i.cleaned_data
-                cleaned_price = cd.get('price')
-                cleaned_quantity = cd.get('quantity')
-                item_price = int(float(cleaned_price)) * int(cleaned_quantity)
-                # item_price = cd.get('price') * cd.get('quantity')
-                sub_total_price = sub_total_price + item_price
+                # Only add to subtotal if the form is not marked for deletion
+                if not cd.get('DELETE', False):
+                    cleaned_price = cd.get('price', 0)
+                    cleaned_quantity = cd.get('quantity', 0)
+                    # item_price = float(cleaned_price) * int(cleaned_quantity)
+                    item_price = Decimal(cleaned_price) * Decimal(cd.get('quantity', 0))
+                    sub_total_price = sub_total_price + item_price
 
             form_replica = form.save(commit=False)
             form_replica.sub_total = sub_total_price
@@ -223,6 +228,19 @@ def add_quotation_item(request, id):
         quotation_item_form = QuotationItemsForm(request.POST)
         if quotation_item_form.is_valid():
             QI_form = quotation_item_form.save(commit=False)
+
+            price = quotation_item_form.cleaned_data['price']
+            quantity = quotation_item_form.cleaned_data['quantity']
+  
+            item_price = int(float(price)) * int(quantity)
+            total_iten_price = item_price
+
+            new_sub_total_price = selected_quotation.sub_total + total_iten_price
+
+            selected_quotation.sub_total = new_sub_total_price
+            selected_quotation.save()
+
+
             QI_form.quotation = selected_quotation
             QI_form.save()
             messages.success(request, f'Successfully added quotation item')
@@ -308,8 +326,11 @@ def client_delete(request, id):
 def generate_pdf_quotation(request, id):
     selected_quotation = Quotation.objects.get(id=id)
     listed_quotation_items = QuotationItems.objects.filter(quotation=selected_quotation)
+    business_account = request.session.get('selected_business_account')
+    selected_business_account = BusinessAccount.objects.get(id=business_account) 
     # Template context variables
     context = {
+        'selected_business_account': selected_business_account,
         'selected_quotation': selected_quotation,
         'listed_quotation_items': listed_quotation_items,
     }

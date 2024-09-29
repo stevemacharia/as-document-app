@@ -9,7 +9,10 @@ class InvoiceForm(forms.ModelForm):
         ('0', 'Draft'),
         ('1', 'Final'),
     )
-
+    TAXABLE_CHOICES = (
+        ('True', 'Yes'),
+        ('False', 'No'),
+    )
 
     client = forms.ModelChoiceField(queryset=Client.objects.all(), label="Choose client",
                                       widget=forms.Select(attrs={'class': 'form-control'}))
@@ -20,9 +23,14 @@ class InvoiceForm(forms.ModelForm):
         input_formats=["%Y-%m-%d"]
     )
     status = forms.ChoiceField(choices=STATUS_CHOICES, label='Status', required=True)
+    taxable = forms.ChoiceField(
+        choices=TAXABLE_CHOICES,
+        label='Include 16% Tax',
+        required=True
+    )
     class Meta:
         model = Invoice
-        fields = ['client', 'submission_date', 'status']
+        fields = ['client', 'submission_date', 'status', 'taxable']
 
 
 class InvoiceItemsForm(forms.ModelForm):

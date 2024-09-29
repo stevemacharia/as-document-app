@@ -25,6 +25,17 @@
                         $('.form-container').last().after(clone);
                         $('#form_count').val(formCount + 1);
                     });
+                    // Remove form functionality
+                    $(document).on('click', '.remove-form-btn', function() {
+                        if ($('.form-container').length > 1) {
+                            $(this).closest('.form-container').remove();
+                            // Update form count after removing a form
+                            var formCount = $('.form-container').length;
+                            $('#form_count').val(formCount);
+                        } else {
+                            alert("You must have at least one item in the invoice.");
+                        }
+                    });
                 });
             </script>
             {% if messages %}
@@ -68,6 +79,9 @@
                                         <div class="col-sm-4">
                                             {{ delivery_note_form.status|as_crispy_field }}
                                         </div>
+                                        <div class="col-sm-12 mt-0">
+                                            {{ delivery_note_form.taxable|as_crispy_field }}
+                                        </div>
                                     </div>
                                     <input type="hidden" id="form_count" name="form_count" value="{{ forms|length }}">
                                     {% for form in forms %}
@@ -92,6 +106,7 @@
                                                     {{ form.price|as_crispy_field }}
                                                 </div>
                                             </div>
+                                            <button type="button" class="remove-form-btn btn btn-danger rounded-5 my-2">Remove Item</button>
                                         </div>
                                     {% endfor %}
 
@@ -137,7 +152,7 @@
                                             <td class="text-uppercase">{{ d_note.dnote_id }}</td>
                                             <td>{{ d_note.client }}</td>
                                             <td>{{ d_note.total_price|intcomma }}</td>
-                                            <td>{{ d_note.submission_date }}</td>
+                                            <td>{{ d_note.submission_date|date:"d M. Y"  }}</td>
                                             <td>{% if d_note.status %}
                                                     Final
                                                 {% else %}
@@ -192,7 +207,7 @@
                                             <td class="text-uppercase">{{ d_note.dnote_id }}</td>
                                             <td>{{ d_note.client }}</td>
                                             <td>{{ d_note.total_price|intcomma }}</td>
-                                            <td>{{ d_note.submission_date }}</td>
+                                            <td>{{ d_note.submission_date|date:"d M. Y"  }}</td>
                                             <td>{% if d_note.status %}
                                                     Final
                                                 {% else %}

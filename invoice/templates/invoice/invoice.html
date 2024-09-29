@@ -1,13 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>ARIESHELBY-DOCUMENTS</title>
-</head>
-<body>
-
-</body>
-</html>{% extends 'documents/base.html' %}
+{% extends 'documents/base.html' %}
 {% load humanize %}
 {% load crispy_forms_tags %}
 {% load static %}
@@ -34,11 +25,25 @@
                         $('.form-container').last().after(clone);
                         $('#form_count').val(formCount + 1);
                     });
+
+
+
+                    // Remove form functionality
+                    $(document).on('click', '.remove-form-btn', function() {
+                        if ($('.form-container').length > 1) {
+                            $(this).closest('.form-container').remove();
+                            // Update form count after removing a form
+                            var formCount = $('.form-container').length;
+                            $('#form_count').val(formCount);
+                        } else {
+                            alert("You must have at least one item in the invoice.");
+                        }
+                    });
                 });
             </script>
             {% if messages %}
             {% for message in messages %}
-                <div class="alert rounded-4 alert-{{message.tags}} m-3">
+                <div class="alert rounded-5 alert-{{message.tags}} m-3">
                     {{message}}
                 </div>
             {% endfor %}
@@ -77,7 +82,11 @@
                                         <div class="col-sm-4">
                                             {{ invoice_form.status|as_crispy_field }}
                                         </div>
+                                        <div class="col-sm-12 mt-0">
+                                            {{ invoice_form.taxable|as_crispy_field }}
+                                        </div>
                                     </div>
+
                                     <input type="hidden" id="form_count" name="form_count" value="{{ forms|length }}">
                                     {% for form in forms %}
                                         <div class="form-container">
@@ -101,7 +110,9 @@
                                                     {{ form.price|as_crispy_field }}
                                                 </div>
                                             </div>
+                                            <button type="button" class="remove-form-btn btn btn-danger rounded-5 my-2">Remove Item</button>
                                         </div>
+
                                     {% endfor %}
 
 
@@ -145,7 +156,7 @@
                                             <td class="text-uppercase">{{ invoice.invoice_id }}</td>
                                             <td>{{ invoice.client }}</td>
                                             <td>{{ invoice.total_price|intcomma }}</td>
-                                            <td>{{ invoice.submission_date }}</td>
+                                            <td>{{ invoice.submission_date|date:"d M. Y" }}</td>
                                             <td>{% if invoice.status %}
                                                     Final
                                                 {% else %}
@@ -200,7 +211,7 @@
                                             <td class="text-uppercase">{{ invoice.invoice_id }}</td>
                                             <td>{{ invoice.client }}</td>
                                             <td>{{ invoice.total_price|intcomma  }}</td>
-                                            <td>{{ invoice.submission_date }}</td>
+                                            <td>{{ invoice.submission_date|date:"d M. Y" }}</td>
                                             <td>{% if invoice.status %}
                                                     Final
                                                 {% else %}
