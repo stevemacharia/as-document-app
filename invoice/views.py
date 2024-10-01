@@ -50,6 +50,7 @@ def invoice(request):
             # string[:3]
             client_initials = str(client)[:3]
             q_form.invoice_id = 'AS-' + str(client_initials) + '-' + x
+            new_invoice_id = 'AS-' + str(client_initials) + '-' + x
 
             ###############QR CODE GENERATION#########
             qr = qrcode.QRCode(
@@ -58,7 +59,7 @@ def invoice(request):
                 box_size=10,
                 border=4,
             )
-            data = "www.document.arieshelby.com/invoice/invoice_verification/"+x
+            data = "www.document.arieshelby.com/invoice/invoice_verification/"+new_invoice_id 
             qr.add_data(data)
             qr.make(fit=True)
             img = qr.make_image(fill='black', back_color='white')
