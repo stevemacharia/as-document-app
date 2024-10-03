@@ -13,13 +13,26 @@
                     {% endfor %}
                 {% endif %}
                 <h2 class="PrimaryColor text-capitalize pb-4 fw-bold">{{ business_account.name }} Business Account</h2>
+                    <!-- Displaying Form Errors -->
+                    {% if form.errors %}
+                        <ul class="errorlist">
+                            {% for field, errors in form.errors.items %}
+                                <li>
+                                    <strong>{{ field|capfirst }}:</strong>
+                                    {% for error in errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
                     <div class="row gy-5">
                         <div class="col-sm-4">
                           <div class="p-3 bg-white">
                               <div class="card border-0">
                                   <img src="{{ business_account.logo.url}}" class="card-img-top" alt="..." style="width:22rem;">
                                   <div class="card-body">
-                                        <h5 class="card-title fw-bold text-start text-uppercase">{{ business_account.name }}</h5>
+                                        <h5 class="card-title fw-bold text-center text-uppercase">{{ business_account.name }}</h5>
                                         <h6 class="text-center"><button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop1">Delete Account</button></h6>
                                         <!-- Modal -->
                                         <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -93,7 +106,7 @@
                                                    {{ business_account.name}} Account details</h1>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
-                                        <form id="original-form" method="post" action="{% url 'business-profile' business_account.id %}">
+                                        <form id="original-form" method="post" enctype="multipart/form-data" action="{% url 'business-profile' business_account.id %}">
                                             <div class="modal-body">
                                             {% csrf_token %}
                                             <div class="row g-3">

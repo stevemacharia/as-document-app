@@ -16,7 +16,7 @@ class BusinessAccountForm(forms.ModelForm):
 
     class Meta:
         model = BusinessAccount
-        fields = ['name', 'email', 'address', 'location', 'phone_number', 'tel', 'theme_color']
+        fields = ['name', 'email', 'address', 'location', 'phone_number', 'tel', 'theme_color', 'logo']
 
 
         widgets = {

@@ -14,29 +14,28 @@ def business_profile(request, id):
         selected_business_account = BusinessAccount.objects.get(id=id)
         u_form = BusinessAccountForm(request.POST, request.FILES, instance=selected_business_account)
         if u_form.is_valid():
-            cleaned_logo = u_form.cleaned_data['logo']
             u_form.save()
-            messages.success(request, f'Your account has been updated!' +cleaned_logo.url)
+            messages.success(request, f'Your account has been updated!' )
             return redirect('business-profile', id)
-        else:
-            messages.warning(request, f'Failed to update your details, Kindly retry again. ')
-            return redirect('business-profile', id)
+        # else:
+        #     messages.warning(request, f'Failed to update your details, Kindly retry again. ')
+        #     return redirect('business-profile', id)
     else:
         selected_business_account = BusinessAccount.objects.get(id=id)
         u_form = BusinessAccountForm(instance=selected_business_account)
-        context = {
-                'u_form': u_form,
-                'business_account':selected_business_account
-        }
+        # context = {
+        #         'u_form': u_form,
+        #         'business_account':selected_business_account
+        # }
 
-    return render(request, 'accounts/business_profile.html', context)
+    return render(request, 'accounts/business_profile.html', {'u_form': u_form, 'business_account':selected_business_account})
 
 
 
 @login_required
 def business_account(request):
     if request.method == 'POST':
-        u_form = BusinessAccountForm(request.POST)
+        u_form = BusinessAccountForm(request.POST, request.FILES)
         if u_form.is_valid():
             b_form = u_form.save(commit=False)
             b_form.user = request.user
