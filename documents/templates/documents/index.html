@@ -13,7 +13,7 @@
         <div class="container-fluid px-3 py-3 mb-4 shadow-sm bg-white rounded-4">
             <h5 class="fw-semibold text-primary"> <i class="bi bi-person-bounding-box pe-2"></i> Account</h5>
             <div class="table-responsive">
-                {% if all_invoices %}
+                {% if selected_business_account %}
                     <table class="table table-borderless">
 
                         <tbody>
@@ -32,7 +32,7 @@
                             <div>
                                 <img src="/static/documents/images/as-empty-data.svg" class="d-block mx-lg-auto img-fluid" alt="Empty!" width="110" height="65" loading="lazy">
                             </div>
-                            <p class="fs-6 pt-2 fst-italic text-center">You have no pending Invoices!.</p>
+                            <p class="fs-6 pt-2 fst-italic text-center">You have Accounts created.</p>
                         </div>
                     </div>
                 {% endif %}

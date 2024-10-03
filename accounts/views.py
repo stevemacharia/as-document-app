@@ -12,10 +12,11 @@ from deliverynote.models import DeliveryNote
 def business_profile(request, id):
     if request.method == 'POST':
         selected_business_account = BusinessAccount.objects.get(id=id)
-        u_form = BusinessAccountForm(request.POST, instance=selected_business_account)
+        u_form = BusinessAccountForm(request.POST, request.FILES, instance=selected_business_account)
         if u_form.is_valid():
+            cleaned_logo = u_form.cleaned_data['logo']
             u_form.save()
-            messages.success(request, f'Your account has been updated!')
+            messages.success(request, f'Your account has been updated!' +cleaned_logo.url)
             return redirect('business-profile', id)
         else:
             messages.warning(request, f'Failed to update your details, Kindly retry again. ')
@@ -35,7 +36,7 @@ def business_profile(request, id):
 @login_required
 def business_account(request):
     if request.method == 'POST':
-        u_form = BusinessAccountForm(request.POST, request.FILES)
+        u_form = BusinessAccountForm(request.POST)
         if u_form.is_valid():
             b_form = u_form.save(commit=False)
             b_form.user = request.user

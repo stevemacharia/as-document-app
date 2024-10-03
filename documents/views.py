@@ -33,30 +33,34 @@ from decimal import Decimal
 # Create your views here.
 @login_required
 def index(request):
-    business_account = request.session.get('selected_business_account')
-    selected_business_account = BusinessAccount.objects.get(id=business_account)
-    # selected_business_account = BusinessAccount.objects.get(id=id, user=request.user)
-    quotations = Quotation.objects.filter(business_account=selected_business_account)
-    invoices = Invoice.objects.filter(business_account=selected_business_account)
-    delivery_notes = DeliveryNote.objects.filter(business_account=selected_business_account)
-    clients = Client.objects.filter(business_account=selected_business_account)
+    business_account_id = request.session.get('selected_business_account')
+    business_account = BusinessAccount.objects.filter(id=business_account_id)
+    if business_account:
+        selected_business_account = BusinessAccount.objects.get(id=business_account_id)
+        # selected_business_account = BusinessAccount.objects.get(id=id, user=request.user)
+        quotations = Quotation.objects.filter(business_account=selected_business_account)
+        invoices = Invoice.objects.filter(business_account=selected_business_account)
+        delivery_notes = DeliveryNote.objects.filter(business_account=selected_business_account)
+        clients = Client.objects.filter(business_account=selected_business_account)
 
-    quotation_count = quotations.count()
-    invoice_count = invoices.count()
-    d_note_count = delivery_notes.count()
-    client_count = clients.count()
+        quotation_count = quotations.count()
+        invoice_count = invoices.count()
+        d_note_count = delivery_notes.count()
+        client_count = clients.count()
 
-    context = {
-        'all_quotations': quotations,
-        'all_invoices': invoices,
-        'delivery_notes': delivery_notes,
-        'selected_business_account': selected_business_account,
-        'quotation_count' : quotation_count,
-        'invoice_count': invoice_count,
-        'd_note_count': d_note_count,
-        'client_count': client_count,
-    }
-    return render(request, 'documents/index.html', context)
+        context = {
+            'all_quotations': quotations,
+            'all_invoices': invoices,
+            'delivery_notes': delivery_notes,
+            'selected_business_account': selected_business_account,
+            'quotation_count' : quotation_count,
+            'invoice_count': invoice_count,
+            'd_note_count': d_note_count,
+            'client_count': client_count,
+        }
+        return render(request, 'documents/index.html', context)
+    else:
+        return redirect('business-account')
 
 @login_required
 def quotations(request):

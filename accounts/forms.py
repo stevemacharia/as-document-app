@@ -16,7 +16,7 @@ class BusinessAccountForm(forms.ModelForm):
 
     class Meta:
         model = BusinessAccount
-        fields = ['name', 'email', 'address', 'location', 'phone_number', 'tel', 'theme_color', 'logo']
+        fields = ['name', 'email', 'address', 'location', 'phone_number', 'tel', 'theme_color']
 
 
         widgets = {
@@ -35,10 +35,10 @@ class BusinessAccountForm(forms.ModelForm):
             raise forms.ValidationError("Enter a valid color in hex format (e.g., #ff0000)")
         return theme_color
         
-    # Optional: You can also add custom form validation here if needed
-    def clean_image(self):
-        image = self.cleaned_data.get('logo')
-        if image:
-            if image.size > 3 * 1024 * 1024:  # 3 MB limit
-                raise forms.ValidationError("The image file is too large ( > 3MB )")
-        return image
+    # # Optional: You can also add custom form validation here if needed
+    # def clean_image(self):
+    #     image = self.cleaned_data.get('logo')
+    #     if image:
+    #         if image.size > 3 * 1024 * 1024:  # 3 MB limit
+    #             raise forms.ValidationError("The image file is too large ( > 3MB )")
+    #     return image
