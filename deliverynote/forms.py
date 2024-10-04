@@ -31,7 +31,7 @@ class DeliveryNoteForm(forms.ModelForm):
     )
     class Meta:
         model = DeliveryNote
-        fields = ['client', 'submission_date', 'status', 'taxable', 'note']
+        fields = ['client', 'submission_date', 'status', 'taxable']
 
 
 class DeliveryNoteItemsForm(forms.ModelForm):

@@ -5,6 +5,7 @@ from . import views
 # from .views import generate_pdf
 
 urlpatterns = [
+    path('business-account-register/', views.busines_account_register, name='busines_account_register'),
     path('business-profile/<str:id>/', views.business_profile, name='business-profile'),
     path('', views.business_account, name='business-account'),
     path('business-account-dashbaord/<str:id>/', views.business_account_dashboard, name='business-account-dashboard'),

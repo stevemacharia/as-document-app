@@ -9,6 +9,23 @@ from deliverynote.models import DeliveryNote
 
 # Create your views here.
 @login_required
+def busines_account_register(request):
+    if request.method == 'POST':
+        u_form = BusinessAccountForm(request.POST, request.FILES)
+        if u_form.is_valid():
+            b_form = u_form.save(commit=False)
+            b_form.user = request.user
+            b_form.save()
+            u_form.save()
+            messages.success(request, f'Your account has been updated!')
+            return redirect('business-account')
+    else:
+        u_form = BusinessAccountForm(instance=request.user)
+
+    return render(request, 'accounts/business_account_register.html', {'u_form': u_form})
+
+
+@login_required
 def business_profile(request, id):
     if request.method == 'POST':
         selected_business_account = BusinessAccount.objects.get(id=id)
@@ -17,16 +34,9 @@ def business_profile(request, id):
             u_form.save()
             messages.success(request, f'Your account has been updated!' )
             return redirect('business-profile', id)
-        # else:
-        #     messages.warning(request, f'Failed to update your details, Kindly retry again. ')
-        #     return redirect('business-profile', id)
     else:
         selected_business_account = BusinessAccount.objects.get(id=id)
         u_form = BusinessAccountForm(instance=selected_business_account)
-        # context = {
-        #         'u_form': u_form,
-        #         'business_account':selected_business_account
-        # }
 
     return render(request, 'accounts/business_profile.html', {'u_form': u_form, 'business_account':selected_business_account})
 

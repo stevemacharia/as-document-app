@@ -41,3 +41,9 @@ class BusinessAccount(models.Model):
             output_size = (600, 600)
             img.thumbnail(output_size)
             img.save(self.logo.path)
+
+
+class PaymentOption(models.Model):
+    business = models.ForeignKey(BusinessAccount, on_delete=models.CASCADE)
+    name = models.CharField(max_length=300, blank=True)
+    account_no = models.CharField(max_length=100, blank=True, null=True)

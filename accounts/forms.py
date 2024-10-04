@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from user.models import PaymentOption
-from accounts.models import BusinessAccount
+from accounts.models import BusinessAccount,PaymentOption
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import ImageField
 
@@ -42,3 +42,10 @@ class BusinessAccountForm(forms.ModelForm):
     #         if image.size > 3 * 1024 * 1024:  # 3 MB limit
     #             raise forms.ValidationError("The image file is too large ( > 3MB )")
     #     return image
+
+class PaymentOptionForm(forms.ModelForm):
+    name = forms.CharField(max_length=255)
+    account_no = forms.CharField(max_length=100)
+    class Meta:
+        model = PaymentOption
+        fields = ['name', 'account_no']

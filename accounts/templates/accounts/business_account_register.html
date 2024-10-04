@@ -1,0 +1,76 @@
+{% extends 'accounts/business_base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+    <main>
+        <style>
+            .step {
+                text-align: center;
+            }
+    
+            .progress-container {
+                display: flex;
+                justify-content: space-between;
+                position: relative;
+                margin-top: 20px;
+            }
+    
+            .progress-container .progress {
+                flex-grow: 1;
+                margin: 0 20px;
+            }
+    
+            .icon-circle {
+                background-color: #185319;
+                color: white;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: auto;
+            }
+          
+        </style>
+        <div class="container-fluid bg-body-tertiary rounded-top-4 p-4">
+            {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{message.tags}} rounded-5 m-3">
+                    {{message}}
+                </div>
+            {% endfor %}
+            {% endif %}
+            
+
+            <div class="container position-relative p-5 bg-white shadow-sm rounded-5">
+                <div class="row">
+                    <div class="col step">
+                        <div class="icon-circle">
+                            <i class="bi bi-person-plus-fill"></i>
+                        </div>
+                        <div>Register Business account</div>
+                    </div>
+                    <div class="col step">
+                        <div class="icon-circle">
+                            <i class="bi bi-credit-card-fill"></i>
+                        </div>
+                        <div>Add Payment option</div>
+                    </div>
+                    <div class="col step">
+                        <div class="icon-circle">
+                            <i class="bi bi-person-badge-fill"></i>
+                        </div>
+                        <div>Add Client address</div>
+                    </div>
+                </div>
+                <div class="progress-container">
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: 25%; background-color:#185319;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+{% endblock %}
