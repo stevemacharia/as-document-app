@@ -69,6 +69,59 @@
                         <div class="progress-bar" role="progressbar" style="width: 25%; background-color:#185319;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                 </div>
+
+
+
+                <div class="mt-5 p-4">
+                    <h2 class="mb-2 PrimaryColor fw-bold ">Create your business account</h2>
+                    <form id="original-form" method="post" enctype="multipart/form-data" action="{% url 'busines_account_register' %}">
+                        <div class="modal-body">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-sm-12">
+                                {{ u_form.name|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-sm-12">
+                                {{ u_form.email|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                {{ u_form.tel|as_crispy_field }}
+                            </div>
+                            <div class="col-sm-6">
+                                {{ u_form.phone_number|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="row g-3 d-flex">
+                            <div class="col-sm-6">
+                                <label for="color" class="form-label">Click to select:</label>
+                                {{ u_form.theme_color|as_crispy_field }}
+                            </div>
+                            <div class="col-sm-6">
+                                {{ u_form.logo|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-sm-12">
+                                {{ u_form.address|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-sm-12">
+                                {{ u_form.location|as_crispy_field }}
+                            </div>
+                        </div>
+                        </div>
+
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-outline-dark rounded-5" type="submit">Create Account</button>
+                            </div>
+
+                    </form>
+                </div>
             </div>
 
         </div>
