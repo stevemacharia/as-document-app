@@ -1,9 +1,9 @@
 from django.shortcuts import render
-from .forms import BusinessAccountForm
+from .forms import BusinessAccountForm, PaymentOptionForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from .models import BusinessAccount
+from .models import BusinessAccount, PaymentOption
 from deliverynote.models import DeliveryNote
 
 
@@ -11,19 +11,35 @@ from deliverynote.models import DeliveryNote
 @login_required
 def busines_account_register(request):
     if request.method == 'POST':
-        u_form = BusinessAccountForm(request.POST, request.FILES)
-        if u_form.is_valid():
-            b_form = u_form.save(commit=False)
-            b_form.user = request.user
-            b_form.save()
-            u_form.save()
+        business_form = BusinessAccountForm(request.POST, request.FILES)
+        if business_form.is_valid():
+            business_instance = business_form.save(commit=False)
+            business_instance.user = request.user
+            business_instance.save()
+            request.session['registered_business_instance'] = business_instance.id
+            messages.success(request, f'Your account has been updated!')
+            return redirect('payment-account-register')
+    else:
+        u_form = BusinessAccountForm(instance=request.user)
+
+    return render(request, 'accounts/business_account_register.html', {'u_form': u_form})
+
+@login_required
+def payment_account_register(request):
+    if request.method == 'POST':
+        payment_form_instance= PaymentOptionForm(request.POST, request.FILES)
+        request.session['registered_business_instance']
+        if payment_form_instance.is_valid():
+            payment_form = payment_form_instance.save(commit=False)
+            payment_form.business = request.user
+            payment_form.save()
+
             messages.success(request, f'Your account has been updated!')
             return redirect('business-account')
     else:
         u_form = BusinessAccountForm(instance=request.user)
 
     return render(request, 'accounts/business_account_register.html', {'u_form': u_form})
-
 
 @login_required
 def business_profile(request, id):
