@@ -33,7 +33,7 @@
             }
           
         </style>
-        <div class="container-fluid bg-body-tertiary rounded-top-4 p-4">
+        <div class="container bg-body-tertiary rounded-top-4 p-4">
             {% if messages %}
             {% for message in messages %}
                 <div class="alert alert-{{message.tags}} rounded-5 m-3">
@@ -74,7 +74,7 @@
 
                 <div class="mt-5 p-4">
                     <h2 class="mb-2 PrimaryColor fw-bold ">Add Business Account</h2>
-                    <form id="original-form" method="post" enctype="multipart/form-data" action="{% url 'busines_account_register' %}">
+                    <form id="original-form" method="post" enctype="multipart/form-data" action="{% url 'busines-account-register' %}">
                         <div class="modal-body">
                         {% csrf_token %}
                         <div class="row g-3">

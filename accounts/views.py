@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .forms import BusinessAccountForm, PaymentOptionForm
+from documents.forms import ClientForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
@@ -17,7 +18,7 @@ def busines_account_register(request):
             business_instance.user = request.user
             business_instance.save()
             request.session['registered_business_instance'] = business_instance.id
-            messages.success(request, f'Your account has been updated!')
+            messages.success(request, f'Your business account has been created!')
             return redirect('payment-account-register')
     else:
         u_form = BusinessAccountForm(instance=request.user)
@@ -27,19 +28,43 @@ def busines_account_register(request):
 @login_required
 def payment_account_register(request):
     if request.method == 'POST':
-        payment_form_instance= PaymentOptionForm(request.POST, request.FILES)
-        request.session['registered_business_instance']
+        payment_form_instance= PaymentOptionForm(request.POST)
+        business_id=request.session['registered_business_instance']
+        business_account= BusinessAccount.objects.get(id=business_id)
+
         if payment_form_instance.is_valid():
             payment_form = payment_form_instance.save(commit=False)
-            payment_form.business = request.user
+            payment_form.business = business_account
             payment_form.save()
 
-            messages.success(request, f'Your account has been updated!')
-            return redirect('business-account')
-    else:
-        u_form = BusinessAccountForm(instance=request.user)
+            messages.success(request, f'Your payment account has been added!')
+            return redirect('client-address-creation')
+    else:   
+        payment_form= PaymentOptionForm()
 
-    return render(request, 'accounts/business_account_register.html', {'u_form': u_form})
+    return render(request, 'accounts/payment_account_register.html', {'payment_form': payment_form})
+
+
+
+@login_required
+def client_account_creation(request):
+    if request.method == 'POST':
+        client_address_form_instance= ClientForm(request.POST)
+        business_id=request.session['registered_business_instance']
+        business_account= BusinessAccount.objects.get(id=business_id)
+
+        if client_address_form_instance.is_valid():
+            client_address_form = client_address_form_instance.save(commit=False)
+            client_address_form.business_account = business_account
+            client_address_form.save()
+
+            messages.success(request, f'Your have completed your business registration process!')
+            return redirect('business-account')
+    else:   
+        client_address_form= ClientForm()
+
+    return render(request, 'accounts/client_address_creation.html', {'client_address_form': client_address_form})
+
 
 @login_required
 def business_profile(request, id):
