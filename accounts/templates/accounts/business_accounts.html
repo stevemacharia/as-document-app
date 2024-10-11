@@ -30,70 +30,11 @@
                 {% else %}
                     <h2 class="my-2 PrimaryColor fw-bold">Start by adding a new business account</h2>
                 {% endif %}
-                <button class="btn  btn-success BgPrimaryColor text-white rounded-4 px-5 mt-3" data-bs-toggle="modal" data-bs-target="#exampleModal" type="button">
+                <a href="{% url 'busines-account-register' %}"><button class="btn  btn-success BgPrimaryColor text-white rounded-4 px-5 mt-3" type="button">
                     Create a new business account
-                </button>
+                </button></a>
 
-                <!-- Modal -->
-                    <div class="modal fade text-start" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <form id="original-form" method="post" enctype="multipart/form-data" action="{% url 'business-account' %}">
-                                <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">Enter new business details</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    {% csrf_token %}
-                                    <div class="row g-3">
-                                        <div class="col-sm-12">
-                                            {{ u_form.name|as_crispy_field }}
-                                        </div>
-                                    </div>
-                                    <div class="row g-3">
-                                        <div class="col-sm-12">
-                                            {{ u_form.email|as_crispy_field }}
-                                        </div>
-                                    </div>
-                                    <div class="row g-3">
-                                        <div class="col-sm-6">
-                                            {{ u_form.tel|as_crispy_field }}
-                                        </div>
-                                        <div class="col-sm-6">
-                                            {{ u_form.phone_number|as_crispy_field }}
-                                        </div>
-                                    </div>
-                                    <div class="row g-3 d-flex">
-                                        <div class="col-sm-6">
-                                            <label for="color" class="form-label">Click to select</label>
-                                            {{ u_form.theme_color|as_crispy_field }}
-                                        </div>
-                                        <div class="col-sm-6">
-                                            {{ u_form.logo|as_crispy_field }}
-                                        </div>
-                                    </div>
-                                    <div class="row g-3">
-                                        <div class="col-sm-12">
-                                            {{ u_form.address|as_crispy_field }}
-                                        </div>
-                                    </div>
-                                    <div class="row g-3">
-                                        <div class="col-sm-12">
-                                            {{ u_form.location|as_crispy_field }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="p-3">
-                                    <div class="d-grid gap-2">
-                                        <button class="btn btn-outline-dark rounded-5" type="submit">Submit</button>
-                                    </div>
-                                </div>
 
-                            </form>
-                        </div>
-                        </div>
-                    </div>
-                <!-- End of Modal -->
             </div>
 
 

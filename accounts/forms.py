@@ -12,7 +12,7 @@ class BusinessAccountForm(forms.ModelForm):
     location = forms.CharField(max_length=200, widget=forms.Textarea, label="Your physical location")
     phone_number = forms.CharField(max_length=100)
     tel = forms.CharField(max_length=100, label="Tel")
-    # logo = ImageField()
+    logo = ImageField(required=True)
 
     class Meta:
         model = BusinessAccount
