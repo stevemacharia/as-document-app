@@ -12,7 +12,21 @@
                         </div>
                     {% endfor %}
                 {% endif %}
-                <h2 class="PrimaryColor text-capitalize pb-4 fw-bold">{{ business_account.name }} Business Account</h2>
+                <div class="container mt-1 mb-4 ps-0">
+                    <nav aria-label="breadcrumb">
+                      <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3">
+                        <li class="breadcrumb-item">
+                          <a class="link-body-emphasis fw-semibold" href="{% url 'index' %}"><i class="bi bi-house-door-fill pe-2"></i>
+                            <span class="text-decoration-none">Dashboard</span>
+                          </a>
+                        </li>
+                        <li class="breadcrumb-item">
+                          <a class="link-body-emphasis text-decoration-none" href="#">Account Profile</a>
+                        </li>
+                      </ol>
+                    </nav>
+                </div>
+                <h4 class="PrimaryColor text-uppercase pb-4 fw-bold">{{ business_account.name }} Business Account</h4>
                     <!-- Displaying Form Errors -->
                     {% if form.errors %}
                         <ul class="errorlist">

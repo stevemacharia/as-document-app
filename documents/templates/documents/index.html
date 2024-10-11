@@ -12,10 +12,9 @@
         <h2 class="my-3 PrimaryColor fw-bold">Dashboard</h2>
         <div class="container-fluid px-3 py-3 mb-4 shadow-sm bg-white rounded-4">
             <h5 class="fw-semibold text-primary"> <i class="bi bi-person-bounding-box pe-2"></i> Account</h5>
-            <div class="table-responsive">
+            <div class="table-responsive pt-2">
                 {% if selected_business_account %}
                     <table class="table table-borderless">
-
                         <tbody>
                             <tr>
                                 <td><a href="{% url 'business-profile' selected_business_account.id %}">{{ selected_business_account.name }}</a></td>
@@ -32,7 +31,7 @@
                             <div>
                                 <img src="/static/documents/images/as-empty-data.svg" class="d-block mx-lg-auto img-fluid" alt="Empty!" width="110" height="65" loading="lazy">
                             </div>
-                            <p class="fs-6 pt-2 fst-italic text-center">You have Accounts created.</p>
+                            <p class="fs-6 pt-2 fst-italic text-center">No Business account chosen</p>
                         </div>
                     </div>
                 {% endif %}

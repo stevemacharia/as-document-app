@@ -44,6 +44,20 @@
             
 
             <div class="container position-relative p-5 bg-white shadow-sm rounded-5">
+                <div class="container mt-1 mb-4">
+                    <nav aria-label="breadcrumb">
+                      <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3">
+                        <li class="breadcrumb-item">
+                          <a class="link-body-emphasis fw-semibold" href="{% url 'business-account' %}"><i class="bi bi-house-door-fill pe-2"></i>
+                            <span class="text-decoration-none">Home</span>
+                          </a>
+                        </li>
+                        <li class="breadcrumb-item">
+                          <a class="link-body-emphasis text-decoration-none" href="#">Client Address</a>
+                        </li>
+                      </ol>
+                    </nav>
+                </div>
                 <div class="row">
                     <div class="col step">
                         <div class="icon-circle">
@@ -73,7 +87,7 @@
 
 
                 <div class="mt-5 p-4">
-                    <h2 class="mb-2 PrimaryColor fw-bold ">03. Add your first client address</h2>
+                    <h4 class="mb-2 PrimaryColor fw-bold ">03. Add your first client address</h4>
                     <form id="original-form" method="post" enctype="multipart/form-data" action="{% url 'client-address-creation' %}">
                         <div class="modal-body">
                         {% csrf_token %}
