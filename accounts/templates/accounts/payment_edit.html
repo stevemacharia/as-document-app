@@ -1,0 +1,45 @@
+{% extends 'accounts/business_base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+<main>
+    <div class="container-fluid bg-body-tertiary rounded-top-4 p-4">
+        <div class="container position-relative bg-white shadow-sm p-0 rounded-3">
+            <img src="/static/documents/images/as_logo.jpeg" class="card-img-top rounded-3" alt="...">
+        </div>
+
+        <div class="container mb-1 mt-4 ps-0">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb breadcrumb-chevron mb-0 p-3 bg-body-tertiary rounded-3">
+                <li class="breadcrumb-item">
+                  <a class="link-body-emphasis fw-semibold" href="{% url 'index' %}"><i class="bi bi-house-door-fill pe-2"></i>
+                    <span class="text-decoration-none">Dashboard</span>
+                  </a>
+                </li>
+                <li class="breadcrumb-item">
+                  <a class="link-body-emphasis text-decoration-none" href="#">Account Profile</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a class="link-body-emphasis text-decoration-none" href="#">Payment Option Edit</a>
+                </li>
+              </ol>
+            </nav>
+        </div>
+
+
+
+        <div class="container position-relative mb-5 p-4 bg-white shadow-sm rounded-3">
+            <h4 class="PrimaryColor pb-1 fw-bolder"><i class="bi bi-pencil-square pe-2"></i>Edit payment option</h4>
+            <form id="original-form" method="post" enctype="multipart/form-data" action="{% url 'payment-edit' payment_option_id %}">
+                {% csrf_token %}
+                {{ payment_form|crispy}}
+                <div class="d-grid gap-2 py-3">
+                    <button class="btn btn-outline-dark rounded-5" type="submit">Add payment option</button>
+                </div>
+            </form>
+        </div>
+
+
+    </div>
+</main>
+{% endblock %}

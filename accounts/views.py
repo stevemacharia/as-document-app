@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .models import BusinessAccount, PaymentOption
 from deliverynote.models import DeliveryNote
+from documents.models import Client
 
 
 # Create your views here.
@@ -31,6 +32,8 @@ def payment_account_register(request):
         payment_form_instance= PaymentOptionForm(request.POST)
         business_id=request.session['registered_business_instance']
         business_account= BusinessAccount.objects.get(id=business_id)
+        # Capture the referrer (previous page URL)
+        previous_url = request.META.get('HTTP_REFERER')
 
         if payment_form_instance.is_valid():
             payment_form = payment_form_instance.save(commit=False)
@@ -38,7 +41,13 @@ def payment_account_register(request):
             payment_form.save()
 
             messages.success(request, f'Your payment account has been added!')
-            return redirect('client-address-creation')
+            
+            # Redirect to the referrer or a fallback URL if the referrer is not available
+            if previous_url:
+                return redirect(previous_url)
+            else:
+                # Fallback URL in case referrer is not present
+                return redirect('index') 
     else:   
         payment_form= PaymentOptionForm()
 
@@ -65,22 +74,54 @@ def client_account_creation(request):
 
     return render(request, 'accounts/client_address_creation.html', {'client_address_form': client_address_form})
 
+# start of business profile views
+
 
 @login_required
-def business_profile(request, id):
+def business_profile(request):
     if request.method == 'POST':
-        selected_business_account = BusinessAccount.objects.get(id=id)
+        business_account_id = request.session.get('selected_business_account')
+        selected_business_account = BusinessAccount.objects.get(id=business_account_id)
         u_form = BusinessAccountForm(request.POST, request.FILES, instance=selected_business_account)
+        payment_options = PaymentOption.objects.filter(business=selected_business_account)
         if u_form.is_valid():
             u_form.save()
             messages.success(request, f'Your account has been updated!' )
             return redirect('business-profile', id)
     else:
-        selected_business_account = BusinessAccount.objects.get(id=id)
+        business_account_id = request.session.get('selected_business_account')
+        selected_business_account = BusinessAccount.objects.get(id=business_account_id)
         u_form = BusinessAccountForm(instance=selected_business_account)
+        payment_options = PaymentOption.objects.filter(business=selected_business_account)
+        client_addresses= Client.objects.filter(business_account=selected_business_account)
+        payment_form= PaymentOptionForm()
 
-    return render(request, 'accounts/business_profile.html', {'u_form': u_form, 'business_account':selected_business_account})
+    return render(request, 'accounts/business_profile.html', {'u_form': u_form, 'business_account':selected_business_account, 'payment_options':payment_options, 'client_addresses': client_addresses, 'payment_form':payment_form})
 
+@login_required
+def payment_edit(request, id):
+    selected_payment_option = PaymentOption.objects.get(id=id)
+    # Capture the referrer (previous page URL)
+    previous_url = request.META.get('HTTP_REFERER')
+    if request.method == 'POST':
+        payment_form_instance = PaymentOptionForm(request.POST)
+
+        if payment_form_instance.is_valid():
+            payment_form_instance.save()
+
+            messages.success(request, f'Your payment account has been added!')
+            # Redirect to the referrer or a fallback URL if the referrer is not available
+            if previous_url:
+                return redirect('business-profile')
+            else:
+                # Fallback URL in case referrer is not present
+                return redirect('index') 
+
+    else:
+        payment_option_id = id
+        payment_form= PaymentOptionForm(instance=selected_payment_option)
+    return render(request, 'accounts/payment_edit.html', {'payment_form':payment_form, 'payment_option_id' : payment_option_id})
+# end of busines profile views
 
 
 @login_required
