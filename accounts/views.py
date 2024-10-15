@@ -99,17 +99,48 @@ def business_profile(request):
     return render(request, 'accounts/business_profile.html', {'u_form': u_form, 'business_account':selected_business_account, 'payment_options':payment_options, 'client_addresses': client_addresses, 'payment_form':payment_form})
 
 @login_required
+def payment_account_add(request):
+    # Capture the referrer (previous page URL)
+    previous_url = request.META.get('HTTP_REFERER')
+    business_account_id = request.session.get('selected_business_account')
+    selected_business_account = BusinessAccount.objects.get(id=business_account_id)
+
+    if request.method == 'POST':
+        payment_form_instance = PaymentOptionForm(request.POST)
+        if payment_form_instance.is_valid():
+
+            payment_form= payment_form_instance.save(commit=False)
+
+            payment_form.business=selected_business_account
+            payment_form.save()
+
+            messages.success(request, f'Your payment account has been added!')
+            # Redirect to the referrer or a fallback URL if the referrer is not available
+            if previous_url:
+                return redirect('business-profile')
+            else:
+                # Fallback URL in case referrer is not present
+                return redirect('index') 
+
+    else:
+        payment_form= PaymentOptionForm()
+    return render(request, 'accounts/payment_add.html', {'payment_form':payment_form})
+
+
+
+
+@login_required
 def payment_edit(request, id):
     selected_payment_option = PaymentOption.objects.get(id=id)
     # Capture the referrer (previous page URL)
     previous_url = request.META.get('HTTP_REFERER')
     if request.method == 'POST':
-        payment_form_instance = PaymentOptionForm(request.POST)
+        payment_form_instance = PaymentOptionForm(request.POST,  instance=selected_payment_option)
 
         if payment_form_instance.is_valid():
             payment_form_instance.save()
 
-            messages.success(request, f'Your payment account has been added!')
+            messages.success(request, f'Your payment account has been updated!')
             # Redirect to the referrer or a fallback URL if the referrer is not available
             if previous_url:
                 return redirect('business-profile')
@@ -121,6 +152,24 @@ def payment_edit(request, id):
         payment_option_id = id
         payment_form= PaymentOptionForm(instance=selected_payment_option)
     return render(request, 'accounts/payment_edit.html', {'payment_form':payment_form, 'payment_option_id' : payment_option_id})
+
+
+@login_required
+def payment_account_delete(request, id):
+    selected_payment_option = PaymentOption.objects.get(id=id)
+    selected_payment_option.delete()
+    # Capture the referrer (previous page URL)
+    previous_url = request.META.get('HTTP_REFERER')
+    messages.success(request, f'Payment account deleted successfully')
+        # Redirect to the referrer or a fallback URL if the referrer is not available
+    if previous_url:
+        return redirect(previous_url)
+    else:
+        # Fallback URL in case referrer is not present
+        return redirect('index') 
+
+
+
 # end of busines profile views
 
 

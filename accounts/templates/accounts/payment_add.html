@@ -20,7 +20,7 @@
                   <a class="link-body-emphasis text-decoration-none" href="#">Account Profile</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a class="link-body-emphasis text-decoration-none" href="#">Payment Option Edit</a>
+                    <a class="link-body-emphasis text-decoration-none" href="#">Payment Option Add</a>
                 </li>
               </ol>
             </nav>
@@ -29,7 +29,7 @@
 
 
         <div class="container position-relative mb-5 p-4 bg-white shadow-sm rounded-3">
-            <h4 class="PrimaryColor pb-1 fw-bolder"><i class="bi bi-pencil-square pe-2"></i>Edit payment option</h4>
+            <h4 class="PrimaryColor pb-1 fw-bolder"><i class="bi bi-pencil-square pe-2"></i>Add payment option</h4>
 
 
 
@@ -65,11 +65,11 @@
              </div>
 
 
-            <form id="original-form" method="post" enctype="multipart/form-data" action="{% url 'payment-edit' payment_option_id %}">
+            <form id="original-form" method="post" enctype="multipart/form-data" action="{% url 'payment-account-add' %}">
                 {% csrf_token %}
                 {{ payment_form|crispy}}
                 <div class="d-grid gap-2 py-3">
-                    <button class="btn btn-outline-dark rounded-5" type="submit">Edit payment option</button>
+                    <button class="btn btn-outline-dark rounded-5" type="submit">Add payment option</button>
                 </div>
             </form>
         </div>
