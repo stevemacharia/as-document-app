@@ -26,7 +26,7 @@
             <div class="container position-relative">
                 {% if messages %}
                 {% for message in messages %}
-                    <div class="alert alert-{{message.tags}} rounded-5 m-3">
+                    <div class="alert alert-{{message.tags}} rounded-5 m-3" id="myAlert">
                         {{message}}
                     </div>
                 {% endfor %}
@@ -34,7 +34,7 @@
 
                 <!-- Non-field errors -->
                 {% if form.non_field_errors %}
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert" id="myAlert">
                         <ul>
                             {% for error in form.non_field_errors %}
                                 <li>{{ error }}</li>
@@ -46,7 +46,7 @@
                 
                 <!-- Field-specific errors -->
                 {% if form.errors %}
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" id="myAlert">
                         <ul>
                             {% for field, errors in form.errors.items %}
                                 <li><strong>{{ field|capfirst }}</strong>:
@@ -249,7 +249,13 @@
                                     <td>{{ address.name }}</td>
                                     <td>{{ address.address }}</td>
                                     <td>{{ address.postal_address }}</td>
-                                    <td><button class="btn btn-outline-dark rounded-5">Edit</button></td>
+                                    <td><a href="{% url 'client-edit' address.id %}"><button class="btn btn-outline-dark rounded-5">Edit</button></a></td>
+
+
+
+
+
+
                                     <td>
                                         <button class="btn btn-outline-danger rounded-5" data-bs-toggle="modal" data-bs-target="#staticBackdropDeleteClient">Delete</button>
                                         <!-- Modal -->
@@ -265,7 +271,7 @@
                                                 </div>
                                                 <div class="modal-footer d-flex justify-content-center">
                                                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
-                                                    <a href="{% url 'business-account-deletion' business_account.id %}"><button type="button" class="btn btn-danger">Delete account</button></a>
+                                                    <a href="{% url 'client-profile-delete' address.id %}"><button type="button" class="btn btn-danger">Delete account</button></a>
                                                 </div>
                                             </div>
                                             </div>
@@ -283,29 +289,7 @@
                     <div class="me-auto ps-3">
                     </div>
                     <div class="p-2">
-                        <button type="button" class="btn btn-outline-dark rounded-5" data-bs-toggle="modal" data-bs-target="#staticBackdropAddClient"><i class="bi bi-person-fill-add pe-2"></i> Add Client</button>
-                        <!-- Modal -->
-                        <div class="modal fade" id="staticBackdropAddClient" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-lg">
-                                
-                                <form id="original-form" method="post" enctype="multipart/form-data" action="{% url 'payment-account-register' %}">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title PrimaryColor fw-bolder fs-5" id="exampleModalLabel">Add new Client</h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body pt-2">
-                                            {% csrf_token %}
-                                            {{ payment_form|crispy}}
-                                        </div>
-                                        <div class="d-grid gap-2 p-3">
-                                            <button class="btn btn-outline-dark rounded-5" type="submit">Add Client </button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        <!--End of Modal -->
+                        <a href="{% url 'client-profile-add' %}"><button type="button" class="btn btn-outline-dark rounded-5"><i class="bi bi-person-fill-add pe-2"></i> Add Client</button>
 
                     </div>
 
@@ -314,4 +298,13 @@
 
         </div>
     </main>
+<script>
+    // Use this script to automatically close the alert after 5 seconds (5000 milliseconds)
+    setTimeout(function() {
+        let alertElement = document.getElementById('myAlert');
+        let alert = new bootstrap.Alert(alertElement);
+        alert.close();
+    }, 5000);
+
+</script>
 {% endblock %}

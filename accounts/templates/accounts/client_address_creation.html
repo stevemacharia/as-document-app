@@ -63,19 +63,19 @@
                         <div class="icon-circle">
                             <i class="bi bi-person-plus-fill"></i>
                         </div>
-                        <div class="pt-2">01. Register Business account</div>
+                        <div class="pt-2">STEP 01. Register Business account</div>
                     </div>
                     <div class="col step">
                         <div class="icon-circle">
                             <i class="bi bi-credit-card-fill"></i>
                         </div>
-                        <div class="pt-2">02. Add Payment option</div>
+                        <div class="pt-2">STEP 02. Add Payment option</div>
                     </div>
                     <div class="col step">
                         <div class="icon-circle">
                             <i class="bi bi-person-badge-fill"></i>
                         </div>
-                        <div class="pt-2">03. Add Client address</div>
+                        <div class="pt-2">STEP 03. Add Client address</div>
                     </div>
                 </div>
                 <div class="progress-container">
@@ -86,7 +86,10 @@
 
 
 
-                <div class="mt-5 p-4">
+                <div class="mt-3 p-4">
+                    <div class="alert alert-primary" role="alert">
+                        You can add this later. <a href="{% url 'business-account' %}">Skip for now</a>
+                      </div>
                     <h4 class="mb-2 PrimaryColor fw-bold ">03. Add your first client address</h4>
                     <form id="original-form" method="post" enctype="multipart/form-data" action="{% url 'client-address-creation' %}">
                         <div class="modal-body">
