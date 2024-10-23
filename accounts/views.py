@@ -21,9 +21,11 @@ def busines_account_register(request):
             request.session['registered_business_instance'] = business_instance.id
             messages.success(request, f'Your business account has been created!')
             return redirect('payment-account-register')
+        else:
+            u_form = BusinessAccountForm()
+            return render(request, 'accounts/business_account_register.html', {'u_form': business_form})
     else:
-        u_form = BusinessAccountForm(instance=request.user)
-
+        u_form = BusinessAccountForm()
     return render(request, 'accounts/business_account_register.html', {'u_form': u_form})
 
 @login_required
@@ -47,7 +49,9 @@ def payment_account_register(request):
                 return redirect('client-address-creation')
             else:
                 # Fallback URL in case referrer is not present
-                return redirect('index') 
+                return redirect('index')
+        else:
+            return render(request, 'accounts/payment_account_register.html', {'payment_form': payment_form_instance})
     else:   
         payment_form= PaymentOptionForm()
 
@@ -66,9 +70,10 @@ def client_account_creation(request):
             client_address_form = client_address_form_instance.save(commit=False)
             client_address_form.business_account = business_account
             client_address_form.save()
-
             messages.success(request, f'Your have completed your business registration process!')
             return redirect('business-account')
+        else:
+            return render(request, 'accounts/client_address_creation.html', {'client_address_form': client_address_form_instance})
     else:   
         client_address_form= ClientForm()
 
@@ -84,10 +89,16 @@ def business_profile(request):
         selected_business_account = BusinessAccount.objects.get(id=business_account_id)
         u_form = BusinessAccountForm(request.POST, request.FILES, instance=selected_business_account)
         payment_options = PaymentOption.objects.filter(business=selected_business_account)
+        client_addresses= Client.objects.filter(business_account=selected_business_account)
+
         if u_form.is_valid():
             u_form.save()
             messages.success(request, f'Your account has been updated!' )
             return redirect('business-profile', id)
+        else:
+            payment_form= PaymentOptionForm()
+            return render(request, 'accounts/business_profile.html', {'u_form': u_form, 'business_account':selected_business_account, 'payment_options':payment_options, 'client_addresses': client_addresses, 'payment_form':payment_form})
+
     else:
         business_account_id = request.session.get('selected_business_account')
         selected_business_account = BusinessAccount.objects.get(id=business_account_id)
@@ -121,7 +132,8 @@ def payment_account_add(request):
             else:
                 # Fallback URL in case referrer is not present
                 return redirect('index') 
-
+        else: 
+            return render(request, 'accounts/payment_add.html', {'payment_form':payment_form_instance })
     else:
         payment_form= PaymentOptionForm()
     return render(request, 'accounts/payment_add.html', {'payment_form':payment_form})
@@ -139,7 +151,6 @@ def payment_edit(request, id):
 
         if payment_form_instance.is_valid():
             payment_form_instance.save()
-
             messages.success(request, f'Your payment account has been updated!')
             # Redirect to the referrer or a fallback URL if the referrer is not available
             if previous_url:
@@ -147,6 +158,9 @@ def payment_edit(request, id):
             else:
                 # Fallback URL in case referrer is not present
                 return redirect('index') 
+        else:
+
+            return render(request, 'accounts/payment_edit.html', {'payment_form':payment_form_instance, 'payment_option_id' : id})
 
     else:
         payment_option_id = id
@@ -186,7 +200,9 @@ def client_edit(request, id):
                 return redirect('business-profile')
             else:
                 # Fallback URL in case referrer is not present
-                return redirect('index') 
+                return redirect('index')
+        else: 
+            return render(request, 'accounts/client_edit.html', {'client_profile_form':client_profile_form_instance, 'client_profile_id' : id})
 
     else:
         client_profile_id = id
@@ -216,8 +232,9 @@ def client_profile_add(request):
                 return redirect('business-profile')
             else:
                 # Fallback URL in case referrer is not present
-                return redirect('index') 
-
+                return redirect('index')
+        else:
+            return render(request, 'accounts/client_profile_add.html', {'client_address_form':client_profile_form_instance})
     else:
         client_address_form= ClientForm()
     return render(request, 'accounts/client_profile_add.html', {'client_address_form':client_address_form})
@@ -242,25 +259,12 @@ def client_profile_delete(request, id):
 
 @login_required
 def business_account(request):
-    if request.method == 'POST':
-        u_form = BusinessAccountForm(request.POST, request.FILES)
-        if u_form.is_valid():
-            b_form = u_form.save(commit=False)
-            b_form.user = request.user
-            b_form.save()
-            u_form.save()
-            messages.success(request, f'Your account has been updated!')
-            return redirect('business-account')
-        else:
-            messages.warning(request, f'Failed to update your details, Kindly retry again. ')
-            return redirect('business-account')
-    else:
-        u_form = BusinessAccountForm(instance=request.user)
-        business_profiles = BusinessAccount.objects.filter(user=request.user)
-        context = {
-                'u_form': u_form,
-                'business_profiles': business_profiles,
-        }
+    u_form = BusinessAccountForm(instance=request.user)
+    business_profiles = BusinessAccount.objects.filter(user=request.user)
+    context = {
+            'u_form': u_form,
+            'business_profiles': business_profiles,
+    }
     return render(request, 'accounts/business_accounts.html', context)
 
 @login_required

@@ -6,7 +6,7 @@ from .models import Client, Quotation, QuotationItems
 # Register your models here.
 class ClientAdmin(admin.ModelAdmin):
     model = Client
-    list_display = ['name', 'address', 'postal_address']
+    list_display = ['name', 'email', 'phone_number', 'postal_address']
     search_fields = ['name']
 
 admin.site.register(Client, ClientAdmin)

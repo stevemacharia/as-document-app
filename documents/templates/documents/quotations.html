@@ -85,6 +85,9 @@
                                         <div class="col-sm-12 mt-0">
                                             {{ quotation_form.taxable|as_crispy_field }}
                                         </div>
+                                        <div class="col-sm-12 mt-0">
+                                            {{ quotation_form.note|as_crispy_field }}
+                                        </div>
                                     </div>
 
                                     <input type="hidden" id="form_count" name="form_count" value="{{ forms|length }}">

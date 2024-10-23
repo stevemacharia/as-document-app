@@ -13,8 +13,9 @@ import uuid
 # Create your models here.
 class Client(models.Model):
     name = models.CharField(max_length=100)
-    address = models.CharField(max_length=400)
-    postal_address = models.CharField(max_length=400)
+    email = models.EmailField(max_length=254, unique=True, null=True, blank=True)
+    phone_number = models.CharField(max_length=15, unique=True, null=True, blank=True)
+    postal_address = models.CharField(max_length=400, null=True, blank=True)
     business_account = models.ForeignKey(BusinessAccount, on_delete=models.CASCADE)
 
     def __str__(self):

@@ -6,12 +6,17 @@ from django.contrib.admin.widgets import AdminDateWidget
 
 class ClientForm(forms.ModelForm):
     name = forms.CharField()
-    address = forms.CharField()
+    email = forms.EmailField(
+        max_length=254, 
+        required=True,
+        widget=forms.EmailInput(attrs={'placeholder': 'Enter your email', 'class': 'form-control'})
+    )
+    phone_number = forms.CharField()
     postal_address = forms.CharField(required=False, widget=forms.Textarea)
 
     class Meta:
         model = Client
-        fields = ['name', 'address', 'postal_address']
+        fields = ['name', 'email', 'phone_number', 'postal_address']
 
 
 class QuotationForm(forms.ModelForm):
@@ -39,9 +44,10 @@ class QuotationForm(forms.ModelForm):
         label='Include 16% Tax',
         required=True
     )
+    note = forms.CharField(required=True, label="Add a note to the Quotation", widget=forms.Textarea)
     class Meta:
         model = Quotation
-        fields = ['client', 'submission_date', 'status', 'taxable']
+        fields = ['client', 'submission_date', 'status', 'taxable', 'note']
 
 
 class QuotationItemsForm(forms.ModelForm):

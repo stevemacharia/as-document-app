@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from user.models import PaymentOption
+# from user.models import PaymentOption
 from accounts.models import BusinessAccount,PaymentOption
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import ImageField
@@ -44,8 +44,23 @@ class BusinessAccountForm(forms.ModelForm):
     #     return image
 
 class PaymentOptionForm(forms.ModelForm):
+    PAYMENT_OPTIONS = [
+         ('', 'Select a payment method'),
+        ('MM', 'Mobile Money Transfer'),
+        ('BT', 'Bank Transfer'),
+    ]
     name = forms.CharField(max_length=255)
     account_no = forms.CharField(max_length=100)
+    payment_method = forms.ChoiceField(
+        choices=PAYMENT_OPTIONS,
+        widget=forms.Select(attrs={'class': 'form-select', 'id': 'payment-method'}),  # or forms.Select for a dropdown
+        required=True
+    )
+    def clean_payment_method(self):
+        payment_method = self.cleaned_data.get('payment_method')
+        if payment_method == '':
+            raise forms.ValidationError('Please select a valid payment method.')
+        return payment_method
     class Meta:
         model = PaymentOption
-        fields = ['name', 'account_no']
+        fields = ['payment_method', 'name', 'account_no']

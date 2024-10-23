@@ -143,6 +143,7 @@ def invoice(request):
         business_account = request.session.get('selected_business_account')
         selected_business_account = BusinessAccount.objects.get(id=business_account) 
         all_invoices = Invoice.objects.filter(business_account=selected_business_account)
+        all_quotations =
         return render(request, 'invoice/invoice.html',
                       {'forms': [form], 'invoice_form': invoice_form, 'all_invoice': all_invoices})
 

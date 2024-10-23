@@ -44,6 +44,16 @@ class BusinessAccount(models.Model):
 
 
 class PaymentOption(models.Model):
+    PAYMENT_OPTIONS = [
+        ('MM', 'Mobile Money Transfer'),
+        ('BT', 'Bank Transfer'),
+    ]
     business = models.ForeignKey(BusinessAccount, on_delete=models.CASCADE)
+    payment_method = models.CharField(
+        max_length=2,
+        choices=PAYMENT_OPTIONS,
+        default='MM',
+        blank=True, null=True
+    )
     name = models.CharField(max_length=300, blank=True)
     account_no = models.CharField(max_length=100, blank=True, null=True)

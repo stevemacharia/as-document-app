@@ -50,17 +50,29 @@
             {% endif %}
             <div class="container-fluid px-3 py-2 mb-4 shadow-sm bg-white rounded-4">
                 <h2 class="my-2 PrimaryColor fw-bold">Invoices</h2>
-                <ol class="breadcrumb mb-4">
+                <ol class="breadcrumb mb-2">
                     <li class="breadcrumb-item active">Create or view invoices from here</li>
                 </ol>
+                
 
-                <div class="card BgPrimaryColor rounded-5 mb-4">
-                    <a class="text-decoration-none text-dark" href="#">
-                        <div class="card-body" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            <h5 class="text-center text-white fw-bolder"><i class="bi bi-upload pe-2"></i> Create an Invoice</h5>
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 py-4">
+                    <div class="col d-flex align-items-start">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1.75em" height="1.75em" fill="currentColor" class="bi bi-receipt bi flex-shrink-0 me-3 PrimaryColor" viewBox="0 0 16 16">
+                            <path d="M1.92.506a.5.5 0 0 1 .434.14L3 1.293l.646-.647a.5.5 0 0 1 .708 0L5 1.293l.646-.647a.5.5 0 0 1 .708 0L7 1.293l.646-.647a.5.5 0 0 1 .708 0L9 1.293l.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .801.13l.5 1A.5.5 0 0 1 15 2v12a.5.5 0 0 1-.053.224l-.5 1a.5.5 0 0 1-.8.13L13 14.707l-.646.647a.5.5 0 0 1-.708 0L11 14.707l-.646.647a.5.5 0 0 1-.708 0L9 14.707l-.646.647a.5.5 0 0 1-.708 0L7 14.707l-.646.647a.5.5 0 0 1-.708 0L5 14.707l-.646.647a.5.5 0 0 1-.708 0L3 14.707l-.646.647a.5.5 0 0 1-.801-.13l-.5-1A.5.5 0 0 1 1 14V2a.5.5 0 0 1 .053-.224l.5-1a.5.5 0 0 1 .367-.27m.217 1.338L2 2.118v11.764l.137.274.51-.51a.5.5 0 0 1 .707 0l.646.647.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.509.509.137-.274V2.118l-.137-.274-.51.51a.5.5 0 0 1-.707 0L12 1.707l-.646.647a.5.5 0 0 1-.708 0L10 1.707l-.646.647a.5.5 0 0 1-.708 0L8 1.707l-.646.647a.5.5 0 0 1-.708 0L6 1.707l-.646.647a.5.5 0 0 1-.708 0L4 1.707l-.646.647a.5.5 0 0 1-.708 0z"/>
+                            <path d="M3 4.5a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5m8-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5"/>
+                        </svg>
+                        <div>
+                        <h3 class="fw-bold mb-0 fs-5 PrimaryColor">Invoices</h3>
+                        <p class="mb-0"><span class="pe-2 text-secondary">200 Completed </span> <span class="text-danger pe-2"> 300 Draft</span></p>
+    
                         </div>
-                    </a>
+                    </div>
                 </div>
+
+                <div class="p-2">
+                    <button type="button" class="btn btn-outline-dark rounded-5" data-bs-toggle="modal" data-bs-target="#exampleModal" ><i class="bi bi-upload pe-2"></i> Create a new Invoice</button>
+                </div>
+
                 <!-- Start of Upload Modal -->
                     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" data-bs-backdrop="static" aria-hidden="true">
                     <div class="modal-dialog modal-fullscreen modal-dialog-centered">
@@ -129,6 +141,71 @@
                     </div>
                     </div>
                 <!-- End of Upload Modal -->
+
+
+
+                <div class="accordion accordion-flush" id="accordionFlushExample">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                            <div class="icon-link icon-link-hover fw-semibold PrimaryColor" href="#">
+                                Generate an Invoice from previous quotations now
+                                <i class="bi bi-arrow-right"></i>
+                            </div>
+                        </button>
+                      </h2>
+                      <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                        <div class="accordion-body">
+                            <div class="table-responsive">
+                                {% if all_quotations %}
+                                    <table class="table table-borderless">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Quotation Code</th>
+                                                <th scope="col">Client</th>
+                                                <th scope="col">Total Amount</th>
+                                                <th scope="col">Submission Date</th>
+                                                <th scope="col">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for quotation in all_quotations %}
+                                                <tr>
+                                                <th scope="row">{{ forloop.counter }}</th>
+                                                <td class="text-uppercase"><a href="{% url 'quotation_details' quotation.id %}">{{ quotation.quotation_id }}</a></td>
+                                                <td>{{ quotation.client }}</td>
+                                                <td>{{ quotation.total_price }}</td>
+                                                <td>{{ quotation.submission_date|date:"d M Y"  }}</td>
+                                                <td>{% if quotation.status %}
+                                                        Final
+                                                    {% else %}
+                                                        Draft
+                                                    {% endif %}
+                                                </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% else %}
+                                    <div class="py-1">
+                                        <div class="py-4">
+                                            <div>
+                                                <img src="/static/documents/images/as-no-quotation.svg" class="d-block mx-lg-auto img-fluid" alt="Empty!" width="110" height="65" loading="lazy">
+                                            </div>
+                                            <p class="fs-6 pt-2 fst-italic text-center">You have not created any Quotations!.</p>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        
+                        
+                        </div>
+                      </div>
+                    </div>
+                    
+                </div>
+
             </div>
             <div class="container-fluid p-3 mb-4 shadow-sm bg-white rounded-4">
                 <h5 class="fw-semibold PrimaryColor">Draft Invoices</h5>    
