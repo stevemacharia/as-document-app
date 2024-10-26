@@ -167,22 +167,24 @@
                                                 <th scope="col">Total Amount</th>
                                                 <th scope="col">Submission Date</th>
                                                 <th scope="col">Status</th>
+                                                <th scope="col"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {% for quotation in all_quotations %}
                                                 <tr>
-                                                <th scope="row">{{ forloop.counter }}</th>
-                                                <td class="text-uppercase"><a href="{% url 'quotation_details' quotation.id %}">{{ quotation.quotation_id }}</a></td>
-                                                <td>{{ quotation.client }}</td>
-                                                <td>{{ quotation.total_price }}</td>
-                                                <td>{{ quotation.submission_date|date:"d M Y"  }}</td>
-                                                <td>{% if quotation.status %}
-                                                        Final
-                                                    {% else %}
-                                                        Draft
-                                                    {% endif %}
-                                                </td>
+                                                    <th scope="row">{{ forloop.counter }}</th>
+                                                    <td class="text-uppercase"><a href="{% url 'quotation_details' quotation.id %}">{{ quotation.quotation_id }}</a></td>
+                                                    <td>{{ quotation.client }}</td>
+                                                    <td>{{ quotation.total_price }}</td>
+                                                    <td>{{ quotation.submission_date|date:"d M Y"  }}</td>
+                                                    <td>{% if quotation.status %}
+                                                            Final
+                                                        {% else %}
+                                                            Draft
+                                                        {% endif %}
+                                                    </td>
+                                                    <td><a href="{% url 'convert-quotation-to-invoice' quotation.id %}"><button class="btn btn-outline-dark rounded-5">Generate Invoice</button></td></a>
                                                 </tr>
                                             {% endfor %}
                                         </tbody>

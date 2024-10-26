@@ -171,14 +171,15 @@ def quotations(request):
         quotation_form = QuotationForm()
         business_account = request.session.get('selected_business_account')
         selected_business_account = BusinessAccount.objects.get(id=business_account) 
-        all_quotations = Quotation.objects.filter(business_account=selected_business_account)
+        draft_quotations = Quotation.objects.filter(business_account=selected_business_account, status=False)
+        final_quotations = Quotation.objects.filter(business_account=selected_business_account, status=True)
         # quotation_items_form = QuotationItemsForm(prefix='form0')
         # context = {
         #     'form': [quotation_items_form],
         #     'quotation_form': quotation_form,
         # }
         return render(request, 'documents/quotations.html',
-                      {'forms': [form], 'quotation_form': quotation_form, 'all_quotations': all_quotations})
+                      {'forms': [form], 'quotation_form': quotation_form, 'draft_quotations': draft_quotations, 'final_quotations': final_quotations })
 
 @login_required
 def quotation_details(request, id):
@@ -206,13 +207,13 @@ def quotation_details(request, id):
             form_replica.save()
             # form.save()
             formset.save()
-
-
             messages.success(request, f'Updated Quotation Successfully.')
             return redirect('quotations')
         else:
-            messages.warning(request, f'Failed to update quotation details, Kindly retry again.')
-            return redirect('quotations')
+            messages.success(request, f'Updated Quotation Successfullydf.')
+            # return redirect('quotations')
+            return render(request, 'documents/quotation_details.html', {'form': form, 'formset':formset,'quotation_form': form})
+
     else:
         form = QuotationForm(instance=chosen_quotation)
         formset = QuotationItemFormSet(instance=chosen_quotation)

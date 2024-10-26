@@ -14,7 +14,7 @@
             {% endfor %}
             {% endif %}
             <div class="container-fluid p-3 mb-4 shadow-sm bg-white rounded-4">
-                <h2 class="my-2 pb-3 PrimaryColor fw-bold">Edit Invoices</h2>
+                <h2 class="my-2 pb-3 PrimaryColor fw-bold">Invoice <span class="text-uppercase">{{ chosen_invoice.invoice_id }}</span> Details</h2>
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-sm-6">
@@ -34,7 +34,7 @@
 
                                         <div class="py-3">
                                             <div class="d-grid gap-2">
-                                                <button class="btn btn-success" type="submit">Submit</button>
+                                                <button class="btn btn-success" type="submit">Update</button>
                                             </div>
                                         </div>
                                 </form>
@@ -48,7 +48,7 @@
                                         {{ invoice_items_form|crispy }}
                                         <div class="py-3">
                                             <div class="d-grid gap-2">
-                                                <button class="btn btn-success" type="submit">Submit</button>
+                                                <button class="btn btn-success" type="submit">Update</button>
                                             </div>
                                         </div>
                                     </form>

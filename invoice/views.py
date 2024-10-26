@@ -5,6 +5,9 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import InvoiceForm, InvoiceItemsForm
 from .models import Client, Invoice, InvoiceItems
+from documents.models import Client, Quotation, QuotationItems
+from documents.forms import QuotationForm, QuotationItemsForm, ClientForm
+from documents.models import Quotation
 import uuid
 from django.http import HttpResponse
 from django.forms import inlineformset_factory
@@ -28,6 +31,8 @@ from weasyprint import HTML
 from django.contrib.auth.decorators import login_required
 from accounts.models import BusinessAccount
 from decimal import Decimal
+from django.shortcuts import get_object_or_404
+from django.utils import timezone
 import os
 # Create your views here.
 
@@ -143,9 +148,9 @@ def invoice(request):
         business_account = request.session.get('selected_business_account')
         selected_business_account = BusinessAccount.objects.get(id=business_account) 
         all_invoices = Invoice.objects.filter(business_account=selected_business_account)
-        all_quotations =
+        all_quotations = Quotation.objects.filter(business_account=selected_business_account)
         return render(request, 'invoice/invoice.html',
-                      {'forms': [form], 'invoice_form': invoice_form, 'all_invoice': all_invoices})
+                      {'forms': [form], 'invoice_form': invoice_form, 'all_invoice': all_invoices, 'all_quotations': all_quotations})
 
 @login_required
 def invoice_details(request, id):
@@ -230,6 +235,103 @@ def invoice_delete(request, id):
     messages.success(request, f'Invoice deleted successfully')
     return redirect('invoice')
 
+
+@login_required
+def convert_quotation_to_invoice(request, id):
+    # Fetch the quotation instance
+    quotation = get_object_or_404(Quotation, id=id)
+    x = str(uuid.uuid4())[:5]
+    client_initials = str(quotation.client)[:3]
+    new_invoice_id = 'AS-' + str(client_initials) + '-' + x
+    # Create a new Invoice instance with Quotation details
+    invoice = Invoice.objects.create(
+        invoice_id = new_invoice_id,
+        client=quotation.client,
+        business_account=quotation.business_account,
+        status=quotation.status,
+        invoice_doc=quotation.quotation_doc,
+        data=quotation.data,
+        qr_code_image=quotation.qr_code_image,
+        note=quotation.note,
+        submission_date=timezone.now(),
+        taxable=quotation.taxable,
+        sub_total=quotation.sub_total,
+        total_price=quotation.total_price,
+    )
+
+    # Copy each QuotationItem to InvoiceItem
+    quotation_items = QuotationItems.objects.filter(quotation=quotation)
+    for item in quotation_items:
+        InvoiceItems.objects.create(
+            invoice=invoice,
+            item=item.item,
+            item_description=item.item_description,
+            quantity=item.quantity,
+            price=item.price,
+        )
+
+    # Optionally update the quotation status or other fields
+    quotation.status = True  # Mark the quotation as converted
+    quotation.save()
+
+    # Redirect to the invoice detail page with the new invoice ID
+    return redirect(reverse('invoice_details', args=[invoice.id]))
+
+
+
+
+
+
+
+
+
+
+
+
+
+    chosen_quotation = Quotation.objects.get(id=id)
+    listed_quotation_items = QuotationItems.objects.filter(quotation=chosen_quotation)
+    QuotationItemFormSet = inlineformset_factory(Quotation, QuotationItems, form=QuotationItemsForm, extra=0)
+
+    if request.method == "POST":
+        form = QuotationForm(request.POST, instance=chosen_quotation)
+        formset = QuotationItemFormSet(request.POST, instance=chosen_quotation)
+        if form.is_valid() and formset.is_valid():
+            sub_total_price = 0
+            for i in formset:
+                cd = i.cleaned_data
+                # Only add to subtotal if the form is not marked for deletion
+                if not cd.get('DELETE', False):
+                    cleaned_price = cd.get('price', 0)
+                    cleaned_quantity = cd.get('quantity', 0)
+                    # item_price = float(cleaned_price) * int(cleaned_quantity)
+                    item_price = Decimal(cleaned_price) * Decimal(cd.get('quantity', 0))
+                    sub_total_price = sub_total_price + item_price
+
+            form_replica = form.save(commit=False)
+            form_replica.sub_total = sub_total_price
+            form_replica.save()
+            # form.save()
+            formset.save()
+
+
+            messages.success(request, f'Updated Quotation Successfully.')
+            return redirect('quotations')
+        else:
+            messages.warning(request, f'Failed to update quotation details, Kindly retry again.')
+            return redirect('quotations')
+    else:
+        form = QuotationForm(instance=chosen_quotation)
+        formset = QuotationItemFormSet(instance=chosen_quotation)
+        quotation_items_form = QuotationItemsForm()
+        context = {
+            'quotation_form': form,
+            'quotation_items_form': quotation_items_form,
+            'QIformset': formset,
+            'chosen_quotation': chosen_quotation
+        }
+    return render(request, 'documents/quotation_details.html', context)
+    return render(request, 'invoice/generate_quoted_invoice.html', context)
 
 
 @login_required

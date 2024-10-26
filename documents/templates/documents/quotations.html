@@ -42,12 +42,32 @@
             </script>
 
             <div class="container-fluid px-3 py-2 mb-4 shadow-sm bg-white rounded-4">
-                {% if messages %}
-                {% for message in messages %}
-                    <div class="alert rounded-5 mb-3 alert-{{message.tags}} m-3">
-                        {{message}}
+                <!-- Non-field errors -->
+                {% if form.non_field_errors %}
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <ul>
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-                {% endfor %}
+                {% endif %}
+                
+                <!-- Field-specific errors -->
+                {% if form.errors %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <ul>
+                            {% for field, errors in form.errors.items %}
+                                <li><strong>{{ field|capfirst }}</strong>:
+                                    {% for error in errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                 {% endif %}
                 <h2 class="my-2 PrimaryColor fw-bold">Quotations</h2>
                 <ol class="breadcrumb mb-4">
@@ -139,7 +159,7 @@
                 {#start of draft quotation tables#}
                     <section class="p-4">
                         <div class="table-responsive">
-                            {% if all_quotations %}
+                            {% if draft_quotations %}
                                 <table class="table table-sm table-hover table-borderless">
                                     <thead class="table-light">
                                         <tr>
@@ -154,7 +174,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for quotation in all_quotations %}
+                                        {% for quotation in draft_quotations %}
                                             <tr>
                                             <th scope="row">{{ forloop.counter }}</th>
                                             <td class="text-uppercase">{{ quotation.quotation_id }}</td>
@@ -193,7 +213,7 @@
                 {#start of final quotation tables#}
                     <section class="p-4">
                         <div class="table-responsive">
-                            {% if all_quotations %}
+                            {% if final_quotations %}
                                 <table class="table table-sm table-hover table-borderless">
                                     <thead class="table-light">
                                         <tr>
@@ -209,7 +229,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for quotation in all_quotations %}
+                                        {% for quotation in final_quotations %}
                                             <tr>
                                             <th scope="row">{{ forloop.counter }}</th>
                                             <td class="text-uppercase">{{ quotation.quotation_id }}</td>
@@ -230,12 +250,12 @@
                                     </tbody>
                                 </table>
                             {% else %}
-                                <div class="py-1">
+                                <div class="py-1">  
                                     <div class="py-4">
                                         <div>
                                             <img src="/static/documents/images/as-empty-data.svg" class="d-block mx-lg-auto img-fluid" alt="Empty!" width="110" height="65" loading="lazy">
                                         </div>
-                                        <p class="fs-6 pt-2 fst-italic text-center">You have no pending Invoices!.</p>
+                                        <p class="fs-6 pt-2 fst-italic text-center">You have no Quotations marked final   .</p>
                                     </div>
                                 </div>
                             {% endif %}

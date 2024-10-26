@@ -8,6 +8,7 @@ urlpatterns = [
     path('invoice_details/<str:id>/', views.invoice_details, name='invoice_details'),
     path('invoice_delete/<str:id>/', views.invoice_delete, name='invoice_delete'),
     path('add_invoice_item/<str:id>/', views.add_invoice_item, name='add_invoice_item'),
+    path('convert_quotation_to_invoice/<str:id>/', views.convert_quotation_to_invoice, name='convert-quotation-to-invoice'),
     path('generate_pdf_invoice/<str:id>/', views.generate_pdf_invoice, name='generate_pdf_invoice'),
     path('invoice_verification/<str:id>/', views.invoice_verification, name='invoice_verification'),
 
