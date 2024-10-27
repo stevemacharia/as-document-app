@@ -64,128 +64,111 @@ def index(request):
 
 @login_required
 def quotations(request):
+    form = QuotationItemsForm(prefix='form0')
+    quotation_form = QuotationForm()
+    business_account = request.session.get('selected_business_account')
+    selected_business_account = BusinessAccount.objects.get(id=business_account) 
+    draft_quotations = Quotation.objects.filter(business_account=selected_business_account, status=False)
+    final_quotations = Quotation.objects.filter(business_account=selected_business_account, status=True)
+
     if request.method == 'POST':
         quotation_form = QuotationForm(request.POST)
+        form_count = int(request.POST.get('form_count', 1))
+        forms = [QuotationItemsForm(request.POST, prefix=f'form{i}') for i in range(form_count)]
         x = str(uuid.uuid4())[:5]
 
-        if quotation_form.is_valid():
+        if quotation_form.is_valid() and all(f.is_valid() for f in forms):
+            # Process and save the main QuotationForm
             q_form = quotation_form.save(commit=False)
-            business_account = request.session.get('selected_business_account')
-            selected_business_account = BusinessAccount.objects.get(id=business_account) 
             q_form.business_account = selected_business_account
-
-            client = q_form.client
-            # string = "Hello world"
-            # string[:3]
-            client_initials = str(client)[:3]
-            q_form.quotation_id = 'AS-' + str(client_initials) + '-' + x
-
-            ###############QR CODE GENERATION#########
+            client_initials = str(q_form.client)[:3]
+            q_form.quotation_id = f'AS-{client_initials}-{x}'
+            
+            # QR Code Generation
             qr = qrcode.QRCode(
                 version=1,
                 error_correction=qrcode.constants.ERROR_CORRECT_L,
                 box_size=10,
                 border=4,
             )
-            data = "www.document.arieshelby.com/quotation_verification/"+x
+            data = "www.document.arieshelby.com/quotation_verification/" + x
             qr.add_data(data)
             qr.make(fit=True)
             img = qr.make_image(fill='black', back_color='white')
 
-            # Save QR code image to a BytesIO object
             buffer = BytesIO()
             img.save(buffer, format='PNG')
             buffer.seek(0)
-
-            # Save the image to the ImageField
-
-            file_name = f"qr_code_{data}.png"
-            # qr_code.qr_code_image.save(file_name, File(buffer), save=False)
-            # qr_code.save()
-            ###############END OF QR CODE GENERATION##
-            q_form.qr_code_image.save(file_name, File(buffer), save=False)
-
+            q_form.qr_code_image.save(f"qr_code_{data}.png", File(buffer), save=False)
             q_form.save()
             
-            new_id = 'AS-' + str(client_initials) + '-' + x
-            chosen_quotation = Quotation.objects.get(quotation_id=new_id)
-
-            forms = []
-            form_count = int(request.POST.get('form_count', 1))
-            # quotation_forms = [QuotationForm(request.POST, prefix=str(i)) for i in range(int(request.POST['form_count']))]
+            chosen_quotation = Quotation.objects.get(quotation_id=q_form.quotation_id)
             sub_total_price = 0
-            for i in range(form_count):
-                form = QuotationItemsForm(request.POST, prefix='form{}'.format(i))
-                form_replica = form.save(commit=False)
-                item_price = form_replica.price * form_replica.quantity
-                sub_total_price = sub_total_price + item_price
-                if form.is_valid():
-                    forms.append(form)
-                else:
-                    quotation_form = QuotationForm()
-                    quotation_items_form = QuotationItemsForm()
-                    context = {
-                        'quotation_form': quotation_form,
-                        'quotation_items_form': quotation_items_form,
-                    }
-                    # If any form is invalid, render the template with all forms
-                    return render(request, 'documents/quotations.html', context)
-            main_sub_total_price = sub_total_price
-            chosen_quotation.sub_total = main_sub_total_price
+
+            # Process each QuotationItemsForm
+            for form in forms:
+                item = form.save(commit=False)
+                item.quotation = chosen_quotation
+                item_price = item.price * item.quantity
+                sub_total_price += item_price
+                item.save()
+
+            chosen_quotation.sub_total = sub_total_price
             chosen_quotation.save()
-            if forms:
-                # If all forms are valid, save them
-                for form in forms:
-                    Q_Items_form = form.save(commit=False)
-                    Q_Items_form.quotation = chosen_quotation
-                    Q_Items_form.save()
 
-                #########   GENERATE PDF   #############
-                # chosen__quotation = Quotation.objects.get(id=id)
-                template_name = get_template('documents/quotation_doc.html')
-                listed_quotation_items = QuotationItems.objects.filter(quotation=chosen_quotation)
-                context = {
-                    'selected_quotation': chosen_quotation,
-                    'listed_quotation_items': listed_quotation_items,
-                }
-                rendered_html = template_name.render(context)
-                pdf_file = HTML(string=rendered_html).write_pdf()
+            # PDF Generation
+            template_name = get_template('documents/quotation_doc.html')
+            listed_quotation_items = QuotationItems.objects.filter(quotation=chosen_quotation)
+            context = {
+                'selected_quotation': chosen_quotation,
+                'listed_quotation_items': listed_quotation_items,
+            }
+            pdf_file = HTML(string=template_name.render(context)).write_pdf()
+            chosen_quotation.quotation_doc = SimpleUploadedFile(
+                f'Arieshelby Quotation-{chosen_quotation.quotation_id}.pdf', pdf_file, content_type='application/pdf'
+            )
+            chosen_quotation.save()
 
-                ########## Update Quotation Model ##############
-                chosen_quotation.quotation_doc = SimpleUploadedFile(
-                    'Arieshelby Quotation-' + str(chosen_quotation.quotation_id) + '.pdf', pdf_file,
-                    content_type='application/pdf')
-                chosen_quotation.save()
-                ###############################
-                #########   GENERATE PDF   ##################
-
-                messages.success(request, f'Added Record Successfully.')
-                return redirect('quotations')
-        else:
-            messages.warning(request, f'Failed to add record.')
+            messages.success(request, 'Quotation and items saved successfully.')
             return redirect('quotations')
+        else:
+            # Gather errors for the main form and each items form
+            error_messages = []
+            if quotation_form.errors:
+                for field, errors in quotation_form.errors.items():
+                    for error in errors:
+                        error_messages.append(f"{field}: {error}")
+            for form in forms:
+                if form.errors:
+                    for field, errors in form.errors.items():
+                        for error in errors:
+                            error_messages.append(f"{field} (item): {error}")
 
+            # Pass error messages to the template
+            return render(request, 'documents/quotations.html', {
+                'forms': forms,
+                'quotation_form': quotation_form,
+                'draft_quotations': draft_quotations,
+                'final_quotations': final_quotations,
+                'error_messages': error_messages
+            })
 
     else:
-        form = QuotationItemsForm(prefix='form0')
-        quotation_form = QuotationForm()
-        business_account = request.session.get('selected_business_account')
-        selected_business_account = BusinessAccount.objects.get(id=business_account) 
-        draft_quotations = Quotation.objects.filter(business_account=selected_business_account, status=False)
-        final_quotations = Quotation.objects.filter(business_account=selected_business_account, status=True)
-        # quotation_items_form = QuotationItemsForm(prefix='form0')
-        # context = {
-        #     'form': [quotation_items_form],
-        #     'quotation_form': quotation_form,
-        # }
-        return render(request, 'documents/quotations.html',
-                      {'forms': [form], 'quotation_form': quotation_form, 'draft_quotations': draft_quotations, 'final_quotations': final_quotations })
+        return render(request, 'documents/quotations.html', {
+            'forms': [form],
+            'quotation_form': quotation_form,
+            'draft_quotations': draft_quotations,
+            'final_quotations': final_quotations
+        })
 
 @login_required
 def quotation_details(request, id):
     chosen_quotation = Quotation.objects.get(id=id)
     listed_quotation_items = QuotationItems.objects.filter(quotation=chosen_quotation)
     QuotationItemFormSet = inlineformset_factory(Quotation, QuotationItems, form=QuotationItemsForm, extra=0)
+    quotation_items_form = QuotationItemsForm()
+    form_instance = QuotationForm(instance=chosen_quotation)
+    formset_instance = QuotationItemFormSet(instance=chosen_quotation)
 
     if request.method == "POST":
         form = QuotationForm(request.POST, instance=chosen_quotation)
@@ -210,18 +193,19 @@ def quotation_details(request, id):
             messages.success(request, f'Updated Quotation Successfully.')
             return redirect('quotations')
         else:
-            messages.success(request, f'Updated Quotation Successfullydf.')
-            # return redirect('quotations')
-            return render(request, 'documents/quotation_details.html', {'form': form, 'formset':formset,'quotation_form': form})
+            return render(request, 'documents/quotation_details.html', 
+                          {
+                              'quotation_form': form, 
+                              'QIformset':formset, 
+                              'chosen_quotation': chosen_quotation, 
+                              'quotation_items_form': quotation_items_form
+                           })
 
     else:
-        form = QuotationForm(instance=chosen_quotation)
-        formset = QuotationItemFormSet(instance=chosen_quotation)
-        quotation_items_form = QuotationItemsForm()
         context = {
-            'quotation_form': form,
+            'quotation_form': form_instance,
             'quotation_items_form': quotation_items_form,
-            'QIformset': formset,
+            'QIformset': formset_instance,
             'chosen_quotation': chosen_quotation
         }
     return render(request, 'documents/quotation_details.html', context)
