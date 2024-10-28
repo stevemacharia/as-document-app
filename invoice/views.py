@@ -39,23 +39,28 @@ import os
 
 @login_required
 def invoice(request):
+    form = InvoiceItemsForm(prefix='form0')
+    invoice_form = InvoiceForm()
+    business_account = request.session.get('selected_business_account')
+    selected_business_account = BusinessAccount.objects.get(id=business_account) 
+    all_invoices = Invoice.objects.filter(business_account=selected_business_account)
+    draft_invoices = Invoice.objects.filter(business_account=selected_business_account, status=False)
+    final_invoices = Invoice.objects.filter(business_account=selected_business_account, status=True)
+    final_quotations = Quotation.objects.filter(business_account=selected_business_account, status=True)
     if request.method == 'POST':
         invoice_form = InvoiceForm(request.POST)
+        form_count = int(request.POST.get('form_count', 1))
+        forms = [InvoiceItemsForm(request.POST, prefix=f'form{i}') for i in range(form_count)]
         x = str(uuid.uuid4())[:5]
 
-        if invoice_form.is_valid():
+        if invoice_form.is_valid() and all(f.is_valid() for f in forms):
             q_form = invoice_form.save(commit=False)
             # Retrieve a business account value from the session
-            business_account = request.session.get('selected_business_account')
-            selected_business_account = BusinessAccount.objects.get(id=business_account) 
-
             q_form.business_account = selected_business_account
-            client = q_form.client
-            # string = "Hello world"
-            # string[:3]
-            client_initials = str(client)[:3]
-            q_form.invoice_id = 'AS-' + str(client_initials) + '-' + x
-            new_invoice_id = 'AS-' + str(client_initials) + '-' + x
+            client_initials = str(q_form.client)[:3]
+            invoice_id_smaller = f'AS{client_initials}{x}'
+            q_form.invoice_id = invoice_id_smaller.upper()
+            new_invoice_id = q_form.invoice_id
 
             ###############QR CODE GENERATION#########
             qr = qrcode.QRCode(
@@ -77,80 +82,85 @@ def invoice(request):
             # Save the image to the ImageField
 
             file_name = f"qr_code_{data}.png"
-            # qr_code.qr_code_image.save(file_name, File(buffer), save=False)
-            # qr_code.save()
+
             ###############END OF QR CODE GENERATION##
             q_form.qr_code_image.save(file_name, File(buffer), save=False)
 
             q_form.save()
-            new_id = 'AS-' + str(client_initials) + '-' + x
-            chosen_invoice = Invoice.objects.get(invoice_id=new_id)
 
-            forms = []
-            form_count = int(request.POST.get('form_count', 1))
+            chosen_invoice = Invoice.objects.get(invoice_id=new_invoice_id)
+
             sub_total_price = 0
-            for i in range(form_count):
-                form = InvoiceItemsForm(request.POST, prefix='form{}'.format(i))
-                form_replica = form.save(commit=False)
-                item_price = form_replica.price * form_replica.quantity
-                sub_total_price = sub_total_price + item_price
-                if form.is_valid():
-                    forms.append(form)
-                else:
-                    invoice_form = InvoiceForm()
-                    invoice_items_form = InvoiceItemsForm()
-                    context = {
-                        'invoice_form': invoice_form,
-                        'invoice_items_form': invoice_items_form,
-                    }
-                    # If any form is invalid, render the template with all forms
-                    return render(request, 'invoice/invoice.html', context)
-            main_sub_total_price = sub_total_price
-            chosen_invoice.sub_total = main_sub_total_price
+            # Process each QuotationItemsForm
+            for form in forms:
+                item = form.save(commit=False)
+                item.invoice = chosen_invoice
+                item_price = item.price * item.quantity
+                sub_total_price += item_price
+                item.save()
+
+            chosen_invoice.sub_total = sub_total_price
             chosen_invoice.save()
-            if forms:
-                # If all forms are valid, save them
-                for form in forms:
-                    Q_Items_form = form.save(commit=False)
-                    Q_Items_form.invoice = chosen_invoice
-                    Q_Items_form.save()
 
-                #########   GENERATE PDF   #############
 
-                template_name = get_template('invoice/invoice_doc.html')
-                listed_invoice_items = InvoiceItems.objects.filter(invoice=chosen_invoice)
-                selected_business_account = request.session.get('selected_business_account')
-                context = {
-                    'selected_invoice': chosen_invoice,
-                    'listed_invoice_items': listed_invoice_items,
-                    'selected_business_account': selected_business_account,
-                }
-                rendered_html = template_name.render(context)
-                pdf_file = HTML(string=rendered_html).write_pdf()
 
-                ########## Update Invoice Model ##############
-                chosen_invoice.invoice_doc = SimpleUploadedFile(
-                    'Arieshelby Invoice-' + str(chosen_invoice.invoice_id) + '.pdf', pdf_file,
-                    content_type='application/pdf')
-                chosen_invoice.save()
-                ###############################
-                #########   GENERATE PDF   ##################
 
-                messages.success(request, f'Added Record Successfully.')
-                return redirect('invoice')
-        else:
-            messages.warning(request, f'Failed to add record.')
+            #########   GENERATE PDF   #############
+
+            template_name = get_template('invoice/invoice_doc.html')
+            listed_invoice_items = InvoiceItems.objects.filter(invoice=chosen_invoice)
+            selected_business_account = request.session.get('selected_business_account')
+            context = {
+                'selected_invoice': chosen_invoice,
+                'listed_invoice_items': listed_invoice_items,
+                'selected_business_account': selected_business_account,
+            }
+            rendered_html = template_name.render(context)
+            pdf_file = HTML(string=rendered_html).write_pdf()
+
+            ########## Update Invoice Model ##############
+            chosen_invoice.invoice_doc = SimpleUploadedFile(
+                f'Arieshelby Invoice-{chosen_invoice.invoice_id}.pdf', pdf_file,
+                content_type='application/pdf')
+            chosen_invoice.save()
+            ###############################
+            #########   GENERATE PDF   ##################
+
+            messages.success(request, f'Invoice saved Successfully.')
             return redirect('invoice')
+        else:
+            # Gather errors for the main form and each items form
+            error_messages = []
+            if invoice_form.errors:
+                for field, errors in invoice_form.errors.items():
+                    for error in errors:
+                        error_messages.append(f"{field}: {error}")
+            for form in forms:
+                if form.errors:
+                    for field, errors in form.errors.items():
+                        for error in errors:
+                            error_messages.append(f"{field} (item): {error}")
+
+            # Pass error messages to the template
+            return render(request, 'invoice/invoice.html', {
+                'forms': forms,
+                'invoice_form': invoice_form,
+                'draft_invoice': draft_invoices,
+                'final_invoice': final_invoices,
+                'final_quotations': final_quotations,
+                'error_messages': error_messages
+            })
 
     else:
-        form = InvoiceItemsForm(prefix='form0')
-        invoice_form = InvoiceForm()
-        business_account = request.session.get('selected_business_account')
-        selected_business_account = BusinessAccount.objects.get(id=business_account) 
-        all_invoices = Invoice.objects.filter(business_account=selected_business_account)
-        all_quotations = Quotation.objects.filter(business_account=selected_business_account)
-        return render(request, 'invoice/invoice.html',
-                      {'forms': [form], 'invoice_form': invoice_form, 'all_invoice': all_invoices, 'all_quotations': all_quotations})
+
+        return render(request, 'invoice/invoice.html',{
+            'forms': [form],
+            'invoice_form': invoice_form,
+            'draft_invoice': draft_invoices,
+            'final_invoice': final_invoices,
+            'final_quotations': final_quotations
+            
+            })
 
 @login_required
 def invoice_details(request, id):

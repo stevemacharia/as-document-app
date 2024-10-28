@@ -82,7 +82,10 @@ def quotations(request):
             q_form = quotation_form.save(commit=False)
             q_form.business_account = selected_business_account
             client_initials = str(q_form.client)[:3]
-            q_form.quotation_id = f'AS-{client_initials}-{x}'
+            # client_initials = client_initials_smaller.upper()
+            quotation_id_smaller = f'AS{client_initials}{x}'
+            q_form.quotation_id = quotation_id_smaller.upper()
+            new_quotation_id = q_form.quotation_id 
             
             # QR Code Generation
             qr = qrcode.QRCode(
@@ -91,7 +94,7 @@ def quotations(request):
                 box_size=10,
                 border=4,
             )
-            data = "www.document.arieshelby.com/quotation_verification/" + x
+            data = "www.document.arieshelby.com/quotation_verification/" + new_quotation_id
             qr.add_data(data)
             qr.make(fit=True)
             img = qr.make_image(fill='black', back_color='white')

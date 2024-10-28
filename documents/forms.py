@@ -44,7 +44,7 @@ class QuotationForm(forms.ModelForm):
         label='Include 16% Tax',
         required=True
     )
-    note = forms.CharField(required=True, label="Add a note to the Quotation", widget=forms.Textarea)
+    note = forms.CharField(required=False, label="Add a note to the Quotation", widget=forms.Textarea)
     class Meta:
         model = Quotation
         fields = ['client', 'submission_date', 'status', 'taxable', 'note']
