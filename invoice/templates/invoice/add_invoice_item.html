@@ -39,39 +39,16 @@
 
             {% if messages %}
             {% for message in messages %}
-                <div class="alert alert-{{message.tags}} rounded-5 m-3">
+                <div class="alert alert-{{message.tags}} rounded-5 m-3" id="myAlert">
                     {{message}}
                 </div>
             {% endfor %}
             {% endif %}
             <div class="container-fluid p-3 mb-4 shadow-sm bg-white rounded-4">
-                <h2 class="my-2 pb-3 PrimaryColor fw-bold">Invoice <span class="text-uppercase">{{ chosen_invoice.invoice_id }}</span> Details</h2>
+                <h2 class="my-2 pb-3 PrimaryColor fw-bold">Invoice <span class="text-uppercase">{{ chosen_invoice.invoice_id }}</span> Item</h2>
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="col-sm-6">
-                            <div class="position-relative p-4 text-start text-muted bg-body border border-dashed rounded-5">
-                                <h6 class="text-primary fw-bolder text-capitalize pb-2"><i class="bi bi-pencil-square"></i> Update <span class="text-uppercase">{{ chosen_invoice.invoice_id }}</span> Invoice details</h6>
-                                <form method="POST" enctype="multipart/form-data">
-                                        {% csrf_token %}
-                                        {{ invoice_form|crispy }}
-
-                                        <!-- Iterate over form instances in the formset -->
-                                        {{ Invoiceformset.management_form }}
-                                        {% for form in Invoiceformset %}
-                                            {{ form|crispy }}
-
-                                        {% endfor %}
-
-
-                                        <div class="py-3">
-                                            <div class="d-grid gap-2">
-                                                <button class="btn btn-success" type="submit">Update</button>
-                                            </div>
-                                        </div>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
+                        <div class="col-sm-12">
                             <div class="position-relative p-4 text-start text-muted bg-body border border-dashed rounded-5">
                                 <h6 class="text-success fw-bolder text-capitalize"><i class="bi bi-plus-circle-fill"></i> Add Item to <span class="text-uppercase">{{ chosen_invoice.invoice_id }}</span> Invoice </h6>
                                     <form method="POST" enctype="multipart/form-data" action="{% url 'add_invoice_item' chosen_invoice.id %}">
@@ -90,4 +67,13 @@
             </div>
         </div>
     </main>
+<script>
+    // Use this script to automatically close the alert after 5 seconds (5000 milliseconds)
+    setTimeout(function() {
+        let alertElement = document.getElementById('myAlert');
+        let alert = new bootstrap.Alert(alertElement);
+        alert.close();
+    }, 5000);
+
+</script>
 {% endblock %}

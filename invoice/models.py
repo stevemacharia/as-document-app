@@ -11,7 +11,7 @@ from .utils import save_qr_code
 from PIL import Image
 import uuid
 from documents.models import Client
-from accounts.models import BusinessAccount
+from accounts.models import BusinessAccount, PaymentOption
 
 
 # Create your models here.
@@ -22,6 +22,7 @@ class Invoice(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='invoiced_client')
     business_account = models.ForeignKey(BusinessAccount, on_delete=models.CASCADE)
     status = models.BooleanField(default="False", null=True, blank=True)
+    payment_account = models.ForeignKey(PaymentOption, on_delete=models.CASCADE) 
     invoice_doc = models.FileField(upload_to='invoice_docs', default='default.pdf', null=True, blank=True, max_length=500)
     data = models.CharField(max_length=255, blank=True, null=True)
     qr_code_image = models.ImageField(upload_to='qr_codes/', blank=True, null=True)

@@ -264,14 +264,18 @@
 
 
 
-        {% if selected_invoice.note %}
+
             <div class="card" style="border: 1px solid {{ selected_business_account.theme_color }} ; margin-top: 20px; width: 40rem;">
               <div class="card-body" style="padding-bottom:0cm !important; padding-top:0.2cm !important;">
+                {% if selected_business_account %}
+                {% endif %}
+                {% if selected_invoice.note %}
                   <div>*Notes</div>
                   <p class="fw-normal" style="font-size:10px;">{{ selected_invoice.note }}</p>
+                {% endif %}
               </div>
             </div>
-        {% endif %}
+
 
         <div class="d-flex align-items-center shadow-sm">
             <div class="flex-shrink-0"><img src="{{ qr_code_url }}" alt="QR Code" class="qr-code"></div>

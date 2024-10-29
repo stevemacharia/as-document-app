@@ -1,0 +1,47 @@
+{% extends 'documents/base.html' %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+    <main>
+        <div class="container-fluid bg-body-tertiary rounded-4 p-4">
+
+            {% if quotation_items_form.errors %}
+                <div class="alert alert-danger rounded-5" role="alert">
+                    <strong>There were some errors with your submission at the field(s) below:</strong>
+                    <ul class="mb-0">
+                        {% for field in quotation_items_form %}
+                            {% if field.errors %}
+                                <li><strong>{{ field.errors|join:", " }}</strong> </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+
+
+            <div class="container-fluid p-3 mb-4 shadow-sm bg-white rounded-4">
+                <h2 class="my-2 pb-3 PrimaryColor fw-bold">Edit Quotation</h2>
+                <div class="row">
+
+                    <div class="col-sm-12">
+                        <div class="position-relative p-4 text-start text-muted bg-body border border-dashed rounded-5">
+                            <h6 class="text-success fw-bolder text-capitalize"><i class="bi bi-plus-circle-fill"></i> Add Item to <span class="text-uppercase">{{ chosen_quotation.quotation_id }}</span> Quotation </h6>
+                                <form method="POST" enctype="multipart/form-data" action="{% url 'add_quotation_item' chosen_quotation.id %}">
+                                    {% csrf_token %}
+                                    {{ quotation_items_form|crispy }}
+                                    <div class="py-3">
+                                        <div class="d-grid gap-2">
+                                            <button class="btn btn-success" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

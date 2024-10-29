@@ -45,14 +45,14 @@
                 
                 {% if messages %}
                 {% for message in messages %}
-                    <div class="alert alert-{{message.tags}} rounded-5 m-3">
+                    <div class="alert alert-{{message.tags}} rounded-5 m-3" id="myAlert">
                         {{message}}
                     </div>
                 {% endfor %}
                 {% endif %}
                 
                 {% if error_messages %}
-                    <div class="alert alert-danger rounded-5">
+                    <div class="alert alert-danger rounded-5" >
                         <strong>There were some errors with your submission:</strong>
                         <ul>
                             {% for error in error_messages %}
@@ -140,7 +140,6 @@
                                     {% endfor %}
 
 
-
                                     <button type="button" class="btn btn-primary rounded-5" id="add-form-btn">Add another Item <i class="bi bi-database-fill-add"></i></button>
                                     <div class="py-3">
                                         <div class="d-grid gap-2">
@@ -169,7 +168,7 @@
                       <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
                         <div class="accordion-body">
                             <div class="table-responsive">
-                                {% if all_quotations %}
+                                {% if final_quotations %}
                                     <table class="table table-borderless">
                                         <thead class="table-light">
                                             <tr>
@@ -183,7 +182,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {% for quotation in all_quotations %}
+                                            {% for quotation in final_quotations %}
                                                 <tr>
                                                     <th scope="row">{{ forloop.counter }}</th>
                                                     <td class="text-uppercase"><a href="{% url 'quotation_details' quotation.id %}">{{ quotation.quotation_id }}</a></td>
@@ -332,4 +331,13 @@
             </div>
         </div>
     </main>
+<script>
+    // Use this script to automatically close the alert after 5 seconds (5000 milliseconds)
+    setTimeout(function() {
+        let alertElement = document.getElementById('myAlert');
+        let alert = new bootstrap.Alert(alertElement);
+        alert.close();
+    }, 5000);
+
+</script>
 {% endblock %}

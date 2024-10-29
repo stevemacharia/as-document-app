@@ -238,8 +238,12 @@ def add_quotation_item(request, id):
             messages.success(request, f'Successfully added quotation item')
             return redirect(reverse('quotation_details', kwargs={'id': id}))
         else:
-            messages.warning(request, f'Failed to add quotation item')
-            return redirect('quotations')
+            return render(request, 'documents/add_quotation_item.html',
+                        {
+                            'chosen_quotation': selected_quotation,
+                            'quotation_items_form': quotation_item_form,
+
+                        })
     else:
         messages.warning(request, f'Not post request')
         return redirect('quotations')

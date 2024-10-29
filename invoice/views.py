@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import InvoiceForm, InvoiceItemsForm
+from accounts.forms import PaymentOptionForm
 from .models import Client, Invoice, InvoiceItems
 from documents.models import Client, Quotation, QuotationItems
 from documents.forms import QuotationForm, QuotationItemsForm, ClientForm
@@ -41,19 +42,30 @@ import os
 def invoice(request):
     form = InvoiceItemsForm(prefix='form0')
     invoice_form = InvoiceForm()
+    payment_form = PaymentOptionForm()
     business_account = request.session.get('selected_business_account')
     selected_business_account = BusinessAccount.objects.get(id=business_account) 
-    all_invoices = Invoice.objects.filter(business_account=selected_business_account)
     draft_invoices = Invoice.objects.filter(business_account=selected_business_account, status=False)
     final_invoices = Invoice.objects.filter(business_account=selected_business_account, status=True)
     final_quotations = Quotation.objects.filter(business_account=selected_business_account, status=True)
     if request.method == 'POST':
         invoice_form = InvoiceForm(request.POST)
+        payment_form_instance = PaymentOptionForm(request.POST)
         form_count = int(request.POST.get('form_count', 1))
         forms = [InvoiceItemsForm(request.POST, prefix=f'form{i}') for i in range(form_count)]
         x = str(uuid.uuid4())[:5]
 
-        if invoice_form.is_valid() and all(f.is_valid() for f in forms):
+        if invoice_form.is_valid() and all(f.is_valid() for f in forms) and payment_form_instance.is_valid:
+
+            # start of payment form save
+            payment_form = payment_form_instance.save(commit=False)
+            payment_form.business = business_account
+            payment_form.save()
+
+            # end of payment form save
+
+
+
             q_form = invoice_form.save(commit=False)
             # Retrieve a business account value from the session
             q_form.business_account = selected_business_account
@@ -87,7 +99,7 @@ def invoice(request):
             q_form.qr_code_image.save(file_name, File(buffer), save=False)
 
             q_form.save()
-
+            
             chosen_invoice = Invoice.objects.get(invoice_id=new_invoice_id)
 
             sub_total_price = 0
@@ -101,9 +113,6 @@ def invoice(request):
 
             chosen_invoice.sub_total = sub_total_price
             chosen_invoice.save()
-
-
-
 
             #########   GENERATE PDF   #############
 
@@ -145,6 +154,7 @@ def invoice(request):
             return render(request, 'invoice/invoice.html', {
                 'forms': forms,
                 'invoice_form': invoice_form,
+                'payment_form': payment_form,
                 'draft_invoice': draft_invoices,
                 'final_invoice': final_invoices,
                 'final_quotations': final_quotations,
@@ -156,6 +166,7 @@ def invoice(request):
         return render(request, 'invoice/invoice.html',{
             'forms': [form],
             'invoice_form': invoice_form,
+            'payment_form': payment_form,
             'draft_invoice': draft_invoices,
             'final_invoice': final_invoices,
             'final_quotations': final_quotations
@@ -167,10 +178,12 @@ def invoice_details(request, id):
     chosen_invoice = Invoice.objects.get(id=id)
     listed_invoice_items = InvoiceItems.objects.filter(invoice=chosen_invoice)
     InvoiceItemFormSet = inlineformset_factory(Invoice, InvoiceItems, can_delete=True, form=InvoiceItemsForm, extra=0)
+    form = InvoiceForm(instance=chosen_invoice)
+    formset = InvoiceItemFormSet(instance=chosen_invoice)
+    invoice_items_form = InvoiceItemsForm()
 
     if request.method == "POST":
         form = InvoiceForm(request.POST, instance=chosen_invoice)
-
         formset = InvoiceItemFormSet(request.POST, instance=chosen_invoice)
         
         if form.is_valid() and formset.is_valid():
@@ -194,16 +207,20 @@ def invoice_details(request, id):
             messages.success(request, f'Updated Invoice Successfully.')
             return redirect('invoice')
         else:
-            messages.warning(request, f'Failed to update invoice details, Kindly retry again.')
-            return redirect('invoice')
+            return render(request, 'invoice/invoice_details.html',
+                        {
+                            'invoice_form': form,
+                            'invoice_items_form': invoice_items_form,
+                            'Invoiceformset': formset,
+                            'chosen_invoice': chosen_invoice
+                        })
+
     else:
-        form = InvoiceForm(instance=chosen_invoice)
-        formset = InvoiceItemFormSet(instance=chosen_invoice)
-        invoice_items_form = InvoiceItemsForm()
+
         context = {
             'invoice_form': form,
             'invoice_items_form': invoice_items_form,
-            'QIformset': formset,
+            'Invoiceformset': formset,
             'chosen_invoice': chosen_invoice
         }
     return render(request, 'invoice/invoice_details.html', context)
@@ -229,14 +246,18 @@ def add_invoice_item(request, id):
 
             QI_form.invoice = selected_invoice
             QI_form.save()
-            messages.success(request, f'Successfully added invoice item2')
+            messages.success(request, f'Successfully added invoice item')
             return redirect(reverse('invoice_details', kwargs={'id': id}))
         else:
-            messages.warning(request, f'Failed to add invoice item')
-            return redirect('invoice')
+            return render(request, 'invoice/add_invoice_item.html',
+                        {
+                        'invoice_items_form': invoice_item_form,
+                        'chosen_invoice': selected_invoice,
+
+                        })
     else:
-        messages.warning(request, f'Not post request')
-        return redirect('invoice')
+            messages.success(request, f'Kindly retry again')
+            return redirect(reverse('invoice_details', kwargs={'id': id}))
 
 @login_required
 def invoice_delete(request, id):
@@ -287,61 +308,6 @@ def convert_quotation_to_invoice(request, id):
     # Redirect to the invoice detail page with the new invoice ID
     return redirect(reverse('invoice_details', args=[invoice.id]))
 
-
-
-
-
-
-
-
-
-
-
-
-
-    chosen_quotation = Quotation.objects.get(id=id)
-    listed_quotation_items = QuotationItems.objects.filter(quotation=chosen_quotation)
-    QuotationItemFormSet = inlineformset_factory(Quotation, QuotationItems, form=QuotationItemsForm, extra=0)
-
-    if request.method == "POST":
-        form = QuotationForm(request.POST, instance=chosen_quotation)
-        formset = QuotationItemFormSet(request.POST, instance=chosen_quotation)
-        if form.is_valid() and formset.is_valid():
-            sub_total_price = 0
-            for i in formset:
-                cd = i.cleaned_data
-                # Only add to subtotal if the form is not marked for deletion
-                if not cd.get('DELETE', False):
-                    cleaned_price = cd.get('price', 0)
-                    cleaned_quantity = cd.get('quantity', 0)
-                    # item_price = float(cleaned_price) * int(cleaned_quantity)
-                    item_price = Decimal(cleaned_price) * Decimal(cd.get('quantity', 0))
-                    sub_total_price = sub_total_price + item_price
-
-            form_replica = form.save(commit=False)
-            form_replica.sub_total = sub_total_price
-            form_replica.save()
-            # form.save()
-            formset.save()
-
-
-            messages.success(request, f'Updated Quotation Successfully.')
-            return redirect('quotations')
-        else:
-            messages.warning(request, f'Failed to update quotation details, Kindly retry again.')
-            return redirect('quotations')
-    else:
-        form = QuotationForm(instance=chosen_quotation)
-        formset = QuotationItemFormSet(instance=chosen_quotation)
-        quotation_items_form = QuotationItemsForm()
-        context = {
-            'quotation_form': form,
-            'quotation_items_form': quotation_items_form,
-            'QIformset': formset,
-            'chosen_quotation': chosen_quotation
-        }
-    return render(request, 'documents/quotation_details.html', context)
-    return render(request, 'invoice/generate_quoted_invoice.html', context)
 
 
 @login_required

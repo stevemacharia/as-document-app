@@ -2,6 +2,7 @@ from django import forms
 from .models import Invoice, InvoiceItems, Client
 from crispy_bootstrap5.bootstrap5 import FloatingField
 from django.contrib.admin.widgets import AdminDateWidget
+from accounts.models import PaymentOption
 
 
 class InvoiceForm(forms.ModelForm):
@@ -15,6 +16,8 @@ class InvoiceForm(forms.ModelForm):
     )
 
     client = forms.ModelChoiceField(queryset=Client.objects.all(), label="Choose client",
+                                      widget=forms.Select(attrs={'class': 'form-control'}))
+    payment_account = forms.ModelChoiceField(queryset=PaymentOption.objects.all(), label="Choose payment account",
                                       widget=forms.Select(attrs={'class': 'form-control'}))
     submission_date = forms.DateField(
         label="Submission Date",
