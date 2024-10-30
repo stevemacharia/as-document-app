@@ -1,0 +1,93 @@
+{% extends 'documents/base.html' %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+    <main>
+        <div class="container-fluid bg-body-tertiary rounded-4 p-4">
+
+            {% if invoice_form.errors %}
+                <div class="alert alert-danger rounded-5" role="alert">
+                    <strong>There were some errors with your submission at the field(s) below:</strong>
+                    <ul class="mb-0">
+                        {% for field in invoice_form %}
+                            {% if field.errors %}
+                                <li><strong>{{ field.errors|join:", " }}</strong> </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+
+            {% if Invoiceformset.errors %}
+                <div class="alert alert-danger rounded-5" role="alert">
+                    <strong>There were some errors with your submission at the field(s) below:</strong>
+                    <ul class="mb-0">
+                        {% for field in Invoiceformset %}
+                            {% if field.errors %}
+                                <li><strong>{{ field.errors|join:", " }}</strong></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+
+
+
+            {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{message.tags}} rounded-5 m-3">
+                    {{message}}
+                </div>
+            {% endfor %}
+            {% endif %}
+            <div class="container-fluid p-3 mb-4 shadow-sm bg-white rounded-4">
+                <h2 class="my-2 pb-3 PrimaryColor fw-bold">Invoice <span class="text-uppercase">{{ chosen_invoice.invoice_id }}</span> Details</h2>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="position-relative p-4 text-start text-muted bg-body border border-dashed rounded-5">
+                                <h6 class="text-primary fw-bolder text-capitalize pb-2"><i class="bi bi-pencil-square"></i> Update <span class="text-uppercase">{{ chosen_invoice.invoice_id }}</span> Invoice details</h6>
+                                <form method="POST" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        {{ invoice_form|crispy }}
+
+                                        <!-- Iterate over form instances in the formset -->
+                                        {{ Invoiceformset.management_form }}
+                                        {% for form in Invoiceformset %}
+                                            {{ form|crispy }}
+
+                                        {% endfor %}
+
+
+                                        <div class="py-3">
+                                            <div class="d-grid gap-2">
+                                                <button class="btn btn-success" type="submit">Update</button>
+                                            </div>
+                                        </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="position-relative p-4 text-start text-muted bg-body border border-dashed rounded-5">
+                                <h6 class="text-success fw-bolder text-capitalize"><i class="bi bi-plus-circle-fill"></i> Add Item to <span class="text-uppercase">{{ chosen_invoice.invoice_id }}</span> Invoice </h6>
+                                    <form method="POST" enctype="multipart/form-data" action="{% url 'add_invoice_item' chosen_invoice.id %}">
+                                        {% csrf_token %}
+                                        {{ invoice_items_form|crispy }}
+                                        <div class="py-3">
+                                            <div class="d-grid gap-2">
+                                                <button class="btn btn-success" type="submit">Update</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}
