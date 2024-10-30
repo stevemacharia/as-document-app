@@ -106,8 +106,17 @@
                                         <div class="col-sm-4">
                                             {{ invoice_form.status|as_crispy_field }}
                                         </div>
-                                        <div class="col-sm-12 mt-0">
+                                        <div class="col-sm-4 mt-0">
                                             {{ invoice_form.taxable|as_crispy_field }}
+                                        </div>
+                                        <div class="col-sm-4 mt-0">
+                                            {{ invoice_form.payment_account|as_crispy_field }}
+                                        </div>
+                                        <div class="col-sm-4 mt-0">
+                                            {{ invoice_form.payment_status|as_crispy_field }}
+                                        </div>
+                                        <div class="col-sm-12 mt-0">
+                                            {{ invoice_form.note|as_crispy_field }}
                                         </div>
                                     </div>
 
@@ -221,62 +230,8 @@
 
             </div>
             <div class="container-fluid p-3 mb-4 shadow-sm bg-white rounded-4">
-                <h5 class="fw-semibold PrimaryColor">Draft Invoices</h5>    
+                <h5 class="fw-semibold PrimaryColor">Final Invoices</h5>    
                 {#start of draft Invoice tables#}
-                    <section class="p-4">
-                        <div class="table-responsive">
-                            {% if draft_invoice %}
-                                <table class="table table-sm caption-top table-hover table-borderless">
-                                    <thead class="table-light">
-                                        <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Invoice Code</th>
-                                        <th scope="col">Client</th>
-                                        <th scope="col">Total Amount</th>
-                                        <th scope="col">Submission Date</th>
-                                        <th scope="col">Status</th>
-                                        <th scope="col">Edit</th>
-                                        <th scope="col">Delete</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for invoice in draft_invoice %}
-                                            <tr>
-                                            <th scope="row">{{ forloop.counter }}</th>
-                                            <td class="text-uppercase">{{ invoice.invoice_id }}</td>
-                                            <td>{{ invoice.client }}</td>
-                                            <td>{{ invoice.total_price|intcomma }}</td>
-                                            <td>{{ invoice.submission_date|date:"d M. Y" }}</td>
-                                            <td>{% if invoice.status %}
-                                                    Final
-                                                {% else %}
-                                                    Draft
-                                                {% endif %}
-                                            </td>
-                                            <td><a href="{% url 'invoice_details' invoice.id %}"><button type="button" class="btn btn-primary btn-sm">Edit</button></a></td>
-                                            <td><a href="{% url 'invoice_delete' invoice.id %}"><button type="button" class="btn btn-danger btn-sm">Delete</button></a></td>
-                                            </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            {% else %}
-                                <div class="py-1">
-                                    <div class="py-4">
-                                        <div>
-                                            <img src="/static/documents/images/as-empty-data.svg" class="d-block mx-lg-auto img-fluid" alt="Empty!" width="110" height="65" loading="lazy">
-                                        </div>
-                                        <p class="fs-6 pt-2 fst-italic text-center">You have no pending Invoices!.</p>
-                                    </div>
-                                </div>
-                            {% endif %}
-                        </div>
-                    </section>
-                {# end of invoice tables#}
-            </div>
-
-            <div class="container-fluid p-3 mb-4 shadow-sm bg-white rounded-4">    
-                {#start of final invoice tables#}
-                    <h5 class="fw-semibold PrimaryColor">Final Invoices</h5>
                     <section class="p-4">
                         <div class="table-responsive">
                             {% if final_invoice %}
@@ -300,6 +255,61 @@
                                             <th scope="row">{{ forloop.counter }}</th>
                                             <td class="text-uppercase">{{ invoice.invoice_id }}</td>
                                             <td>{{ invoice.client }}</td>
+                                            <td>{{ invoice.total_price|intcomma }}</td>
+                                            <td>{{ invoice.submission_date|date:"d M. Y" }}</td>
+                                            <td>{% if invoice.status %}
+                                                    Final
+                                                {% else %}
+                                                    Draft
+                                                {% endif %}
+                                            </td>
+                                            <td><a href="{% url 'generate_pdf_invoice' invoice.id %}"><button type="button" class="btn btn-success btn-sm"><i class="bi bi-file-arrow-down-fill"></i> Download</button></a></td>
+                                            <td><a href="{% url 'invoice_details' invoice.id %}"><button type="button" class="btn btn-primary btn-sm">Edit</button></a></td>
+                                            <td><a href="{% url 'invoice_delete' invoice.id %}"><button type="button" class="btn btn-danger btn-sm">Delete</button></a></td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% else %}
+                                <div class="py-1">
+                                    <div class="py-0">
+                                        <div>
+                                            <img src="/static/documents/images/as-empty-data.svg" class="d-block mx-lg-auto img-fluid" alt="Empty!" width="80" height="35" loading="lazy">
+                                        </div>
+                                        <p class="fs-6 pt-0 fst-italic text-center">You have no  Invoices marked final.</p>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </section>
+                {# end of invoice tables#}
+            </div>
+
+            <div class="container-fluid p-3 mb-4 shadow-sm bg-white rounded-4">    
+                {#start of final invoice tables#}
+                    <h5 class="fw-semibold PrimaryColor">Draft Invoices</h5>
+                    <section class="p-4">
+                        <div class="table-responsive">
+                            {% if draft_invoice %}
+                                <table class="table table-sm caption-top table-hover table-borderless">
+                                    <thead class="table-light">
+                                        <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Invoice Code</th>
+                                        <th scope="col">Client</th>
+                                        <th scope="col">Total Amount</th>
+                                        <th scope="col">Submission Date</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Edit</th>
+                                        <th scope="col">Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for invoice in draft_invoice %}
+                                            <tr>
+                                            <th scope="row">{{ forloop.counter }}</th>
+                                            <td class="text-uppercase">{{ invoice.invoice_id }}</td>
+                                            <td>{{ invoice.client }}</td>
                                             <td>{{ invoice.total_price|intcomma  }}</td>
                                             <td>{{ invoice.submission_date|date:"d M. Y" }}</td>
                                             <td>{% if invoice.status %}
@@ -319,9 +329,9 @@
                                 <div class="py-1">
                                     <div class="py-4">
                                         <div>
-                                            <img src="/static/documents/images/as-empty-data.svg" class="d-block mx-lg-auto img-fluid" alt="Empty!" width="110" height="65" loading="lazy">
+                                            <img src="/static/documents/images/as-empty-data.svg" class="d-block mx-lg-auto img-fluid" alt="Empty!" width="80" height="35" loading="lazy">
                                         </div>
-                                        <p class="fs-6 pt-2 fst-italic text-center">You have no pending Invoices!.</p>
+                                        <p class="fs-6 pt-0 fst-italic text-center">You have no draft Invoices!.</p>
                                     </div>
                                 </div>
                             {% endif %}

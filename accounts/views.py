@@ -94,7 +94,7 @@ def business_profile(request):
         if u_form.is_valid():
             u_form.save()
             messages.success(request, f'Your account has been updated!' )
-            return redirect('business-profile', id)
+            return redirect('business-profile')
         else:
             payment_form= PaymentOptionForm()
             return render(request, 'accounts/business_profile.html', {'u_form': u_form, 'business_account':selected_business_account, 'payment_options':payment_options, 'client_addresses': client_addresses, 'payment_form':payment_form})

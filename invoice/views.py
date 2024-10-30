@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import InvoiceForm, InvoiceItemsForm
 from accounts.forms import PaymentOptionForm
+from accounts.models import PaymentOption
 from .models import Client, Invoice, InvoiceItems
 from documents.models import Client, Quotation, QuotationItems
 from documents.forms import QuotationForm, QuotationItemsForm, ClientForm
@@ -42,7 +43,8 @@ import os
 def invoice(request):
     form = InvoiceItemsForm(prefix='form0')
     invoice_form = InvoiceForm()
-    payment_form = PaymentOptionForm()
+    invoice_form.set_request(request)
+
     business_account = request.session.get('selected_business_account')
     selected_business_account = BusinessAccount.objects.get(id=business_account) 
     draft_invoices = Invoice.objects.filter(business_account=selected_business_account, status=False)
@@ -50,21 +52,15 @@ def invoice(request):
     final_quotations = Quotation.objects.filter(business_account=selected_business_account, status=True)
     if request.method == 'POST':
         invoice_form = InvoiceForm(request.POST)
-        payment_form_instance = PaymentOptionForm(request.POST)
+        invoice_form.set_request(request)
+        # form = InvoiceForm(request.POST)
+        # form.set_request(request)  # Ensure this is called on InvoiceForm
+
         form_count = int(request.POST.get('form_count', 1))
         forms = [InvoiceItemsForm(request.POST, prefix=f'form{i}') for i in range(form_count)]
         x = str(uuid.uuid4())[:5]
 
-        if invoice_form.is_valid() and all(f.is_valid() for f in forms) and payment_form_instance.is_valid:
-
-            # start of payment form save
-            payment_form = payment_form_instance.save(commit=False)
-            payment_form.business = business_account
-            payment_form.save()
-
-            # end of payment form save
-
-
+        if invoice_form.is_valid() and all(f.is_valid() for f in forms):
 
             q_form = invoice_form.save(commit=False)
             # Retrieve a business account value from the session
@@ -154,7 +150,6 @@ def invoice(request):
             return render(request, 'invoice/invoice.html', {
                 'forms': forms,
                 'invoice_form': invoice_form,
-                'payment_form': payment_form,
                 'draft_invoice': draft_invoices,
                 'final_invoice': final_invoices,
                 'final_quotations': final_quotations,
@@ -166,7 +161,6 @@ def invoice(request):
         return render(request, 'invoice/invoice.html',{
             'forms': [form],
             'invoice_form': invoice_form,
-            'payment_form': payment_form,
             'draft_invoice': draft_invoices,
             'final_invoice': final_invoices,
             'final_quotations': final_quotations
@@ -179,11 +173,13 @@ def invoice_details(request, id):
     listed_invoice_items = InvoiceItems.objects.filter(invoice=chosen_invoice)
     InvoiceItemFormSet = inlineformset_factory(Invoice, InvoiceItems, can_delete=True, form=InvoiceItemsForm, extra=0)
     form = InvoiceForm(instance=chosen_invoice)
+    form.set_request(request)
     formset = InvoiceItemFormSet(instance=chosen_invoice)
     invoice_items_form = InvoiceItemsForm()
 
     if request.method == "POST":
         form = InvoiceForm(request.POST, instance=chosen_invoice)
+        form.set_request(request)
         formset = InvoiceItemFormSet(request.POST, instance=chosen_invoice)
         
         if form.is_valid() and formset.is_valid():
@@ -313,11 +309,14 @@ def convert_quotation_to_invoice(request, id):
 @login_required
 def generate_pdf_invoice(request, id):
     selected_invoice = Invoice.objects.get(id=id)
+    payment_option = selected_invoice.payment_account
+    selected_payment_option = payment_option
     listed_invoice_items = InvoiceItems.objects.filter(invoice=selected_invoice)
     business_account = request.session.get('selected_business_account')
     selected_business_account = BusinessAccount.objects.get(id=business_account) 
     # Template context variables
     context = {
+        'selected_payment_option': selected_payment_option,
         'selected_business_account': selected_business_account,
         'selected_invoice': selected_invoice,
         'listed_invoice_items': listed_invoice_items,
