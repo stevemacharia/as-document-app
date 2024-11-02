@@ -1,6 +1,3 @@
-from django.shortcuts import render
-
-# Create your views here.
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import InvoiceForm, InvoiceItemsForm
@@ -36,9 +33,8 @@ from decimal import Decimal
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 import os
+
 # Create your views here.
-
-
 @login_required
 def invoice(request):
     form = InvoiceItemsForm(prefix='form0')
