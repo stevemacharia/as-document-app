@@ -36,7 +36,7 @@
                             var formCount = $('.form-container').length;
                             $('#form_count').val(formCount);
                         } else {
-                            alert("You must have at least one item in the invoice.");
+                            alert("You must have at least one item in the receipt.");
                         }
                     });
                 });
@@ -61,9 +61,9 @@
                         </ul>
                     </div>
                 {% endif %}
-                <h2 class="my-2 PrimaryColor fw-bold">Invoices</h2>
+                <h2 class="my-2 PrimaryColor fw-bold">Receipt</h2>
                 <ol class="breadcrumb mb-2">
-                    <li class="breadcrumb-item active">Create or view invoices from here</li>
+                    <li class="breadcrumb-item active">Create or view receipts from here</li>
                 </ol>
                 
 
@@ -74,7 +74,7 @@
                             <path d="M3 4.5a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5m8-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5"/>
                         </svg>
                         <div>
-                        <h3 class="fw-bold mb-0 fs-5 PrimaryColor">Invoices</h3>
+                        <h3 class="fw-bold mb-0 fs-5 PrimaryColor">Receipts</h3>
                         <p class="mb-0"><span class="pe-2 text-secondary">200 Completed </span> <span class="text-danger pe-2"> 300 Draft</span></p>
     
                         </div>
@@ -82,7 +82,7 @@
                 </div>
 
                 <div class="p-2">
-                    <button type="button" class="btn btn-outline-dark rounded-5" data-bs-toggle="modal" data-bs-target="#exampleModal" ><i class="bi bi-upload pe-2"></i> Create a new Invoice</button>
+                    <button type="button" class="btn btn-outline-dark rounded-5" data-bs-toggle="modal" data-bs-target="#exampleModal" ><i class="bi bi-upload pe-2"></i> Create a new Receipt</button>
                 </div>
 
                 <!-- Start of Upload Modal -->
@@ -90,33 +90,33 @@
                     <div class="modal-dialog modal-fullscreen modal-dialog-centered">
                         <div class="modal-content p-4">
                         <div class="modal-header">
-                            <h4 class="modal-title PrimaryColor fw-semibold" id="exampleModalLabel">Enter invoice Details</h4>
+                            <h4 class="modal-title PrimaryColor fw-semibold" id="exampleModalLabel">Enter receipt details</h4>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form id="original-form" method="post" action="{% url 'invoice' %}">
+                            <form id="original-form" method="post" action="{% url 'receipt' %}">
                                     {% csrf_token %}
                                     <div class="row g-3">
                                         <div class="col-sm-4">
-                                            {{ invoice_form.client|as_crispy_field }}
+                                            {{ receipt_form.client|as_crispy_field }}
                                         </div>
                                         <div class="col-sm-4">
-                                            {{ invoice_form.submission_date|as_crispy_field }}
+                                            {{ receipt_form.submission_date|as_crispy_field }}
                                         </div>
                                         <div class="col-sm-4">
-                                            {{ invoice_form.status|as_crispy_field }}
+                                            {{ receipt_form.status|as_crispy_field }}
                                         </div>
                                         <div class="col-sm-4 mt-0">
-                                            {{ invoice_form.taxable|as_crispy_field }}
+                                            {{ receipt_form.taxable|as_crispy_field }}
                                         </div>
                                         <div class="col-sm-4 mt-0">
-                                            {{ invoice_form.payment_account|as_crispy_field }}
+                                            {{ receipt_form.payment_account|as_crispy_field }}
                                         </div>
                                         <div class="col-sm-4 mt-0">
-                                            {{ invoice_form.payment_status|as_crispy_field }}
+                                            {{ receipt_form.payment_status|as_crispy_field }}
                                         </div>
                                         <div class="col-sm-12 mt-0">
-                                            {{ invoice_form.note|as_crispy_field }}
+                                            {{ receipt_form.note|as_crispy_field }}
                                         </div>
                                     </div>
 
@@ -169,7 +169,7 @@
                       <h2 class="accordion-header">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
                             <div class="icon-link icon-link-hover fw-semibold PrimaryColor" href="#">
-                                Generate an Invoice from previous quotations now
+                                Generate an Receipt from previous invoices now
                                 <i class="bi bi-arrow-right"></i>
                             </div>
                         </button>
@@ -177,12 +177,12 @@
                       <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
                         <div class="accordion-body">
                             <div class="table-responsive">
-                                {% if final_quotations %}
+                                {% if final_invoices %}
                                     <table class="table table-borderless">
                                         <thead class="table-light">
                                             <tr>
                                                 <th scope="col">#</th>
-                                                <th scope="col">Quotation Code</th>
+                                                <th scope="col">Invoice Code</th>
                                                 <th scope="col">Client</th>
                                                 <th scope="col">Total Amount</th>
                                                 <th scope="col">Submission Date</th>
@@ -191,20 +191,20 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {% for quotation in final_quotations %}
+                                            {% for invoice in final_invoices %}
                                                 <tr>
                                                     <th scope="row">{{ forloop.counter }}</th>
-                                                    <td class="text-uppercase"><a href="{% url 'quotation_details' quotation.id %}">{{ quotation.quotation_id }}</a></td>
-                                                    <td>{{ quotation.client }}</td>
-                                                    <td>{{ quotation.total_price }}</td>
-                                                    <td>{{ quotation.submission_date|date:"d M Y"  }}</td>
-                                                    <td>{% if quotation.status %}
+                                                    <td class="text-uppercase"><a href="{% url 'invoice_details' invoice.id %}">{{ invoice.invoice_id }}</a></td>
+                                                    <td>{{ invoice.client }}</td>
+                                                    <td>{{ invoice.total_price }}</td>
+                                                    <td>{{ invoice.submission_date|date:"d M Y"  }}</td>
+                                                    <td>{% if invoice.status %}
                                                             Final
                                                         {% else %}
                                                             Draft
                                                         {% endif %}
                                                     </td>
-                                                    <td><a href="{% url 'convert-quotation-to-invoice' quotation.id %}"><button class="btn btn-outline-dark rounded-5">Generate Invoice</button></td></a>
+                                                    <td><a href="{% url 'convert-invoice-to-receipt' invoice.id %}"><button class="btn btn-outline-dark rounded-5">Generate Receipt</button></td></a>
                                                 </tr>
                                             {% endfor %}
                                         </tbody>
@@ -215,7 +215,7 @@
                                             <div>
                                                 <img src="/static/documents/images/as-no-quotation.svg" class="d-block mx-lg-auto img-fluid" alt="Empty!" width="110" height="65" loading="lazy">
                                             </div>
-                                            <p class="fs-6 pt-2 fst-italic text-center">You have not created any Quotations!.</p>
+                                            <p class="fs-6 pt-2 fst-italic text-center">You have not created any Invoices!.</p>
                                         </div>
                                     </div>
                                 {% endif %}
@@ -230,16 +230,16 @@
 
             </div>
             <div class="container-fluid p-3 mb-4 shadow-sm bg-white rounded-4">
-                <h5 class="fw-semibold PrimaryColor">Final Invoices</h5>    
+                <h5 class="fw-semibold PrimaryColor">Final Receipts</h5>    
                 {#start of draft Invoice tables#}
                     <section class="p-4">
                         <div class="table-responsive">
-                            {% if final_invoice %}
+                            {% if final_receipt %}
                                 <table class="table table-sm caption-top table-hover table-borderless">
                                     <thead class="table-light">
                                         <tr>
                                         <th scope="col">#</th>
-                                        <th scope="col">Invoice Code</th>
+                                        <th scope="col">Receipt Code</th>
                                         <th scope="col">Client</th>
                                         <th scope="col">Total Amount</th>
                                         <th scope="col">Submission Date</th>
@@ -250,22 +250,22 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for invoice in final_invoice %}
+                                        {% for receipt in final_receipt %}
                                             <tr>
                                             <th scope="row">{{ forloop.counter }}</th>
-                                            <td class="text-uppercase">{{ invoice.invoice_id }}</td>
-                                            <td>{{ invoice.client }}</td>
-                                            <td>{{ invoice.total_price|intcomma }}</td>
-                                            <td>{{ invoice.submission_date|date:"d M. Y" }}</td>
-                                            <td>{% if invoice.status %}
+                                            <td class="text-uppercase">{{ receipt.receipt_id }}</td>
+                                            <td>{{ receipt.client }}</td>
+                                            <td>{{ receipt.total_price|intcomma }}</td>
+                                            <td>{{ receipt.submission_date|date:"d M. Y" }}</td>
+                                            <td>{% if receipt.status %}
                                                     Final
                                                 {% else %}
                                                     Draft
                                                 {% endif %}
                                             </td>
-                                            <td><a href="{% url 'generate_pdf_invoice' invoice.id %}"><button type="button" class="btn btn-success btn-sm"><i class="bi bi-file-arrow-down-fill"></i> Download</button></a></td>
-                                            <td><a href="{% url 'invoice_details' invoice.id %}"><button type="button" class="btn btn-primary btn-sm">Edit</button></a></td>
-                                            <td><a href="{% url 'invoice_delete' invoice.id %}"><button type="button" class="btn btn-danger btn-sm">Delete</button></a></td>
+                                            <td><a href="{% url 'generate_pdf_receipt' receipt.id %}"><button type="button" class="btn btn-success btn-sm"><i class="bi bi-file-arrow-down-fill"></i> Download</button></a></td>
+                                            <td><a href="{% url 'receipt_details' receipt.id %}"><button type="button" class="btn btn-primary btn-sm">Edit</button></a></td>
+                                            <td><a href="{% url 'receipt_delete' receipt.id %}"><button type="button" class="btn btn-danger btn-sm">Delete</button></a></td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
@@ -276,7 +276,7 @@
                                         <div>
                                             <img src="/static/documents/images/as-empty-data.svg" class="d-block mx-lg-auto img-fluid" alt="Empty!" width="80" height="35" loading="lazy">
                                         </div>
-                                        <p class="fs-6 pt-0 fst-italic text-center">You have no  Invoices marked final.</p>
+                                        <p class="fs-6 pt-0 fst-italic text-center">You have no  Receipts marked final.</p>
                                     </div>
                                 </div>
                             {% endif %}
@@ -287,15 +287,15 @@
 
             <div class="container-fluid p-3 mb-4 shadow-sm bg-white rounded-4">    
                 {#start of final invoice tables#}
-                    <h5 class="fw-semibold PrimaryColor">Draft Invoices</h5>
+                    <h5 class="fw-semibold PrimaryColor">Draft Receipts</h5>
                     <section class="p-4">
                         <div class="table-responsive">
-                            {% if draft_invoice %}
+                            {% if draft_receipt %}
                                 <table class="table table-sm caption-top table-hover table-borderless">
                                     <thead class="table-light">
                                         <tr>
                                         <th scope="col">#</th>
-                                        <th scope="col">Invoice Code</th>
+                                        <th scope="col">Receipt Code</th>
                                         <th scope="col">Client</th>
                                         <th scope="col">Total Amount</th>
                                         <th scope="col">Submission Date</th>
@@ -305,22 +305,22 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for invoice in draft_invoice %}
+                                        {% for receipt in draft_receipt %}
                                             <tr>
                                             <th scope="row">{{ forloop.counter }}</th>
-                                            <td class="text-uppercase">{{ invoice.invoice_id }}</td>
-                                            <td>{{ invoice.client }}</td>
-                                            <td>{{ invoice.total_price|intcomma  }}</td>
-                                            <td>{{ invoice.submission_date|date:"d M. Y" }}</td>
-                                            <td>{% if invoice.status %}
+                                            <td class="text-uppercase">{{ receipt.receipt_id }}</td>
+                                            <td>{{ receipt.client }}</td>
+                                            <td>{{ receipt.total_price|intcomma  }}</td>
+                                            <td>{{ receipt.submission_date|date:"d M. Y" }}</td>
+                                            <td>{% if receipt.status %}
                                                     Final
                                                 {% else %}
                                                     Draft
                                                 {% endif %}
                                             </td>
-                                            <td><a href="{% url 'generate_pdf_invoice' invoice.id %}"><button type="button" class="btn btn-success btn-sm"><i class="bi bi-file-arrow-down-fill"></i> Download</button></a></td>
-                                            <td><a href="{% url 'invoice_details' invoice.id %}"><button type="button" class="btn btn-primary btn-sm">Edit</button></a></td>
-                                            <td><a href="{% url 'invoice_delete' invoice.id %}"><button type="button" class="btn btn-danger btn-sm">Delete</button></a></td>
+                                            <td><a href="{% url 'generate_pdf_receipt' receipt.id %}"><button type="button" class="btn btn-success btn-sm"><i class="bi bi-file-arrow-down-fill"></i> Download</button></a></td>
+                                            <td><a href="{% url 'receipt_details' receipt.id %}"><button type="button" class="btn btn-primary btn-sm">Edit</button></a></td>
+                                            <td><a href="{% url 'receipt_delete' receipt.id %}"><button type="button" class="btn btn-danger btn-sm">Delete</button></a></td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
@@ -331,13 +331,13 @@
                                         <div>
                                             <img src="/static/documents/images/as-empty-data.svg" class="d-block mx-lg-auto img-fluid" alt="Empty!" width="80" height="35" loading="lazy">
                                         </div>
-                                        <p class="fs-6 pt-0 fst-italic text-center">You have no draft Invoices!.</p>
+                                        <p class="fs-6 pt-0 fst-italic text-center">You have no draft Receipts!.</p>
                                     </div>
                                 </div>
                             {% endif %}
                         </div>
                     </section>
-                {# end of quotation tables#}
+                {# end of invoice tables#}
             </div>
         </div>
     </main>
