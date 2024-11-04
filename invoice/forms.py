@@ -1,8 +1,9 @@
 from django import forms
-from .models import Invoice, InvoiceItems, Client
+from .models import Invoice, InvoiceItems
 from crispy_bootstrap5.bootstrap5 import FloatingField
 from django.contrib.admin.widgets import AdminDateWidget
 from accounts.models import BusinessAccount, PaymentOption
+from documents.models import Client
 
 class InvoiceForm(forms.ModelForm):
     STATUS_CHOICES = (

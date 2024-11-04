@@ -7,11 +7,11 @@
     <main>
         <div class="container-fluid bg-body-tertiary rounded-4 p-4">
 
-            {% if invoice_form.errors %}
+            {% if receipt_form.errors %}
                 <div class="alert alert-danger rounded-5" role="alert">
                     <strong>There were some errors with your submission at the field(s) below:</strong>
                     <ul class="mb-0">
-                        {% for field in invoice_form %}
+                        {% for field in receipt_form %}
                             {% if field.errors %}
                                 <li><strong>{{ field.errors|join:", " }}</strong> </li>
                             {% endif %}
@@ -21,11 +21,11 @@
             {% endif %}
 
 
-            {% if Invoiceformset.errors %}
+            {% if Receiptformset.errors %}
                 <div class="alert alert-danger rounded-5" role="alert">
                     <strong>There were some errors with your submission at the field(s) below:</strong>
                     <ul class="mb-0">
-                        {% for field in Invoiceformset %}
+                        {% for field in Receiptformset %}
                             {% if field.errors %}
                                 <li><strong>{{ field.errors|join:", " }}</strong></li>
                             {% endif %}
@@ -45,15 +45,15 @@
             {% endfor %}
             {% endif %}
             <div class="container-fluid p-3 mb-4 shadow-sm bg-white rounded-4">
-                <h2 class="my-2 pb-3 PrimaryColor fw-bold">Invoice <span class="text-uppercase">{{ chosen_invoice.invoice_id }}</span> Item</h2>
+                <h2 class="my-2 pb-3 PrimaryColor fw-bold">Receipt <span class="text-uppercase">{{ chosen_receipt.receipt_id }}</span> Item</h2>
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="position-relative p-4 text-start text-muted bg-body border border-dashed rounded-5">
-                                <h6 class="text-success fw-bolder text-capitalize"><i class="bi bi-plus-circle-fill"></i> Add Item to <span class="text-uppercase">{{ chosen_invoice.invoice_id }}</span> Invoice </h6>
-                                    <form method="POST" enctype="multipart/form-data" action="{% url 'add_invoice_item' chosen_invoice.id %}">
+                                <h6 class="text-success fw-bolder text-capitalize"><i class="bi bi-plus-circle-fill"></i> Add Item to <span class="text-uppercase">{{ chosen_receipt.receipt_id }}</span> Receipt </h6>
+                                    <form method="POST" enctype="multipart/form-data" action="{% url 'add_receipt_item' chosen_receipt.id %}">
                                         {% csrf_token %}
-                                        {{ invoice_items_form|crispy }}
+                                        {{ receipt_items_form|crispy }}
                                         <div class="py-3">
                                             <div class="d-grid gap-2">
                                                 <button class="btn btn-success" type="submit">Update</button>

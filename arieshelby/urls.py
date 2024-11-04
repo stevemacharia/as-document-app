@@ -24,6 +24,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),  # Allauth routes
     path('user/', include('user.urls')),  # Allauth routes
     path('', include('documents.urls')),
+    path('receipt/', include('receipt.urls')),
     path('invoice/', include('invoice.urls')),
     path('delivery_note/', include('deliverynote.urls')),
     path('', include('accounts.urls')),

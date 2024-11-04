@@ -5,7 +5,7 @@ from accounts.forms import PaymentOptionForm
 from accounts.models import PaymentOption
 from .models import Receipt, ReceiptItems
 from invoice.models import Client, Invoice, InvoiceItems
-from invoice.forms import InvoiceForm, InvoiceItemsForm, ClientForm
+from invoice.forms import InvoiceForm, InvoiceItemsForm
 import uuid
 from django.http import HttpResponse
 from django.forms import inlineformset_factory
@@ -310,7 +310,7 @@ def convert_invoice_to_receipt(request, id):
 
 
 @login_required
-def generate_pdf_receip(request, id):
+def generate_pdf_receipt(request, id):
     selected_receipt = Receipt.objects.get(id=id)
     payment_option = selected_receipt.payment_account
     selected_payment_option = payment_option

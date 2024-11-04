@@ -16,8 +16,8 @@
                     <div class="card shadow border-0 mb-3">
                         <img src="/static/documents/images/as_logo.jpeg" class="card-img-top" alt="...">
                       <div class="card-body">
-                            {% if invoice_id %}
-                                <h6 class="fw-semibold" style="color: #185319">Invoice Code: <span class="fw-bold text-decoration-underline text-uppercase">{{ invoice_id }}</span></h6>
+                            {% if receipt_id %}
+                                <h6 class="fw-semibold" style="color: #185319">Receipt Code: <span class="fw-bold text-decoration-underline text-uppercase">{{ receipt_id }}</span></h6>
                             {% endif %}
                             <div class="alert alert-{{message_tag}} m-3">
                                {{message}}

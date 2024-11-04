@@ -113,7 +113,7 @@
                                             {{ receipt_form.payment_account|as_crispy_field }}
                                         </div>
                                         <div class="col-sm-4 mt-0">
-                                            {{ receipt_form.payment_status|as_crispy_field }}
+
                                         </div>
                                         <div class="col-sm-12 mt-0">
                                             {{ receipt_form.note|as_crispy_field }}
@@ -234,7 +234,7 @@
                 {#start of draft Invoice tables#}
                     <section class="p-4">
                         <div class="table-responsive">
-                            {% if final_receipt %}
+                            {% if final_receipts %}
                                 <table class="table table-sm caption-top table-hover table-borderless">
                                     <thead class="table-light">
                                         <tr>
@@ -250,7 +250,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for receipt in final_receipt %}
+                                        {% for receipt in final_receipts %}
                                             <tr>
                                             <th scope="row">{{ forloop.counter }}</th>
                                             <td class="text-uppercase">{{ receipt.receipt_id }}</td>
@@ -290,7 +290,7 @@
                     <h5 class="fw-semibold PrimaryColor">Draft Receipts</h5>
                     <section class="p-4">
                         <div class="table-responsive">
-                            {% if draft_receipt %}
+                            {% if draft_receipts %}
                                 <table class="table table-sm caption-top table-hover table-borderless">
                                     <thead class="table-light">
                                         <tr>
@@ -305,7 +305,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for receipt in draft_receipt %}
+                                        {% for receipt in draft_receipts %}
                                             <tr>
                                             <th scope="row">{{ forloop.counter }}</th>
                                             <td class="text-uppercase">{{ receipt.receipt_id }}</td>
