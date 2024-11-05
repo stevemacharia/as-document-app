@@ -55,8 +55,8 @@
                                         {% csrf_token %}
                                         {{ receipt_form|crispy }}
                                         <!-- Iterate over form instances in the formset -->
-                                        {{ Receiptformset.management_form }}
-                                        {% for form in Receiptformset %}
+                                        {{ receipt_formset.management_form }}
+                                        {% for form in receipt_formset %}
                                             {{ form|crispy }}
                                         {% endfor %}
                                         <div class="py-3">

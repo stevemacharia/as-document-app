@@ -31,6 +31,7 @@ from accounts.models import BusinessAccount
 from decimal import Decimal
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from num2words import num2words
 import os
 
 # Create your views here.
@@ -125,7 +126,7 @@ def receipt(request):
             ###############################
             #########   GENERATE PDF   ##################
 
-            messages.success(request, f'receipt saved Successfully.')
+            messages.success(request, f'Receipt saved Successfully.')
             return redirect('receipt')
         else:
             # Gather errors for the main form and each items form
@@ -155,8 +156,8 @@ def receipt(request):
         return render(request, 'receipt/receipt.html',{
             'forms': [form],
             'receipt_form': receipt_form,
-            'draft_receipt': draft_receipts,
-            'final_receipt': final_receipts,
+            'draft_receipts': draft_receipts,
+            'final_receipts': final_receipts,
             'final_invoices': final_invoice,
             
             })
@@ -210,7 +211,7 @@ def receipt_details(request, id):
         context = {
             'receipt_form': form,
             'receipt_items_form': receipt_items_form,
-            'receiptformset': formset,
+            'receipt_formset': formset,
             'chosen_receipt': chosen_receipt
         }
     return render(request, 'receipt/receipt_details.html', context)
@@ -316,9 +317,13 @@ def generate_pdf_receipt(request, id):
     selected_payment_option = payment_option
     listed_receipt_items = ReceiptItems.objects.filter(receipt=selected_receipt)
     business_account = request.session.get('selected_business_account')
-    selected_business_account = BusinessAccount.objects.get(id=business_account) 
+    selected_business_account = BusinessAccount.objects.get(id=business_account)
+    receipt_total = selected_receipt.total_price
+    # Convert number to words
+    total_price_in_words = num2words(receipt_total)
     # Template context variables
     context = {
+        'total_price_in_words': total_price_in_words,
         'selected_payment_option': selected_payment_option,
         'selected_business_account': selected_business_account,
         'selected_receipt': selected_receipt,
@@ -338,7 +343,7 @@ def generate_pdf_receipt(request, id):
 
     # Create a PDF
     html = HTML(string=html_string, base_url=request.build_absolute_uri())
-    pdf = html.write_pdf(stylesheets=[CSS(string='@page { size: A4; margin: 0.5cm }')])
+    pdf = html.write_pdf(stylesheets=[CSS(string='@page { size: A5; margin: 0.5cm }')])
 
     ########## Update Receipt Model ##############
     selected_receipt.receipt_doc = SimpleUploadedFile(
