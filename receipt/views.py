@@ -290,7 +290,7 @@ def convert_invoice_to_receipt(request, id):
     invoice_items = InvoiceItems.objects.filter(invoice=invoice)
     for item in invoice_items:
         ReceiptItems.objects.create(
-            invoice=receipt,
+            receipt=receipt,
             item=item.item,
             item_description=item.item_description,
             quantity=item.quantity,

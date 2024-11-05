@@ -22,7 +22,7 @@
             padding: 0;
             color: #555;
             line-height: 1.6;
-            font-size:9px;
+            font-size:8px;
         }
         th, td {
             padding: 8px;
@@ -159,13 +159,13 @@
             color: white;
             font-family: "Montserrat", sans-serif;
             font-weight: 600;
-            font-size: 9px;
+            font-size: 8px;
             background-color:{{ selected_business_account.theme_color }} !important;
           }
 
         .invoice .invoice-total {
           margin-right:-10px;
-          font-size:9px;
+          font-size:8px;
         }
 
         .d-flex{
@@ -192,7 +192,7 @@
         <div class="header">
             <img src="{{ selected_business_account.logo.url}}" alt="Company Logo" style="width: 80px;">
             <div class="company-details">
-                <strong style="color:{{ selected_business_account.theme_color }}; font-size:10px; ">{{ selected_business_account.name }}</strong><br>
+                <strong style="color:{{ selected_business_account.theme_color }}; font-size:9px;">{{ selected_business_account.name }}</strong><br>
                 {{ selected_business_account.email }}<br>
                 {{ selected_business_account.email }} | 
                 {{ selected_business_account.phone_number }}, {{ selected_business_account.tel }}<br>
@@ -203,16 +203,16 @@
         </div>
 
         <!-- Client Information and Receipt Details -->
-        <table class="info-table" style="margin-top:10px">
+        <table class="info-table" style="margin-top:10px; font-size:8px;">
             <tr>
-                <td>
+                <td style="font-size:8px;">
                     <strong>Billed To:</strong><br>
                     {{ selected_receipt.client.name }}<br>
                     {{ selected_receipt.client.phone_number }}<br>
                     {{ selected_receipt.client.email }}<br>
                     {{ selected_receipt.client.postal_address }}
                 </td>
-                <td>
+                <td style="font-size:8px;">
                     <strong>Receipt No:</strong> {{ selected_receipt.receipt_id }}<br>
                     <strong>Date:</strong> {{selected_receipt.submission_date|date:"d M. Y" }}<br>
                 </td>
@@ -253,12 +253,11 @@
 
             <div class="card" style="border: 1px solid {{ selected_business_account.theme_color }} ; margin-top: 20px; width: 15rem;">
               <div class="card-body" style="padding-bottom:0cm !important; padding-top:0.2cm !important;">
-                  <div class="fw-bold">Ammount in Words</div>
-                  <p class="fw-normal ps-2 mb-0 text-capitalize" style="font-size:8px;">{{ total_price_in_words }} only</p>
+                  <div class="fw-bold" style="font-size:7px;">Ammount in Words</div>
+                  <p class="fw-normal ps-2 mb-0 text-capitalize" style="font-size:7px;">{{ total_price_in_words }} only</p>
                 {% if selected_payment_option %}
-                    <div class="fw-bold pt-1" style="padding-top:0px !important; margin-top:0px !important;">*Payment Details</div>
-                    <p class="fw-semibold mb-0 ps-2" style="font-size:8px;">{{ selected_payment_option.payment_method  }} Transfer</p>
-                    <p class="fw-normal ps-2" style="font-size:8px;">{{ selected_payment_option.name }} </br> Account No:{{ selected_payment_option.account_no }}</p>
+                    <div class="fw-bold pt-1" style="padding-top:0px !important; margin-top:0px !important; font-size:7px;">*Payment Details - {{ selected_payment_option.payment_method  }} Transfer</div>
+                    <p class="fw-normal ps-2" style="font-size:7px;">{{ selected_payment_option.name }} </br> Account No:{{ selected_payment_option.account_no }}</p>
                 {% endif %}
 
               </div>
@@ -267,7 +266,7 @@
 
             <div class="align-items-center shadow-sm mt-3">
                 <div class="flex-shrink-0"><img src="{{ qr_code_url }}" alt="QR Code" class="qr-code"></div>
-                <div class="flex-grow-1 ms-1"><p style="color:{{ selected_business_account.theme_color }}  !important; font-size: 9px; font-weight: 600;font-family: Montserrat, sans-serif;">This Document is system generated. Scan Qr Code to verify this document</p></div>
+                <div class="flex-grow-1 ms-1"><p style="color:{{ selected_business_account.theme_color }}  !important; font-size: 8px; font-weight: 600;font-family: Montserrat, sans-serif;">This Document is system generated. Scan Qr Code to verify this document</p></div>
             </div>
     </div>
 </body>
