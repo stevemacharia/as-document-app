@@ -28,27 +28,41 @@ from weasyprint import HTML
 import os
 from django.contrib.auth.decorators import login_required
 from accounts.models import BusinessAccount
+from invoice.models import Invoice 
 from decimal import Decimal
 # Create your views here.
 
 
 @login_required
 def delivery_note(request):
+    form = DeliveryNoteItemsForm(prefix='form0')
+    delivery_note_form = DeliveryNoteForm()
+    delivery_note_form.set_request(request)
+    business_account = request.session.get('selected_business_account')
+    selected_business_account = BusinessAccount.objects.get(id=business_account) 
+    draft_delivery_notes = DeliveryNote.objects.filter(business_account=selected_business_account, status=False)
+    final_delivery_notes = DeliveryNote.objects.filter(business_account=selected_business_account, status=True)
+    final_invoices = Invoice.objects.filter(business_account=selected_business_account, status=True)
+
     if request.method == 'POST':
         delivery_note_form = DeliveryNoteForm(request.POST)
+        delivery_note_form.set_request(request)
+        # form = InvoiceForm(request.POST)
+        # form.set_request(request)  # Ensure this is called on InvoiceForm
+
+        form_count = int(request.POST.get('form_count', 1))
+        forms = [DeliveryNoteItemsForm(request.POST, prefix=f'form{i}') for i in range(form_count)]
         x = str(uuid.uuid4())[:5]
 
-        if delivery_note_form.is_valid():
-            q_form = delivery_note_form.save(commit=False)
-            business_account = request.session.get('selected_business_account')
-            selected_business_account = BusinessAccount.objects.get(id=business_account) 
-            q_form.business_account = selected_business_account
+        if delivery_note_form.is_valid() and all(f.is_valid() for f in forms):
 
-            client = q_form.client
-            # string = "Hello world"
-            # string[:3]
-            client_initials = str(client)[:3]
-            q_form.dnote_id = 'AS-' + str(client_initials) + '-' + x
+            dn_form = delivery_note_form.save(commit=False)
+            # Retrieve a business account value from the session
+            dn_form.business_account = selected_business_account
+            client_initials = str(dn_form.client)[:3]
+            delivery_note_id_smaller = f'AS{client_initials}{x}'
+            dn_form.delivery_note_id = delivery_note_id_smaller.upper()
+            new_delivery_note_id = dn_form.delivery_note_id
 
             ###############QR CODE GENERATION#########
             qr = qrcode.QRCode(
@@ -57,7 +71,7 @@ def delivery_note(request):
                 box_size=10,
                 border=4,
             )
-            data = "www.arieshelby.com/"+x
+            data = "www.document.arieshelby.com/invoice/invoice_verification/"+new_delivery_note_id
             qr.add_data(data)
             qr.make(fit=True)
             img = qr.make_image(fill='black', back_color='white')
@@ -70,80 +84,83 @@ def delivery_note(request):
             # Save the image to the ImageField
 
             file_name = f"qr_code_{data}.png"
-            # qr_code.qr_code_image.save(file_name, File(buffer), save=False)
-            # qr_code.save()
+
             ###############END OF QR CODE GENERATION##
-            q_form.qr_code_image.save(file_name, File(buffer), save=False)
+            dn_form.qr_code_image.save(file_name, File(buffer), save=False)
 
-            q_form.save()
-            new_id = 'AS-' + str(client_initials) + '-' + x
-            chosen_delivery_note = DeliveryNote.objects.get(dnote_id=new_id)
+            dn_form.save()
+            
+            chosen_delivery_note = DeliveryNote.objects.get(dnote_id=new_delivery_note_id)
 
-            forms = []
-            form_count = int(request.POST.get('form_count', 1))
             sub_total_price = 0
-            for i in range(form_count):
-                form = DeliveryNoteItemsForm(request.POST, prefix='form{}'.format(i))
-                form_replica = form.save(commit=False)
-                item_price = form_replica.price * form_replica.quantity
-                sub_total_price = sub_total_price + item_price
-                if form.is_valid():
-                    forms.append(form)
-                else:
-                    delivery_note_form = DeliveryNoteForm()
-                    delivery_note_items_form = DeliveryNoteItemsForm()
-                    context = {
-                        'delivery_note_form': delivery_note_form,
-                        'delivery_note_items_form': delivery_note_items_form,
-                    }
-                    # If any form is invalid, render the template with all forms
-                    return render(request, 'deliverynote/delivery_note.html', context)
-            main_sub_total_price = sub_total_price
-            chosen_delivery_note.sub_total = main_sub_total_price
+            # Process each DeliveryNoteItemsForm
+            for form in forms:
+                item = form.save(commit=False)
+                item.dnote = chosen_delivery_note
+                item_price = item.price * item.quantity
+                sub_total_price += item_price
+                item.save()
+
+            chosen_delivery_note.sub_total = sub_total_price
             chosen_delivery_note.save()
-            if forms:
-                # If all forms are valid, save them
-                for form in forms:
-                    Q_Items_form = form.save(commit=False)
-                    Q_Items_form.dnote = chosen_delivery_note
-                    Q_Items_form.save()
 
-                #########   GENERATE PDF   #############
+            #########   GENERATE PDF   #############
 
-                template_name = get_template('deliverynote/delivery_note_doc.html')
-                listed_delivery_note_items = DeliveryNoteItems.objects.filter(dnote=chosen_delivery_note)
-                selected_business_account = request.session.get('selected_business_account')
-                context = {
-                    'selected_delivery_note': chosen_delivery_note,
-                    'listed_delivery_note_items': listed_delivery_note_items,
-                    'selected_business_account': selected_business_account,
-                }
-                rendered_html = template_name.render(context)
-                pdf_file = HTML(string=rendered_html).write_pdf()
+            template_name = get_template('deliverynote/delivery_note_doc.html')
+            listed_delivery_note_items = DeliveryNoteItems.objects.filter(dnote=chosen_delivery_note)
+            selected_business_account = request.session.get('selected_business_account')
+            context = {
+                'selected_delivery_note': chosen_delivery_note,
+                'listed_delivery_note_items': listed_delivery_note_items,
+                'selected_business_account': selected_business_account,
+            }
+            rendered_html = template_name.render(context)
+            pdf_file = HTML(string=rendered_html).write_pdf()
 
-                ########## Update Delivery Note Model ##############
-                chosen_delivery_note.dnote_doc = SimpleUploadedFile(
-                    'Arieshelby Delivery note-' + str(chosen_delivery_note.dnote_id) + '.pdf', pdf_file,
-                    content_type='application/pdf')
-                chosen_delivery_note.save()
-                ###############################
-                #########   GENERATE PDF   ##################
+            ########## Update Invoice Model ##############
+            chosen_delivery_note.dnote_doc = SimpleUploadedFile(
+                f'Arieshelby Delivery Note-{chosen_delivery_note.dnote_id}.pdf', pdf_file,
+                content_type='application/pdf')
+            chosen_delivery_note.save()
+            ###############################
+            #########   GENERATE PDF   ##################
 
-                messages.success(request, f'Added Record Successfully.')
-                return redirect('delivery_note')
+            messages.success(request, f'Invoice saved Successfully.')
+            return redirect('invoice')
         else:
-            messages.warning(request, f'Failed to add record.')
-            return redirect('delivery_note')
+            # Gather errors for the main form and each items form
+            error_messages = []
+            if delivery_note_form.errors:
+                for field, errors in delivery_note_form.errors.items():
+                    for error in errors:
+                        error_messages.append(f"{field}: {error}")
+            for form in forms:
+                if form.errors:
+                    for field, errors in form.errors.items():
+                        for error in errors:
+                            error_messages.append(f"{field} (item): {error}")
 
+            # Pass error messages to the template
+            return render(request, 'deliverynote/delivery_note.html', {
+                'forms': forms,
+                'delivery_note_form': delivery_note_form,
+                'draft_delivery_notes': draft_delivery_notes,
+                'final_delivery_notes': final_delivery_notes,
+                'final_invoices': final_invoices,
+                'error_messages': error_messages
+            })
 
     else:
-        form = DeliveryNoteItemsForm(prefix='form0')
-        delivery_note_form = DeliveryNoteForm()
-        business_account = request.session.get('selected_business_account')
-        selected_business_account = BusinessAccount.objects.get(id=business_account) 
-        delivery_notes = DeliveryNote.objects.filter(business_account=selected_business_account)
-        return render(request, 'deliverynote/delivery_note.html',
-                      {'forms': [form], 'delivery_note_form': delivery_note_form, 'delivery_notes': delivery_notes})
+
+        return render(request, 'deliverynote/delivery_note.html',{
+            'forms': [form],
+            'delivery_note_form': delivery_note_form,
+            'draft_delivery_notes': draft_delivery_notes,
+            'final_delivery_notes': final_delivery_notes,
+            'final_invoices': final_invoices,
+            
+            })
+
 
 
 def delivery_note_details(request, id):

@@ -313,12 +313,12 @@
                                             <td>{{ receipt.total_price|intcomma  }}</td>
                                             <td>{{ receipt.submission_date|date:"d M. Y" }}</td>
                                             <td>{% if receipt.status %}
-                                                    Final
+                                                    Complete
                                                 {% else %}
                                                     Draft
                                                 {% endif %}
                                             </td>
-                                            <td><a href="{% url 'generate_pdf_receipt' receipt.id %}"><button type="button" class="btn btn-success btn-sm"><i class="bi bi-file-arrow-down-fill"></i> Download</button></a></td>
+
                                             <td><a href="{% url 'receipt_details' receipt.id %}"><button type="button" class="btn btn-primary btn-sm">Edit</button></a></td>
                                             <td><a href="{% url 'receipt_delete' receipt.id %}"><button type="button" class="btn btn-danger btn-sm">Delete</button></a></td>
                                             </tr>
