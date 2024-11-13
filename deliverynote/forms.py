@@ -2,10 +2,24 @@ from django import forms
 from .models import DeliveryNote, DeliveryNoteItems, Client
 from crispy_bootstrap5.bootstrap5 import FloatingField
 from django.contrib.admin.widgets import AdminDateWidget
+from accounts.models import BusinessAccount, PaymentOption
 
 
+class DeliveryNoteForm(forms.ModelForm):
+    STATUS_CHOICES = (
+        ('0', 'Draft'),
+        ('1', 'Final'),
+    )
+    PAYMENT_STATUS_CHOICES = (
+        ('0', 'Unpaid'),
+        ('1', 'Paid'),
+    )
+    TAXABLE_CHOICES = (
+        ('True', 'Yes'),
+        ('False', 'No'),
+    )
 
- client = forms.ModelChoiceField(
+    client = forms.ModelChoiceField(
         queryset=Client.objects.none(),
         label="Choose client",
         widget=forms.Select(attrs={'class': 'form-control'})
@@ -32,7 +46,7 @@ from django.contrib.admin.widgets import AdminDateWidget
     )
     note = forms.CharField(required=False, label="Add a note to the Invoice", widget=forms.Textarea)
     class Meta:
-        model = Invoice
+        model = DeliveryNote
         fields = ['client', 'payment_account', 'payment_status', 'submission_date', 'taxable', 'note', 'status']
 
     def set_request(self, request):
@@ -76,35 +90,6 @@ from django.contrib.admin.widgets import AdminDateWidget
 
 
 
-
-class DeliveryNoteForm(forms.ModelForm):
-    STATUS_CHOICES = (
-        ('0', 'Draft'),
-        ('1', 'Final'),
-    )
-    TAXABLE_CHOICES = (
-        ('True', 'Yes'),
-        ('False', 'No'),
-    )
-
-
-    client = forms.ModelChoiceField(queryset=Client.objects.all(), label="Choose client",
-                                      widget=forms.Select(attrs={'class': 'form-control'}))
-    submission_date = forms.DateField(
-        label="Submission Date",
-        required=True,
-        widget=forms.DateInput(format="%Y-%m-%d", attrs={"type": "date"}),
-        input_formats=["%Y-%m-%d"]
-    )
-    status = forms.ChoiceField(choices=STATUS_CHOICES, label='Status', required=True)
-    taxable = forms.ChoiceField(
-        choices=TAXABLE_CHOICES,
-        label='Include 16% Tax',
-        required=True
-    )
-    class Meta:
-        model = DeliveryNote
-        fields = ['client', 'submission_date', 'status', 'taxable']
 
 
 class DeliveryNoteItemsForm(forms.ModelForm):

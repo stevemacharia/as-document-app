@@ -30,6 +30,8 @@ from django.contrib.auth.decorators import login_required
 from accounts.models import BusinessAccount
 from invoice.models import Invoice 
 from decimal import Decimal
+from django.shortcuts import get_object_or_404
+from django.utils import timezone
 # Create your views here.
 
 
@@ -246,6 +248,47 @@ def delivery_note_delete(request, id):
     selected_delivery_note.delete()
     messages.success(request, f'Delivery note deleted successfully')
     return redirect('delivery_note')
+
+@login_required
+def convert_invoice_to_delivery_note(request, id):
+    # Fetch the quotation instance
+    quotation = get_object_or_404(DeliveryNote, id=id)
+    x = str(uuid.uuid4())[:5]
+    client_initials = str(quotation.client)[:3]
+    new_invoice_id = 'AS-' + str(client_initials) + '-' + x
+    # Create a new Invoice instance with Quotation details
+    invoice = Invoice.objects.create(
+        invoice_id = new_invoice_id,
+        client=quotation.client,
+        business_account=quotation.business_account,
+        status=quotation.status,
+        invoice_doc=quotation.quotation_doc,
+        data=quotation.data,
+        qr_code_image=quotation.qr_code_image,
+        note=quotation.note,
+        submission_date=timezone.now(),
+        taxable=quotation.taxable,
+        sub_total=quotation.sub_total,
+        total_price=quotation.total_price,
+    )
+
+    # Copy each QuotationItem to InvoiceItem
+    quotation_items = QuotationItems.objects.filter(quotation=quotation)
+    for item in quotation_items:
+        InvoiceItems.objects.create(
+            invoice=invoice,
+            item=item.item,
+            item_description=item.item_description,
+            quantity=item.quantity,
+            price=item.price,
+        )
+
+    # Optionally update the quotation status or other fields
+    quotation.status = True  # Mark the quotation as converted
+    quotation.save()
+
+    # Redirect to the invoice detail page with the new invoice ID
+    return redirect(reverse('invoice_details', args=[invoice.id]))
 
 
 
