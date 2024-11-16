@@ -11,10 +11,19 @@ from .utils import save_qr_code
 from PIL import Image
 import uuid
 from documents.models import Client
-from accounts.models import BusinessAccount
+from accounts.models import BusinessAccount, PaymentOption
+from django.core.exceptions import ObjectDoesNotExist
 
 
 # Create your models here.
+def get_default_payment_option_account():
+    try:
+        # Return the ID of the first BusinessAccount, or another specific ID
+        return PaymentOption.objects.first().id
+    except (ObjectDoesNotExist, AttributeError):
+        # Handle case where no BusinessAccount exists yet
+        return None  # Or handle with a custom fallback if needed
+
 
 
 class DeliveryNote(models.Model):
@@ -22,10 +31,13 @@ class DeliveryNote(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='delivery_note_client')
     business_account = models.ForeignKey(BusinessAccount, on_delete=models.CASCADE)
     status = models.BooleanField(default="False", null=True, blank=True)
+    payment_account = models.ForeignKey(PaymentOption, on_delete=models.CASCADE, default= get_default_payment_option_account
+    )
+    payment_status = models.BooleanField(default="False", null=True, blank=True)
     dnote_doc = models.FileField(upload_to='delivery_note_docs', default='default.pdf', null=True, blank=True, max_length=500)
     data = models.CharField(max_length=255, blank=True, null=True)
     qr_code_image = models.ImageField(upload_to='qr_codes/', blank=True, null=True)
-    # note = models.CharField(null=True, blank=True, max_length=240)
+    note = models.CharField(null=True, blank=True, max_length=240)
     submission_date = models.DateTimeField(default=timezone.now)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)

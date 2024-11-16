@@ -6,15 +6,41 @@
 {% block content %}
     <main>
         <div class="container-fluid bg-body-tertiary rounded-4 p-4"><div class="container-fluid bg-body-tertiary rounded-4 p-4">
-            {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{message.tags}} rounded-5 m-3">
-                    {{message}}
+            {% if delivery_note_form.errors %}
+                <div class="alert alert-danger rounded-5" role="alert">
+                    <strong>There were some errors with your submission at the field(s) below:</strong>
+                    <ul class="mb-0">
+                        {% for field in delivery_note_form %}
+                            {% if field.errors %}
+                                <li><strong>{{ field.errors|join:", " }}</strong> </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
                 </div>
-            {% endfor %}
+            {% endif %}
+
+
+            {% if DeliveryNoteformset.errors %}
+                <div class="alert alert-danger rounded-5" role="alert">
+                    <strong>There were some errors with your submission at the field(s) below:</strong>
+                    <ul class="mb-0">
+                        {% for field in DeliveryNoteformset %}
+                            {% if field.errors %}
+                                <li><strong>{{ field.errors|join:", " }}</strong></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{message.tags}} rounded-5 m-3">
+                        {{message}}
+                    </div>
+                {% endfor %}
             {% endif %}
             <div class="container-fluid p-3 mb-4 shadow-sm bg-white rounded-4">
-                <h2 class="my-2 pb-3 PrimaryColor fw-bold">Edit Quotation</h2>
+                <h2 class="my-2 pb-3 PrimaryColor fw-bold">Edit Delivery Note</h2>
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="position-relative p-4 text-start text-muted bg-body border border-dashed rounded-5">
@@ -24,8 +50,8 @@
                                         {{ delivery_note_form|crispy }}
 
                                         <!-- Iterate over form instances in the formset -->
-                                        {{ DIformset.management_form }}
-                                        {% for form in DIformset %}
+                                        {{ DeliveryNoteformset.management_form }}
+                                        {% for form in DeliveryNoteformset %}
                                             {{ form|crispy }}
 
                                         {% endfor %}

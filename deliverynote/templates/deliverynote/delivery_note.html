@@ -51,13 +51,26 @@
                     <li class="breadcrumb-item active">Create or view delivery notes from here</li>
                 </ol>
 
-                <div class="card BgPrimaryColor rounded-5 mb-4">
-                    <a class="text-decoration-none text-dark" href="#">
-                        <div class="card-body" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            <h5 class="text-center text-white fw-bolder"><i class="bi bi-upload pe-2"></i> Create a Delivery Note</h5>
+
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 py-4">
+                    <div class="col d-flex align-items-start">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1.75em" height="1.75em" fill="currentColor" class="bi bi-receipt bi flex-shrink-0 me-3 PrimaryColor" viewBox="0 0 16 16">
+                            <path d="M1.92.506a.5.5 0 0 1 .434.14L3 1.293l.646-.647a.5.5 0 0 1 .708 0L5 1.293l.646-.647a.5.5 0 0 1 .708 0L7 1.293l.646-.647a.5.5 0 0 1 .708 0L9 1.293l.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .801.13l.5 1A.5.5 0 0 1 15 2v12a.5.5 0 0 1-.053.224l-.5 1a.5.5 0 0 1-.8.13L13 14.707l-.646.647a.5.5 0 0 1-.708 0L11 14.707l-.646.647a.5.5 0 0 1-.708 0L9 14.707l-.646.647a.5.5 0 0 1-.708 0L7 14.707l-.646.647a.5.5 0 0 1-.708 0L5 14.707l-.646.647a.5.5 0 0 1-.708 0L3 14.707l-.646.647a.5.5 0 0 1-.801-.13l-.5-1A.5.5 0 0 1 1 14V2a.5.5 0 0 1 .053-.224l.5-1a.5.5 0 0 1 .367-.27m.217 1.338L2 2.118v11.764l.137.274.51-.51a.5.5 0 0 1 .707 0l.646.647.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.509.509.137-.274V2.118l-.137-.274-.51.51a.5.5 0 0 1-.707 0L12 1.707l-.646.647a.5.5 0 0 1-.708 0L10 1.707l-.646.647a.5.5 0 0 1-.708 0L8 1.707l-.646.647a.5.5 0 0 1-.708 0L6 1.707l-.646.647a.5.5 0 0 1-.708 0L4 1.707l-.646.647a.5.5 0 0 1-.708 0z"/>
+                            <path d="M3 4.5a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5m8-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5"/>
+                        </svg>
+                        <div>
+                        <h3 class="fw-bold mb-0 fs-5 PrimaryColor">Delivery Note</h3>
+                        <p class="mb-0"><span class="pe-2 text-secondary">200 Completed </span> <span class="text-danger pe-2"> 300 Draft</span></p>
+    
                         </div>
-                    </a>
+                    </div>
                 </div>
+
+                <div class="p-2">
+                    <button type="button" class="btn btn-outline-dark rounded-5" data-bs-target="#exampleModal" data-bs-toggle="modal" ><i class="bi bi-upload pe-2"></i> Create a new Delivery note</button>
+                </div>
+
+
                 <!-- Start of Upload Modal -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" data-bs-backdrop="static" aria-hidden="true">
                     <div class="modal-dialog modal-fullscreen modal-dialog-centered">
@@ -79,9 +92,7 @@
                                         <div class="col-sm-4">
                                             {{ delivery_note_form.status|as_crispy_field }}
                                         </div>
-                                        <div class="col-sm-12 mt-0">
-                                            {{ delivery_note_form.taxable|as_crispy_field }}
-                                        </div>
+
                                     </div>
                                     <input type="hidden" id="form_count" name="form_count" value="{{ forms|length }}">
                                     {% for form in forms %}
@@ -99,12 +110,10 @@
                                                 </div>
                                             </div>
                                             <div class="row g-3">
-                                                <div class="col-sm-6">
+                                                <div class="col-sm-12">
                                                     {{ form.quantity|as_crispy_field }}
                                                 </div>
-                                                <div class="col-sm-6">
-                                                    {{ form.price|as_crispy_field }}
-                                                </div>
+
                                             </div>
                                             <button type="button" class="remove-form-btn btn btn-danger rounded-5 my-2">Remove Item</button>
                                         </div>
@@ -164,7 +173,7 @@
                                                             Draft
                                                         {% endif %}
                                                     </td>
-                                                    <td><a href="{% url 'convert-invoice-to-delivery_note' invoice.id %}"><button class="btn btn-outline-dark rounded-5">Generate Delivery Note</button></td></a>
+                                                    <td><a href="{% url 'convert-invoice-to-delivery-note' invoice.id %}"><button class="btn btn-outline-dark rounded-5">Generate Delivery Note</button></td></a>
                                                 </tr>
                                             {% endfor %}
                                         </tbody>
@@ -197,7 +206,7 @@
                 {#start of draft delivery note tables#}
                     <section class="p-4">
                         <div class="table-responsive">
-                            {% if delivery_notes %}
+                            {% if draft_delivery_notes %}
                                 <table class="table table-sm table-hover table-borderless">
                                     <thead class="table-light">
                                         <tr>
@@ -212,7 +221,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for d_note in delivery_notes %}
+                                        {% for d_note in draft_delivery_notes %}
                                             <tr>
                                             <th scope="row">{{ forloop.counter }}</th>
                                             <td class="text-uppercase">{{ d_note.dnote_id }}</td>
@@ -233,11 +242,11 @@
                                 </table>
                             {% else %}
                                 <div class="py-1">
-                                    <div class="py-4">
+                                    <div class="py-1">
                                         <div>
-                                            <img src="/static/documents/images/as-empty-data.svg" class="d-block mx-lg-auto img-fluid" alt="Empty!" width="110" height="65" loading="lazy">
+                                            <img src="/static/documents/images/as-empty-data.svg" class="d-block mx-lg-auto img-fluid" alt="Empty!" width="70" height="25" loading="lazy">
                                         </div>
-                                        <p class="fs-6 pt-2 fst-italic text-center">You have no pending Draft Delivery Notes!.</p>
+                                        <p class="fs-6 pt-2 fst-italic text-muted text-center">You have no pending Draft Delivery Notes!.</p>
                                     </div>
                                 </div>
                             {% endif %}
@@ -251,7 +260,7 @@
                 {#start of final delivery note tables#}
                     <section class="p-4">
                         <div class="table-responsive">
-                            {% if delivery_notes %}
+                            {% if final_delivery_notes %}
                                 <table class="table table-sm table-hover table-borderless">
                                     <thead class="table-light">
                                         <tr>
@@ -267,7 +276,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for d_note in delivery_notes %}
+                                        {% for d_note in final_delivery_notes %}
                                             <tr>
                                             <th scope="row">{{ forloop.counter }}</th>
                                             <td class="text-uppercase">{{ d_note.dnote_id }}</td>

@@ -28,7 +28,7 @@ from weasyprint import HTML
 import os
 from django.contrib.auth.decorators import login_required
 from accounts.models import BusinessAccount
-from invoice.models import Invoice 
+from invoice.models import Invoice, InvoiceItems
 from decimal import Decimal
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
@@ -164,49 +164,43 @@ def delivery_note(request):
             })
 
 
-
+@login_required
 def delivery_note_details(request, id):
     chosen_delivery_note = DeliveryNote.objects.get(id=id)
     listed_delivery_note_items = DeliveryNoteItems.objects.filter(dnote=chosen_delivery_note)
-    DeliveryNoteItemFormSet = inlineformset_factory(DeliveryNote, DeliveryNoteItems, form=DeliveryNoteItemsForm, extra=0)
+    DeliveryNoteItemFormSet = inlineformset_factory(DeliveryNote, DeliveryNoteItems, can_delete=True,  form=DeliveryNoteItemsForm, extra=0)
+
+    form = DeliveryNoteForm(instance=chosen_delivery_note)
+    form.set_request(request)
+    formset = DeliveryNoteItemFormSet(instance=chosen_delivery_note)
+    delivery_note_items_form = DeliveryNoteItemsForm()
 
     if request.method == "POST":
         form = DeliveryNoteForm(request.POST, instance=chosen_delivery_note)
+        form.set_request(request)
         formset = DeliveryNoteItemFormSet(request.POST, instance=chosen_delivery_note)
         if form.is_valid() and formset.is_valid():
-            sub_total_price = 0
-            for i in formset:
-                cd = i.cleaned_data
-                # Only add to subtotal if the form is not marked for deletion
-                if not cd.get('DELETE', False):
-                    cleaned_price = cd.get('price', 0)
-                    cleaned_quantity = cd.get('quantity', 0)
-                    # item_price = float(cleaned_price) * int(cleaned_quantity)
-                    item_price = Decimal(cleaned_price) * Decimal(cd.get('quantity', 0))
-                    sub_total_price = sub_total_price + item_price
 
-            form_replica = form.save(commit=False)
-            form_replica.sub_total = sub_total_price
-            form_replica.save()
-            # form.save()
+            form.save()
             formset.save()
-
-
             messages.success(request, f'Updated Delivery note Successfully.')
             return redirect('delivery_note')
         else:
-            messages.warning(request, f'Failed to update Delivery note details, Kindly retry again.')
-            return redirect('delivery_note')
+            return render(request, 'deliverynote/delivery_note_details.html',
+                    {
+                        'delivery_note_form': form,
+                        'delivery_note_items_form': delivery_note_items_form,
+                        'DeliveryNoteformset': formset,
+                        'chosen_delivery_note': chosen_delivery_note
+                    })
     else:
-        form = DeliveryNoteForm(instance=chosen_delivery_note)
-        formset = DeliveryNoteItemFormSet(instance=chosen_delivery_note)
-        delivery_note_items_form = DeliveryNoteItemsForm()
+
         context = {
-            'delivery_note_form': form,
-            'delivery_note_items_form': delivery_note_items_form,
-            'DIformset': formset,
-            'chosen_delivery_note': chosen_delivery_note
-        }
+                    'delivery_note_form': form,
+                    'delivery_note_items_form': delivery_note_items_form,
+                    'DeliveryNoteformset': formset,
+                    'chosen_delivery_note': chosen_delivery_note
+                }
     return render(request, 'deliverynote/delivery_note_details.html', context)
 
 @login_required
@@ -218,16 +212,16 @@ def add_delivery_note_item(request, id):
 
             DI_form = delivery_note_item_form.save(commit=False)
 
-            price = delivery_note_item_form.cleaned_data['price']
+            # price = delivery_note_item_form.cleaned_data['price']
             quantity = delivery_note_item_form.cleaned_data['quantity']
 
 
-            item_price = int(float(price)) * int(quantity)
-            total_iten_price = item_price
+            # item_price = int(float(price)) * int(quantity)
+            # total_iten_price = item_price
 
-            new_sub_total_price = selected_delivery_note.sub_total + total_iten_price
+            # new_sub_total_price = selected_delivery_note.sub_total + total_iten_price
 
-            selected_delivery_note.sub_total = new_sub_total_price
+            # selected_delivery_note.sub_total = new_sub_total_price
             selected_delivery_note.save()
   
 
@@ -252,43 +246,43 @@ def delivery_note_delete(request, id):
 @login_required
 def convert_invoice_to_delivery_note(request, id):
     # Fetch the quotation instance
-    quotation = get_object_or_404(DeliveryNote, id=id)
+    invoice = get_object_or_404(Invoice, id=id)
     x = str(uuid.uuid4())[:5]
-    client_initials = str(quotation.client)[:3]
-    new_invoice_id = 'AS-' + str(client_initials) + '-' + x
+    client_initials = str(invoice.client)[:3]
+    new_dnote_id = 'AS-' + str(client_initials) + '-' + x
     # Create a new Invoice instance with Quotation details
-    invoice = Invoice.objects.create(
-        invoice_id = new_invoice_id,
-        client=quotation.client,
-        business_account=quotation.business_account,
-        status=quotation.status,
-        invoice_doc=quotation.quotation_doc,
-        data=quotation.data,
-        qr_code_image=quotation.qr_code_image,
-        note=quotation.note,
+    delivery_note = DeliveryNote.objects.create(
+        dnote_id = new_dnote_id,
+        client=invoice.client,
+        business_account=invoice.business_account,
+        status=invoice.status,
+        dnote_doc=invoice.invoice_doc,
+        data=invoice.data,
+        qr_code_image=invoice.qr_code_image,
+        # note=invoice.note,
         submission_date=timezone.now(),
-        taxable=quotation.taxable,
-        sub_total=quotation.sub_total,
-        total_price=quotation.total_price,
+        # taxable=invoice.taxable,
+        # sub_total=invoice.sub_total,
+        # total_price=invoice.total_price,
     )
 
-    # Copy each QuotationItem to InvoiceItem
-    quotation_items = QuotationItems.objects.filter(quotation=quotation)
-    for item in quotation_items:
-        InvoiceItems.objects.create(
-            invoice=invoice,
+    # Copy each InvoiceItem to DeliveryItem
+    invoice_items = InvoiceItems.objects.filter(invoice=invoice)
+    for item in invoice_items:
+        DeliveryNoteItems.objects.create(
+            dnote=delivery_note,
             item=item.item,
             item_description=item.item_description,
             quantity=item.quantity,
-            price=item.price,
+            # price=item.price,
         )
 
     # Optionally update the quotation status or other fields
-    quotation.status = True  # Mark the quotation as converted
-    quotation.save()
+    invoice.status = True  # Mark the quotation as converted
+    invoice.save()
 
     # Redirect to the invoice detail page with the new invoice ID
-    return redirect(reverse('invoice_details', args=[invoice.id]))
+    return redirect(reverse('delivery_note_details', args=[delivery_note.id]))
 
 
 

@@ -39,15 +39,15 @@ class DeliveryNoteForm(forms.ModelForm):
         input_formats=["%Y-%m-%d"]
     )
     status = forms.ChoiceField(choices=STATUS_CHOICES, label='Status', required=True)
-    taxable = forms.ChoiceField(
-        choices=TAXABLE_CHOICES,
-        label='Include 16% Tax',
-        required=True
-    )
+    # taxable = forms.ChoiceField(
+    #     choices=TAXABLE_CHOICES,
+    #     label='Include 16% Tax',
+    #     required=True
+    # )
     note = forms.CharField(required=False, label="Add a note to the Invoice", widget=forms.Textarea)
     class Meta:
         model = DeliveryNote
-        fields = ['client', 'payment_account', 'payment_status', 'submission_date', 'taxable', 'note', 'status']
+        fields = ['client', 'payment_account', 'payment_status', 'submission_date', 'note', 'status']
 
     def set_request(self, request):
         self.request = request
@@ -78,27 +78,13 @@ class DeliveryNoteForm(forms.ModelForm):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class DeliveryNoteItemsForm(forms.ModelForm):
     item = forms.CharField(required=True, label="Item Name")
     item_description = forms.CharField(required=True, label="Description", widget=forms.Textarea)
     quantity = forms.IntegerField(required=True)
-    price = forms.CharField(required=True, label="Unit cost")
+    # price = forms.CharField(required=True, label="Unit cost")
 
 
     class Meta:
         model = DeliveryNoteItems
-        fields = ['item', 'item_description', 'quantity', 'price']
+        fields = ['item', 'item_description', 'quantity']
