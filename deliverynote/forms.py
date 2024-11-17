@@ -7,12 +7,12 @@ from accounts.models import BusinessAccount, PaymentOption
 
 class DeliveryNoteForm(forms.ModelForm):
     STATUS_CHOICES = (
-        ('0', 'Draft'),
-        ('1', 'Final'),
+        (0, 'Draft'),
+        (1, 'Final'),
     )
     PAYMENT_STATUS_CHOICES = (
-        ('0', 'Unpaid'),
-        ('1', 'Paid'),
+        (0, 'Unpaid'),
+        (1, 'Paid'),
     )
     TAXABLE_CHOICES = (
         ('True', 'Yes'),
@@ -30,7 +30,7 @@ class DeliveryNoteForm(forms.ModelForm):
         label="Choose payment account",
         widget=forms.Select(attrs={'class': 'form-control'})
     )
-    payment_status = forms.ChoiceField(choices=PAYMENT_STATUS_CHOICES, label='Payment status', required=True)
+    payment_status = forms.ChoiceField(choices=PAYMENT_STATUS_CHOICES, label='Payment status', widget=forms.Select, required=True)
 
     submission_date = forms.DateField(
         label="Submission Date",
@@ -38,7 +38,7 @@ class DeliveryNoteForm(forms.ModelForm):
         widget=forms.DateInput(format="%Y-%m-%d", attrs={"type": "date"}),
         input_formats=["%Y-%m-%d"]
     )
-    status = forms.ChoiceField(choices=STATUS_CHOICES, label='Status', required=True)
+    status = forms.ChoiceField(choices=STATUS_CHOICES, label='Status', widget=forms.Select, required=True)
     # taxable = forms.ChoiceField(
     #     choices=TAXABLE_CHOICES,
     #     label='Include 16% Tax',

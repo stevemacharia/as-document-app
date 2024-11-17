@@ -27,13 +27,21 @@ def get_default_payment_option_account():
 
 
 class DeliveryNote(models.Model):
+    STATUS_CHOICES = (
+        (0, 'Draft'),
+        (1, 'Final'),
+    )
+    PAYMENT_STATUS_CHOICES = (
+        (0, 'Unpaid'),
+        (1, 'Paid'),
+    )
     dnote_id = models.CharField(blank=True, max_length=100)
     client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='delivery_note_client')
     business_account = models.ForeignKey(BusinessAccount, on_delete=models.CASCADE)
-    status = models.BooleanField(default="False", null=True, blank=True)
+    status = models.IntegerField(choices=STATUS_CHOICES, default=0)
     payment_account = models.ForeignKey(PaymentOption, on_delete=models.CASCADE, default= get_default_payment_option_account
     )
-    payment_status = models.BooleanField(default="False", null=True, blank=True)
+    payment_status = models.IntegerField(choices=PAYMENT_STATUS_CHOICES, default=0)
     dnote_doc = models.FileField(upload_to='delivery_note_docs', default='default.pdf', null=True, blank=True, max_length=500)
     data = models.CharField(max_length=255, blank=True, null=True)
     qr_code_image = models.ImageField(upload_to='qr_codes/', blank=True, null=True)

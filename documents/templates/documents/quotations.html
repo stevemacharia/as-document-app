@@ -43,11 +43,11 @@
 
             <div class="container-fluid px-3 py-2 mb-4 shadow-sm bg-white rounded-4">
                 {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-{{message.tags}} rounded-5 m-3" id="myAlert">
-                        {{message}}
-                    </div>
-                {% endfor %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{message.tags}} rounded-5 m-3" id="myAlert">
+                            {{message}}
+                        </div>
+                    {% endfor %}
                 {% endif %}
 
                 {% if error_messages %}

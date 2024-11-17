@@ -55,14 +55,13 @@
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-            border: 1px solid #eee;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
             position: relative;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
 
         .header img {
@@ -78,7 +77,7 @@
 
         .info-table {
             width: 100%;
-            margin-bottom: 30px;
+            margin-bottom: 10px;
         }
 
         .info-table td {
@@ -155,7 +154,7 @@
     </style>
 </head>
 <body>
-    <div class="invoice-box">
+    <div class="invoice-box" style="border: 1px solid {{ selected_business_account.theme_color }};   border-radius: 10px;">
 
 
         <!-- Logo and Company Contact Info -->
@@ -164,7 +163,6 @@
             <div class="company-details">
                 <strong style="color:{{ selected_business_account.theme_color }}; font-size:18px; ">{{ selected_business_account.name }}</strong><br>
                 {{ selected_business_account.email }}<br>
-                {{ selected_business_account.email }} | 
                 {{ selected_business_account.phone_number }}, {{ selected_business_account.tel }}<br>
                 {{ selected_business_account.address }} | 
                 {{ selected_business_account.location }}<br><br>
@@ -178,12 +176,13 @@
                 <td>
                     <strong>Billed To:</strong><br>
                     {{ selected_delivery_note.client }}<br>
-                    {{ selected_delivery_note.client.address }}<br>
+                    {{ selected_delivery_note.client.phone_number}}<br>
+                    {{ selected_delivery_note.client.email}}<br>
                     {{ selected_delivery_note.client.postal_address }}
                 </td>
                 <td>
                     <strong>Delivery Note No:</strong> {{ selected_delivery_note.dnote_id }}<br>
-                    <strong>Date:</strong> {{selected_delivery_note.submission_date|date:"d M. Y" }}<br>
+                    <strong>Date:</strong> {{selected_delivery_note.submission_date|date:"d M. Y" }}
                 </td>
             </tr>
         </table>
@@ -196,8 +195,6 @@
                     <th class="text-start">Item</th>
                     <th class="text-start">Item Description </th>
                     <th class="text-start">Quantity</th>
-                    <th class="text-start">Excl @</th>
-                    <th class="text-end pe-3">Total(Excl)</th>
                 </tr>
             </thead>
             <tbody>
@@ -207,47 +204,39 @@
                         <td class="text-start" style="border: 1px solid {{ selected_business_account.theme_color }} ">{{d_note_item.item}}</td>
                         <td class="text-start" style="border: 1px solid {{ selected_business_account.theme_color }} ;">{{d_note_item.item_description|linebreaks }}</td>
                         <td class="text-start" style="border: 1px solid {{ selected_business_account.theme_color }} ;">{{d_note_item.quantity}}</td>
-                        <td class="text-start" style="border: 1px solid {{ selected_business_account.theme_color }} ;">{{d_note_item.price}}</td>
-                        <td class="text-end pe-3" style="border: 1px solid {{ selected_business_account.theme_color }} ;">
-                            {% with result=d_note_item.quantity|mul:d_note_item.price %}
-                                {{result}}
-                            {% endwith %}
-                        </td>
                     </tr>
                 {% endfor %}
-                {% if selected_delivery_note.taxable is True %}
-                    <tr class="fw-bold lh-5" style="padding-bottom: 0cm">
-                        <td class="text-end pb-0" colspan="5" style="border:none;">Subtotal (Excl):</td>
-                        <td class="text-end pe-3 pb-0" style="border:none;">{{selected_delivery_note.sub_total|floatformat:2 |intcomma }}</td>
-                    </tr>
-                    <tr class="fw-bold" style="padding-bottom: 0cm">
-                        <td class="text-end pb-0" colspan="5" style="border:none;">VAT (16%):</td>
-                        <td class="text-end pb-0 pe-3" style="border:none;">{{selected_delivery_note.total_price|sub:selected_delivery_note.sub_total|intcomma }}</td>
-                    </tr>
-                {% endif %}
-                <tr class="text-end fw-bold" style="padding-bottom: 0cm">
-                    <td class="text-end pb-0" colspan="5" style="border:none;">TOTAL (Incl): </td>
-                    <td class="text-end pe-3 pb-0" style="border:none;">{{selected_delivery_note.total_price|intcomma }}</td>
-                </tr>
-
+                
             </tbody>
             </table>
 
 
-
-        {% if selected_delivery_note.note %}
-            <div class="card" style="border: 1px solid {{ selected_business_account.theme_color }} ; margin-top: 20px; width: 40rem;">
-              <div class="card-body" style="padding-bottom:0cm !important; padding-top:0.2cm !important;">
-                  <div>*Notes</div>
-                  <p class="fw-normal" style="font-size:10px;">{{ selected_delivery_note.note }}</p>
-              </div>
+        <div class="card" style="border: 1px solid {{ selected_business_account.theme_color }} ; margin-top: 20px; width: 30rem;">
+            <div class="card-body" style="padding-bottom:0cm !important; padding-top:0.2cm !important;">
+              {% if selected_payment_option %}
+                  <div class="fw-bold">*Payment Details</div>
+                  <p class="fw-semibold mb-0 ps-2" style="font-size:10px;">{{ selected_payment_option.payment_method  }} Transfer</p>
+                  <p class="fw-normal ps-2" style="font-size:10px;">{{ selected_payment_option.name }}</br> Account No:{{ selected_payment_option.account_no }}</p>
+              {% endif %}
+              {% if selected_delivery_note.note  %}
+                <div class="fw-bold">*Notes</div>
+                <p class="fw-normal ps-2" style="font-size:10px;">{{ selected_delivery_note.note }}</p>
+              {% endif %}
             </div>
-        {% endif %}
-
-        <div class="d-flex align-items-center shadow-sm">
-            <div class="flex-shrink-0"><img src="{{ qr_code_url }}" alt="QR Code" class="qr-code"></div>
-            <div class="flex-grow-1 ms-1"><p style="color:{{ selected_business_account.theme_color }}  !important; font-size: 13px; font-weight: 800;           font-family: Montserrat, sans-serif;">Scan Qr Code to verify this document</p></div>
         </div>
+
+
+        <div class="align-items-center shadow-sm mt-3">
+            <div class="flex-shrink-0"><img src="{{ qr_code_url }}" alt="QR Code" class="qr-code"></div>
+            <div class="flex-grow-1 ms-1"><p style="color:{{ selected_business_account.theme_color }}  !important; font-size: 11px; font-weight: 600;font-family: Montserrat, sans-serif;">This Document is system generated. Scan Qr Code to verify this document</p></div>
+        </div>
+
+
+
+
+
+
+
     </div>
 </body>
 </html>

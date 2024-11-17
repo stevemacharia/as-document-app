@@ -45,6 +45,8 @@ def delivery_note(request):
     draft_delivery_notes = DeliveryNote.objects.filter(business_account=selected_business_account, status=False)
     final_delivery_notes = DeliveryNote.objects.filter(business_account=selected_business_account, status=True)
     final_invoices = Invoice.objects.filter(business_account=selected_business_account, status=True)
+    final_delivery_notes_count = DeliveryNote.objects.filter(business_account=selected_business_account, status=True).count()
+    draft_delivery_notes_count = DeliveryNote.objects.filter(business_account=selected_business_account, status=False).count()
 
     if request.method == 'POST':
         delivery_note_form = DeliveryNoteForm(request.POST)
@@ -119,7 +121,7 @@ def delivery_note(request):
             rendered_html = template_name.render(context)
             pdf_file = HTML(string=rendered_html).write_pdf()
 
-            ########## Update Invoice Model ##############
+            ########## Update Delivery Note Model ##############
             chosen_delivery_note.dnote_doc = SimpleUploadedFile(
                 f'Arieshelby Delivery Note-{chosen_delivery_note.dnote_id}.pdf', pdf_file,
                 content_type='application/pdf')
@@ -127,8 +129,8 @@ def delivery_note(request):
             ###############################
             #########   GENERATE PDF   ##################
 
-            messages.success(request, f'Invoice saved Successfully.')
-            return redirect('invoice')
+            messages.success(request, f'Delivery note saved Successfully.')
+            return redirect('delivery_note')
         else:
             # Gather errors for the main form and each items form
             error_messages = []
@@ -146,6 +148,8 @@ def delivery_note(request):
             return render(request, 'deliverynote/delivery_note.html', {
                 'forms': forms,
                 'delivery_note_form': delivery_note_form,
+                'final_delivery_notes_count': final_delivery_notes_count,
+                'draft_delivery_notes_count': draft_delivery_notes_count,
                 'draft_delivery_notes': draft_delivery_notes,
                 'final_delivery_notes': final_delivery_notes,
                 'final_invoices': final_invoices,
@@ -157,6 +161,8 @@ def delivery_note(request):
         return render(request, 'deliverynote/delivery_note.html',{
             'forms': [form],
             'delivery_note_form': delivery_note_form,
+            'final_delivery_notes_count': final_delivery_notes_count,
+            'draft_delivery_notes_count': draft_delivery_notes_count,
             'draft_delivery_notes': draft_delivery_notes,
             'final_delivery_notes': final_delivery_notes,
             'final_invoices': final_invoices,
@@ -168,9 +174,11 @@ def delivery_note(request):
 def delivery_note_details(request, id):
     chosen_delivery_note = DeliveryNote.objects.get(id=id)
     listed_delivery_note_items = DeliveryNoteItems.objects.filter(dnote=chosen_delivery_note)
+
     DeliveryNoteItemFormSet = inlineformset_factory(DeliveryNote, DeliveryNoteItems, can_delete=True,  form=DeliveryNoteItemsForm, extra=0)
 
     form = DeliveryNoteForm(instance=chosen_delivery_note)
+    
     form.set_request(request)
     formset = DeliveryNoteItemFormSet(instance=chosen_delivery_note)
     delivery_note_items_form = DeliveryNoteItemsForm()

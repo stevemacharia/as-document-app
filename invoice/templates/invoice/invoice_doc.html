@@ -194,7 +194,6 @@
             <div class="company-details">
                 <strong style="color:{{ selected_business_account.theme_color }}; font-size:18px; ">{{ selected_business_account.name }}</strong><br>
                 {{ selected_business_account.email }}<br>
-                {{ selected_business_account.email }} | 
                 {{ selected_business_account.phone_number }}, {{ selected_business_account.tel }}<br>
                 {{ selected_business_account.address }} | 
                 {{ selected_business_account.location }}<br><br>
@@ -214,8 +213,7 @@
                 </td>
                 <td>
                     <strong>Invoice No:</strong> {{ selected_invoice.invoice_id }}<br>
-                    <strong>Date:</strong> {{selected_invoice.submission_date|date:"d M. Y" }}<br>
-                    <strong>Order No:</strong> {{ selected_invoice.invoice_id }}
+                    <strong>Date:</strong> {{selected_invoice.submission_date|date:"d M. Y" }}
                 </td>
             </tr>
         </table>
