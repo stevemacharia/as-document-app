@@ -70,6 +70,8 @@ def quotations(request):
     selected_business_account = BusinessAccount.objects.get(id=business_account) 
     draft_quotations = Quotation.objects.filter(business_account=selected_business_account, status=False)
     final_quotations = Quotation.objects.filter(business_account=selected_business_account, status=True)
+    final_quotations_count = Quotation.objects.filter(business_account=selected_business_account, status=True).count()
+    draft_quotations_count = Quotation.objects.filter(business_account=selected_business_account, status=False).count()
 
     if request.method == 'POST':
         quotation_form = QuotationForm(request.POST)
@@ -153,7 +155,9 @@ def quotations(request):
                 'quotation_form': quotation_form,
                 'draft_quotations': draft_quotations,
                 'final_quotations': final_quotations,
-                'error_messages': error_messages
+                'error_messages': error_messages,
+                'final_quotations_count': final_quotations_count,
+                'draft_quotations_count': draft_quotations_count
             })
 
     else:
@@ -161,7 +165,9 @@ def quotations(request):
             'forms': [form],
             'quotation_form': quotation_form,
             'draft_quotations': draft_quotations,
-            'final_quotations': final_quotations
+            'final_quotations': final_quotations,
+            'final_quotations_count': final_quotations_count,
+            'draft_quotations_count': draft_quotations_count
         })
 
 @login_required

@@ -61,10 +61,24 @@
                     </div>
                 {% endif %}
 
-                <h2 class="my-2 PrimaryColor fw-bold">Quotations</h2>
-                <ol class="breadcrumb mb-4">
+                <h2 class="mt-2 PrimaryColor fw-bold">Quotations</h2>
+                <ol class="breadcrumb mb-1">
                     <li class="breadcrumb-item active">Create or view quotations from here</li>
                 </ol>
+
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 py-4">
+                    <div class="col d-flex align-items-start">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1.75em" height="1.75em" fill="currentColor" class="bi bi-calendar2-check-fill flex-shrink-0 me-3 PrimaryColor" viewBox="0 0 16 16">
+                            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5m9.954 3H2.545c-.3 0-.545.224-.545.5v1c0 .276.244.5.545.5h10.91c.3 0 .545-.224.545-.5v-1c0-.276-.244-.5-.546-.5m-2.6 5.854a.5.5 0 0 0-.708-.708L7.5 10.793 6.354 9.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0z"/>
+                        </svg>
+                        <div>
+                        <h3 class="fw-bold mb-0 fs-5 PrimaryColor">Quotations</h3>
+                        <p class="mb-0"><span class="pe-2 text-secondary">{{ final_quotations_count }} Completed </span> <span class="text-danger pe-2"> {{ draft_quotations_count }} Draft</span></p>
+    
+                        </div>
+                    </div>
+                </div>
+
 
                 <div class="card BgPrimaryColor rounded-5 mb-4">
                     <a class="text-decoration-none text-dark" href="#">
@@ -73,6 +87,7 @@
                         </div>
                     </a>
                 </div>
+
                 <!-- Start of Upload Modal -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" data-bs-backdrop="static" aria-hidden="true">
                     <div class="modal-dialog modal-fullscreen modal-dialog-centered">

@@ -93,16 +93,25 @@
                             <form id="original-form" method="post" action="{% url 'delivery_note' %}">
                                     {% csrf_token %}
                                     <div class="row g-3">
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-6">
                                             {{ delivery_note_form.client|as_crispy_field }}
                                         </div>
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-6">
                                             {{ delivery_note_form.submission_date|as_crispy_field }}
                                         </div>
-                                        <div class="col-sm-4">
+
+                                        <div class="col-sm-4 mt-0">
+                                            {{ delivery_note_form.payment_account|as_crispy_field }}
+                                        </div>
+                                        <div class="col-sm-4 mt-0">
+                                            {{ delivery_note_form.payment_status|as_crispy_field }}
+                                        </div>
+                                        <div class="col-sm-4 mt-0">
                                             {{ delivery_note_form.status|as_crispy_field }}
                                         </div>
-
+                                        <div class="col-sm-12 mt-0">
+                                            {{ delivery_note_form.note|as_crispy_field }}
+                                        </div>
                                     </div>
                                     <input type="hidden" id="form_count" name="form_count" value="{{ forms|length }}">
                                     {% for form in forms %}
@@ -243,23 +252,23 @@
                                                 <td><a href="#"><button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop1" >Delete</button></a></td>
 
                                                 <!-- Modal -->
-                                                <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                                    <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header border-bottom-0 pb-0">
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header border-bottom-0 pb-0">
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body pt-0">
+                                                                <h4 class="fw-semibold text-center text-danger">Delete Delivery note</h4>
+                                                                <p class="text-center">Confirm delete <span class="fw-bold text-uppercase">{{ d_note.dnote_id }}</span> delivery note.</p>
+                                                            </div>
+                                                            <div class="modal-footer d-flex justify-content-center">
+                                                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                                                <a href="{% url 'delivery_note_delete' d_note.id %} "><button type="button" class="btn btn-danger">Delete account</button></a>
+                                                            </div>
                                                         </div>
-                                                        <div class="modal-body pt-0">
-                                                            <h4 class="fw-semibold text-center text-danger">Delete Account</h4>
-                                                            <p class="text-center">Confirm delete <span class="fw-bold text-uppercase">{{ d_note.dnote_id }}</span> delivery note.</p>
-                                                        </div>
-                                                        <div class="modal-footer d-flex justify-content-center">
-                                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
-                                                            <a href="{% url 'delivery_note_delete' d_note.id %} "><button type="button" class="btn btn-danger">Delete account</button></a>
                                                         </div>
                                                     </div>
-                                                    </div>
-                                                </div>
                                                 <!--End of Modal -->
 
 
@@ -305,19 +314,44 @@
                                     <tbody>
                                         {% for d_note in final_delivery_notes %}
                                             <tr>
-                                            <th scope="row">{{ forloop.counter }}</th>
-                                            <td class="text-uppercase">{{ d_note.dnote_id }}</td>
-                                            <td>{{ d_note.client }}</td>
-                                            <td>{{ d_note.submission_date|date:"d M. Y"  }}</td>
-                                            <td>{% if d_note.status %}
-                                                    Final
-                                                {% else %}
-                                                    Draft
-                                                {% endif %}
-                                            </td>
-                                            <td><a href="{% url 'generate_pdf_delivery_note' d_note.id %}"><button type="button" class="btn btn-success btn-sm"><i class="bi bi-file-arrow-down-fill"></i> Download</button></a></td>
-                                            <td><a href="{% url 'delivery_note_details' d_note.id %}"><button type="button" class="btn btn-primary btn-sm">Edit</button></a></td>
-                                            <td><a href="{% url 'delivery_note_delete' d_note.id %}"><button type="button" class="btn btn-danger btn-sm">Delete</button></a></td>
+                                                <th scope="row">{{ forloop.counter }}</th>
+                                                <td class="text-uppercase">{{ d_note.dnote_id }}</td>
+                                                <td>{{ d_note.client }}</td>
+                                                <td>{{ d_note.submission_date|date:"d M. Y"  }}</td>
+                                                <td>{% if d_note.status %}
+                                                        Final
+                                                    {% else %}
+                                                        Draft
+                                                    {% endif %}
+                                                </td>
+                                                <td><a href="{% url 'generate_pdf_delivery_note' d_note.id %}"><button type="button" class="btn btn-success btn-sm"><i class="bi bi-file-arrow-down-fill"></i> Download</button></a></td>
+                                                <td><a href="{% url 'delivery_note_details' d_note.id %}"><button type="button" class="btn btn-primary btn-sm">Edit</button></a></td>
+
+
+                                                <td><a href="#"><button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop2">Delete</button></a></td>
+
+
+                                                
+                                                <!-- Modal -->
+                                                    <div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel2" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header border-bottom-0 pb-0">
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body pt-0">
+                                                                <h4 class="fw-semibold text-center text-danger">Delete Delivery note</h4>
+                                                                <p class="text-center">Confirm delete <span class="fw-bold text-uppercase">{{ d_note.dnote_id }}</span> delivery note.</p>
+                                                            </div>
+                                                            <div class="modal-footer d-flex justify-content-center">
+                                                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                                                <a href="{% url 'delivery_note_delete' d_note.id %}"><button type="button" class="btn btn-danger">Delete account</button></a>
+                                                            </div>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                <!--End of Modal -->
+
                                             </tr>
                                         {% endfor %}
                                     </tbody>

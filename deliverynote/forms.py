@@ -44,7 +44,7 @@ class DeliveryNoteForm(forms.ModelForm):
     #     label='Include 16% Tax',
     #     required=True
     # )
-    note = forms.CharField(required=False, label="Add a note to the Invoice", widget=forms.Textarea)
+    note = forms.CharField(required=False, label="Add a note to the Delivery note", widget=forms.Textarea)
     class Meta:
         model = DeliveryNote
         fields = ['client', 'payment_account', 'payment_status', 'submission_date', 'note', 'status']

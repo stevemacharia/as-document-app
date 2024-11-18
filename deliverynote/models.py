@@ -45,7 +45,7 @@ class DeliveryNote(models.Model):
     dnote_doc = models.FileField(upload_to='delivery_note_docs', default='default.pdf', null=True, blank=True, max_length=500)
     data = models.CharField(max_length=255, blank=True, null=True)
     qr_code_image = models.ImageField(upload_to='qr_codes/', blank=True, null=True)
-    note = models.CharField(null=True, blank=True, max_length=240)
+    note = models.CharField(null=True, blank=True, max_length=700)
     submission_date = models.DateTimeField(default=timezone.now)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)

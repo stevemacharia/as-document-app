@@ -65,8 +65,8 @@ def delivery_note(request):
             dn_form.business_account = selected_business_account
             client_initials = str(dn_form.client)[:3]
             delivery_note_id_smaller = f'AS{client_initials}{x}'
-            dn_form.delivery_note_id = delivery_note_id_smaller.upper()
-            new_delivery_note_id = dn_form.delivery_note_id
+            dn_form.dnote_id = delivery_note_id_smaller.upper()
+            new_delivery_note_id = dn_form.dnote_id
 
             ###############QR CODE GENERATION#########
             qr = qrcode.QRCode(
@@ -101,8 +101,7 @@ def delivery_note(request):
             for form in forms:
                 item = form.save(commit=False)
                 item.dnote = chosen_delivery_note
-                item_price = item.price * item.quantity
-                sub_total_price += item_price
+
                 item.save()
 
             chosen_delivery_note.sub_total = sub_total_price
