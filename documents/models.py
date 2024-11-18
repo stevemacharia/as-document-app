@@ -27,10 +27,14 @@ class Client(models.Model):
 
 
 class Quotation(models.Model):
+    STATUS_CHOICES = (
+        (0, 'Draft'),
+        (1, 'Final'),
+    )
     quotation_id = models.CharField(blank=True, max_length=100)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     business_account = models.ForeignKey(BusinessAccount, on_delete=models.CASCADE)
-    status = models.BooleanField(default="False", null=True, blank=True)
+    status = models.IntegerField(choices=STATUS_CHOICES, default=0)
     quotation_doc = models.FileField(upload_to='quotation_docs', default='default.pdf', null=True, blank=True, max_length=500)
     data = models.CharField(max_length=255, blank=True, null=True)
     qr_code_image = models.ImageField(upload_to='qr_codes/', blank=True, null=True)

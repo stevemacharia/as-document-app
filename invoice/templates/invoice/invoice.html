@@ -60,13 +60,12 @@
                         </ul>
                     </div>
                 {% endif %}
-                <h2 class="my-2 PrimaryColor fw-bold">Invoices</h2>
-                <ol class="breadcrumb mb-2">
-                    <li class="breadcrumb-item active">Create or view invoices from here</li>
+                <ol class="breadcrumb mt-2">
+                    <li class="breadcrumb-item fs-4 fw-semibold PrimaryColor">Create or view invoices from here</li>
                 </ol>
                 
 
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 py-4">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 pb-4">
                     <div class="col d-flex align-items-start">
                         <svg xmlns="http://www.w3.org/2000/svg" width="1.75em" height="1.75em" fill="currentColor" class="bi bi-receipt bi flex-shrink-0 me-3 PrimaryColor" viewBox="0 0 16 16">
                             <path d="M1.92.506a.5.5 0 0 1 .434.14L3 1.293l.646-.647a.5.5 0 0 1 .708 0L5 1.293l.646-.647a.5.5 0 0 1 .708 0L7 1.293l.646-.647a.5.5 0 0 1 .708 0L9 1.293l.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .801.13l.5 1A.5.5 0 0 1 15 2v12a.5.5 0 0 1-.053.224l-.5 1a.5.5 0 0 1-.8.13L13 14.707l-.646.647a.5.5 0 0 1-.708 0L11 14.707l-.646.647a.5.5 0 0 1-.708 0L9 14.707l-.646.647a.5.5 0 0 1-.708 0L7 14.707l-.646.647a.5.5 0 0 1-.708 0L5 14.707l-.646.647a.5.5 0 0 1-.708 0L3 14.707l-.646.647a.5.5 0 0 1-.801-.13l-.5-1A.5.5 0 0 1 1 14V2a.5.5 0 0 1 .053-.224l.5-1a.5.5 0 0 1 .367-.27m.217 1.338L2 2.118v11.764l.137.274.51-.51a.5.5 0 0 1 .707 0l.646.647.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.509.509.137-.274V2.118l-.137-.274-.51.51a.5.5 0 0 1-.707 0L12 1.707l-.646.647a.5.5 0 0 1-.708 0L10 1.707l-.646.647a.5.5 0 0 1-.708 0L8 1.707l-.646.647a.5.5 0 0 1-.708 0L6 1.707l-.646.647a.5.5 0 0 1-.708 0L4 1.707l-.646.647a.5.5 0 0 1-.708 0z"/>
@@ -74,7 +73,7 @@
                         </svg>
                         <div>
                         <h3 class="fw-bold mb-0 fs-5 PrimaryColor">Invoices</h3>
-                        <p class="mb-0"><span class="pe-2 text-secondary">200 Completed </span> <span class="text-danger pe-2"> 300 Draft</span></p>
+                        <p class="mb-0"><span class="pe-2 text-secondary">{{ final_invoices_count }} Completed </span> <span class="text-danger pe-2"> {{ draft_invoices_count }} Draft</span></p>
     
                         </div>
                     </div>

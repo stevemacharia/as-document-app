@@ -46,6 +46,9 @@ def receipt(request):
     draft_receipts = Receipt.objects.filter(business_account=selected_business_account, status=False)
     final_receipts = Receipt.objects.filter(business_account=selected_business_account, status=True)
     final_invoice = Invoice.objects.filter(business_account=selected_business_account, status=True)
+    final_receipts_count = Receipt.objects.filter(business_account=selected_business_account, status=True).count()
+    draft_receipts_count = Receipt.objects.filter(business_account=selected_business_account, status=False).count()
+
     if request.method == 'POST':
         receipt_form = ReceiptForm(request.POST)
         receipt_form.set_request(request)
@@ -148,6 +151,8 @@ def receipt(request):
                 'draft_receipt': draft_receipts,
                 'final_receipt': final_receipts,
                 'final_invoices': final_invoice,
+                'final_receipts_count': final_receipts_count,
+                'draft_receipts_count': draft_receipts_count,
                 'error_messages': error_messages
             })
 
@@ -159,6 +164,8 @@ def receipt(request):
             'draft_receipts': draft_receipts,
             'final_receipts': final_receipts,
             'final_invoices': final_invoice,
+            'final_receipts_count': final_receipts_count,
+            'draft_receipts_count': draft_receipts_count,
             
             })
     

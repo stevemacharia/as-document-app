@@ -64,100 +64,108 @@
 
             <div class="container position-relative mb-5 p-4 bg-white shadow-sm rounded-3">
                 <h4 class="PrimaryColor pb-1 fw-bolder">01. Business Details</h4>
-                <div class="d-flex align-items-center">
-                    <div class="flex-shrink-0">
-                      <img src="{{ business_account.logo.url}}" alt="..." class="rounded" style="width:8rem;">
-                    </div>
-                    <div class="me-auto ps-3"><span class="PrimaryColor text-uppercase fw-bolder">{{ business_account.name }} Business Account</span> <br><span class="text-muted">Created on: </span></div>
-                    <div class="p-2">
-                        <button type="button" class="btn btn-outline-dark rounded-5" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="bi bi-upload pe-2"></i> Edit Business Account Detail</button>
-
-                        <!-- Start of Modal -->
-                        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-xl">
-                                <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title PrimaryColor fw-bold fs-5" id="exampleModalLabel">Edit 
-                                                {{ business_account.name}} Account details</h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                    <form id="original-form" method="post" enctype="multipart/form-data" action="{% url 'business-profile' %}">
-                                        <div class="modal-body">
-                                        {% csrf_token %}
-                                        <div class="row g-3">
-                                            <div class="col-sm-12">
-                                                {{ u_form.name|as_crispy_field }}
-                                            </div>
-                                        </div>
-                                        <div class="row g-3">
-                                            <div class="col-sm-12">
-                                                {{ u_form.email|as_crispy_field }}
-                                            </div>
-                                        </div>
-                                        <div class="row g-3">
-                                            <div class="col-sm-6">
-                                                {{ u_form.tel|as_crispy_field }}
-                                            </div>
-                                            <div class="col-sm-6">
-                                                {{ u_form.phone_number|as_crispy_field }}
-                                            </div>
-                                        </div>
-                                        <div class="row g-3 d-flex">
-                                            <div class="col-sm-6">
-                                                <label for="color" class="form-label">Click to select:</label>
-                                                {{ u_form.theme_color|as_crispy_field }}
-                                            </div>
-                                            <div class="col-sm-6">
-                                                {{ u_form.logo|as_crispy_field }}
-                                            </div>
-                                        </div>
-                                        <div class="row g-3">
-                                            <div class="col-sm-12">
-                                                {{ u_form.address|as_crispy_field }}
-                                            </div>
-                                        </div>
-                                        <div class="row g-3">
-                                            <div class="col-sm-12">
-                                                {{ u_form.location|as_crispy_field }}
-                                            </div>
-                                        </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-primary">Save changes</button>
-                                        </div>
-                                    </form>
-                                </div>
+                <div class=" align-items-center">
+                    <div class="row">
+                        <div class="col-sm-8 d-flex">
+                            <div class="flex-shrink-0">
+                            <img src="{{ business_account.logo.url}}" alt="..." class="rounded" style="width:8rem;">
+                            </div>
+                            <div class="me-auto ps-3">
+                                <span class="PrimaryColor text-uppercase fw-bolder">{{ business_account.name }} Business Account</span> <br><span class="text-muted">Created on: </span>
                             </div>
                         </div>
-                        <!-- End of Modal -->
 
-
-
-                    </div>
-                    <div class="p-2">
-                        <h6 class="text-center">
-                            <button type="button" class="btn btn-outline-danger rounded-5" data-bs-toggle="modal" data-bs-target="#staticBackdrop1">Delete Account</button>
-                            <!-- Modal -->
-                            <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                  <div class="modal-content">
-                                    <div class="modal-header border-bottom-0 pb-0">
-                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="col-sm-4 d-flex">
+                            <div class="p-2">
+                                <button type="button" class="btn btn-outline-dark rounded-5" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="bi bi-upload pe-2"></i> Edit Business Account Detail</button>
+                                <!-- Start of Modal -->
+                                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-xl">
+                                        <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title PrimaryColor fw-bold fs-5" id="exampleModalLabel">Edit 
+                                                        {{ business_account.name}} Account details</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                            <form id="original-form" method="post" enctype="multipart/form-data" action="{% url 'business-profile' %}">
+                                                <div class="modal-body">
+                                                {% csrf_token %}
+                                                <div class="row g-3">
+                                                    <div class="col-sm-12">
+                                                        {{ u_form.name|as_crispy_field }}
+                                                    </div>
+                                                </div>
+                                                <div class="row g-3">
+                                                    <div class="col-sm-12">
+                                                        {{ u_form.email|as_crispy_field }}
+                                                    </div>
+                                                </div>
+                                                <div class="row g-3">
+                                                    <div class="col-sm-6">
+                                                        {{ u_form.tel|as_crispy_field }}
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        {{ u_form.phone_number|as_crispy_field }}
+                                                    </div>
+                                                </div>
+                                                <div class="row g-3 d-flex">
+                                                    <div class="col-sm-6">
+                                                        <label for="color" class="form-label">Click to select:</label>
+                                                        {{ u_form.theme_color|as_crispy_field }}
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        {{ u_form.logo|as_crispy_field }}
+                                                    </div>
+                                                </div>
+                                                <div class="row g-3">
+                                                    <div class="col-sm-12">
+                                                        {{ u_form.address|as_crispy_field }}
+                                                    </div>
+                                                </div>
+                                                <div class="row g-3">
+                                                    <div class="col-sm-12">
+                                                        {{ u_form.location|as_crispy_field }}
+                                                    </div>
+                                                </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
-                                    <div class="modal-body pt-0">
-                                        <h4 class="fw-semibold text-center text-danger">Delete Account</h4>
-                                        <p class="text-center">You are about to permanently delete your records. Kindly note you will not be able to retrieve any data linked to this account in the future.</p>
-                                    </div>
-                                    <div class="modal-footer d-flex justify-content-center">
-                                      <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
-                                        <a href="{% url 'business-account-deletion' business_account.id %}"><button type="button" class="btn btn-danger">Delete account</button></a>
-                                    </div>
-                                  </div>
                                 </div>
+                                <!-- End of Modal -->
+
+
+
                             </div>
-                            <!--End of Modal -->
-                        </h6>
+                            <div class="p-2">
+                                <h6 class="text-center">
+                                    <button type="button" class="btn btn-outline-danger rounded-5" data-bs-toggle="modal" data-bs-target="#staticBackdrop1">Delete Account</button>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                          <div class="modal-content">
+                                            <div class="modal-header border-bottom-0 pb-0">
+                                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body pt-0">
+                                                <h4 class="fw-semibold text-center text-danger">Delete Account</h4>
+                                                <p class="text-center">You are about to permanently delete your records. Kindly note you will not be able to retrieve any data linked to this account in the future.</p>
+                                            </div>
+                                            <div class="modal-footer d-flex justify-content-center">
+                                              <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                                <a href="{% url 'business-account-deletion' business_account.id %}"><button type="button" class="btn btn-danger">Delete account</button></a>
+                                            </div>
+                                          </div>
+                                        </div>
+                                    </div>
+                                    <!--End of Modal -->
+                                </h6>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -244,8 +252,8 @@
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Name</th>
-                                    <th scope="col">Physical Location</th>
-                                    <th scope="col">P.O.Box</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Phone Number</th>
                                     <th scope="col">Edit</th>
                                     <th scope="col">Delete</th>
                                 </tr>
@@ -255,15 +263,9 @@
                                     <tr>
                                         <th scope="row">{{ forloop.counter }}</th>
                                         <td>{{ address.name }}</td>
-                                        <td>{{ address.address }}</td>
-                                        <td>{{ address.postal_address }}</td>
+                                        <td>{{ address.email }}</td>
+                                        <td>{{ address.phone_number }}</td>
                                         <td><a href="{% url 'client-edit' address.id %}"><button class="btn btn-outline-dark rounded-5">Edit</button></a></td>
-
-
-
-
-
-
                                         <td>
                                             <button class="btn btn-outline-danger rounded-5" data-bs-toggle="modal" data-bs-target="#staticBackdropDeleteClient">Delete</button>
                                             <!-- Modal -->

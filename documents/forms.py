@@ -21,8 +21,8 @@ class ClientForm(forms.ModelForm):
 
 class QuotationForm(forms.ModelForm):
     STATUS_CHOICES = (
-        ('0', 'Draft'),
-        ('1', 'Final'),
+        (0, 'Draft'),
+        (1, 'Final'),
     )
     TAXABLE_CHOICES = (
         ('True', 'Yes'),

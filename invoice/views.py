@@ -46,6 +46,10 @@ def invoice(request):
     draft_invoices = Invoice.objects.filter(business_account=selected_business_account, status=False)
     final_invoices = Invoice.objects.filter(business_account=selected_business_account, status=True)
     final_quotations = Quotation.objects.filter(business_account=selected_business_account, status=True)
+    final_invoices_count = Invoice.objects.filter(business_account=selected_business_account, status=True).count()
+    draft_invoices_count = Invoice.objects.filter(business_account=selected_business_account, status=False).count()
+
+
     if request.method == 'POST':
         invoice_form = InvoiceForm(request.POST)
         invoice_form.set_request(request)
@@ -149,6 +153,8 @@ def invoice(request):
                 'draft_invoice': draft_invoices,
                 'final_invoice': final_invoices,
                 'final_quotations': final_quotations,
+                'final_invoices_count': final_invoices_count,
+                'draft_invoices_count': draft_invoices_count,
                 'error_messages': error_messages
             })
 
@@ -159,8 +165,9 @@ def invoice(request):
             'invoice_form': invoice_form,
             'draft_invoice': draft_invoices,
             'final_invoice': final_invoices,
-            'final_quotations': final_quotations
-            
+            'final_quotations': final_quotations,
+            'final_invoices_count': final_invoices_count,
+            'draft_invoices_count': draft_invoices_count,
             })
 
 @login_required
