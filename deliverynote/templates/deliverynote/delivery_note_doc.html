@@ -210,21 +210,21 @@
             </tbody>
             </table>
 
-
-        <div class="card" style="border: 1px solid {{ selected_business_account.theme_color }} ; margin-top: 20px; width: 30rem;">
-            <div class="card-body" style="padding-bottom:0cm !important; padding-top:0.2cm !important;">
-              {% if selected_payment_option %}
-                  <div class="fw-bold">*Payment Details</div>
-                  <p class="fw-semibold mb-0 ps-2" style="font-size:10px;">{{ selected_payment_option.payment_method  }} Transfer</p>
-                  <p class="fw-normal ps-2" style="font-size:10px;">{{ selected_payment_option.name }}</br> Account No:{{ selected_payment_option.account_no }}</p>
-              {% endif %}
-              {% if selected_delivery_note.note  %}
-                <div class="fw-bold">*Notes</div>
-                <p class="fw-normal ps-2" style="font-size:10px;">{{ selected_delivery_note.note }}</p>
-              {% endif %}
+        {% if selected_payment_option or selected_delivery_note.note %}
+            <div class="card" style="border: 1px solid {{ selected_business_account.theme_color }} ; margin-top: 20px; width: 30rem;">
+                <div class="card-body" style="padding-bottom:0cm !important; padding-top:0.2cm !important;">
+                {% if selected_payment_option %}
+                    <div class="fw-bold">*Payment Details</div>
+                    <p class="fw-semibold mb-0 ps-2" style="font-size:10px;">{{ selected_payment_option.payment_method  }} Transfer</p>
+                    <p class="fw-normal ps-2" style="font-size:10px;">{{ selected_payment_option.name }}</br> Account No:{{ selected_payment_option.account_no }}</p>
+                {% endif %}
+                {% if selected_delivery_note.note  %}
+                    <div class="fw-bold">*Notes</div>
+                    <p class="fw-normal ps-2" style="font-size:10px;">{{ selected_delivery_note.note }}</p>
+                {% endif %}
+                </div>
             </div>
-        </div>
-
+        {% endif %}
 
         <div class="align-items-center shadow-sm mt-3">
             <div class="flex-shrink-0"><img src="{{ qr_code_url }}" alt="QR Code" class="qr-code"></div>
