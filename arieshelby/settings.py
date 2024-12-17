@@ -162,7 +162,7 @@ DATABASES = {
             'NAME': 'as-docs',
             'USER': 'root',
             'PASSWORD': 'toor',
-            'HOST': 'as-docs',
+            'HOST': 'localhost',
             'PORT': '3306',
         }
 }
