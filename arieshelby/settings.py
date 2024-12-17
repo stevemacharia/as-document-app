@@ -165,7 +165,7 @@ DATABASES = {
             'USER': 'mysql',
             # 'PASSWORD': 'toor',
             'PASSWORD': '8ozjMggmT0Iw0s72p0FnZzBVSysxoRtGHe6976BGs7zCX6vbYEivuSqMVDEVkewHb',
-            'HOST': 'mysql-database-qwsog8g4cks4co4kwswkog0c',
+            'HOST': 'mysql://mysql:ozjMggmT0Iw0s72p0FnZzBVSysxoRtGHe6976BGs7zCX6vbYEivuSqMVDEVkewHb@es4o808ks888cwks0goo8oos:3306/default',
             'PORT': '3306',
         }
 }
