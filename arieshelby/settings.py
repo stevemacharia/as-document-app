@@ -159,13 +159,10 @@ WSGI_APPLICATION = 'arieshelby.wsgi.application'
 DATABASES = {
     'default': {
             'ENGINE': 'django.db.backends.mysql',
-            # 'NAME': 'arieshelby',
-            'NAME': 'mysql-database-qwsog8g4cks4co4kwswkog0c',
-            # 'USER': 'root',
-            'USER': 'mysql',
-            # 'PASSWORD': 'toor',
-            'PASSWORD': '8ozjMggmT0Iw0s72p0FnZzBVSysxoRtGHe6976BGs7zCX6vbYEivuSqMVDEVkewHb',
-            'HOST': 'mysql://mysql:ozjMggmT0Iw0s72p0FnZzBVSysxoRtGHe6976BGs7zCX6vbYEivuSqMVDEVkewHb@es4o808ks888cwks0goo8oos:3306/default',
+            'NAME': 'as-docs',
+            'USER': 'root',
+            'PASSWORD': 'toor',
+            'HOST': 'as-docs',
             'PORT': '3306',
         }
 }
