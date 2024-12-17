@@ -37,10 +37,9 @@ INSTALLED_APPS = [
     'deliverynote.apps.DeliverynoteConfig',
     'accounts.apps.AccountsConfig',
     'receipt.apps.ReceiptConfig',
-    'material',
-    'material.admin',
+    # 'material.admin',
     'user.apps.UserConfig',
-    # 'django.contrib.admin',
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -160,10 +159,13 @@ WSGI_APPLICATION = 'arieshelby.wsgi.application'
 DATABASES = {
     'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'arieshelby',
-            'USER': 'root',
-            'PASSWORD': 'toor',
-            'HOST': 'localhost',
+            # 'NAME': 'arieshelby',
+            'NAME': 'mysql-database-qwsog8g4cks4co4kwswkog0c',
+            # 'USER': 'root',
+            'USER': 'mysql',
+            # 'PASSWORD': 'toor',
+            'PASSWORD': '8ozjMggmT0Iw0s72p0FnZzBVSysxoRtGHe6976BGs7zCX6vbYEivuSqMVDEVkewHb',
+            'HOST': 'db',
             'PORT': '3306',
         }
 }
