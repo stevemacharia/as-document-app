@@ -159,7 +159,7 @@ DATABASES = {
 # DATABASES = {
 #     'default': {
 #             'ENGINE': 'django.db.backends.mysql',
-#             'NAME': 'as-docs',
+#             'NAME': 'arieshelby',
 #             'USER': 'root',
 #             'PASSWORD': 'toor',
 #             'HOST': 'localhost',
