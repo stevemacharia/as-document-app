@@ -30,7 +30,7 @@ class InvoiceForm(forms.ModelForm):
         label="Choose payment account",
         widget=forms.Select(attrs={'class': 'form-control'})
     )
-    payment_status = forms.ChoiceField(choices=PAYMENT_STATUS_CHOICES, label='Payment status', required=True)
+    payment_status = forms.ChoiceField(choices=PAYMENT_STATUS_CHOICES, widget=forms.Select, label='Payment status', required=True)
 
     submission_date = forms.DateField(
         label="Submission Date",
@@ -38,7 +38,7 @@ class InvoiceForm(forms.ModelForm):
         widget=forms.DateInput(format="%Y-%m-%d", attrs={"type": "date"}),
         input_formats=["%Y-%m-%d"]
     )
-    status = forms.ChoiceField(choices=STATUS_CHOICES, label='Status', required=True)
+    status = forms.ChoiceField(choices=STATUS_CHOICES, label='Status', widget=forms.Select, required=True)
     taxable = forms.ChoiceField(
         choices=TAXABLE_CHOICES,
         label='Include 16% Tax',

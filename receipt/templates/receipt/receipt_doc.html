@@ -134,6 +134,32 @@
             top: 30px;
             right: -50px;
         }
+        /* UNPAID Ribbon */
+        .ribbon-2 {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 150px;
+            height: 150px;
+            overflow: hidden;
+        }
+
+        .ribbon-2 span {
+            position: absolute;
+            display: block;
+            width: 225px;
+            padding: 10px 0;
+            background: red;
+            color: white;
+            font-size: 18px;
+            text-align: center;
+            text-transform: uppercase;
+            font-weight: bold;
+            transform: rotate(45deg);
+            top: 30px;
+            right: -50px;
+        }
+        /* UNPAID Ribbon */
         .invoice .top-left {
             font-size:65px;
             color:#3ba0ff;
@@ -182,10 +208,17 @@
 <body>
     <div class="invoice-box">
 
+        {% if selected_receipt.payment_status is True %}
             <!-- PAID Ribbon -->
             <div class="ribbon">
                 <span>PAID</span>
             </div>
+        {% else %}
+            <!-- PAID Ribbon -->
+            <div class="ribbon-2">
+                <span>UNPAID</span>
+            </div>
+        {% endif %}
 
 
         <!-- Logo and Company Contact Info -->

@@ -9,7 +9,10 @@ class ReceiptForm(forms.ModelForm):
         ('0', 'Draft'),
         ('1', 'Complete'),
     )
-
+    PAYMENT_STATUS_CHOICES = (
+        ('0', 'Unpaid'),
+        ('1', 'Paid'),
+    )
     TAXABLE_CHOICES = (
         ('True', 'Yes'),
         ('False', 'No'),
@@ -26,7 +29,7 @@ class ReceiptForm(forms.ModelForm):
         label="Choose payment account",
         widget=forms.Select(attrs={'class': 'form-control'})
     )
-   
+    payment_status = forms.ChoiceField(choices=PAYMENT_STATUS_CHOICES, label='Payment status', required=True)
 
     submission_date = forms.DateField(
         label="Submission Date",
@@ -43,7 +46,7 @@ class ReceiptForm(forms.ModelForm):
     note = forms.CharField(required=False, label="Add a note to the Receipt", widget=forms.Textarea)
     class Meta:
         model = Receipt
-        fields = ['client', 'payment_account', 'submission_date', 'taxable', 'note', 'status']
+        fields = ['client', 'payment_account', 'payment_status', 'submission_date', 'taxable', 'note', 'status']
 
     def set_request(self, request):
         self.request = request

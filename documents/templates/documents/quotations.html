@@ -183,7 +183,12 @@
                                             <th scope="row">{{ forloop.counter }}</th>
                                             <td class="text-uppercase">{{ quotation.quotation_id }}</td>
                                             <td>{{ quotation.client }}</td>
-                                            <td>{{ quotation.total_price|intcomma }}</td>
+                                            {% if quotation.taxable is True  %}
+                                                <td>{{ quotation.total_price|intcomma }}</td>
+                                            {% else %}
+                                                <td>{{ quotation.sub_total|intcomma }}</td>
+                                            {% endif %}
+
                                             <td>{{ quotation.submission_date|date:"d M. Y" }}</td>
                                             <td>{% if quotation.status %}
                                                     Final
@@ -236,7 +241,11 @@
                                             <th scope="row">{{ forloop.counter }}</th>
                                             <td class="text-uppercase">{{ quotation.quotation_id }}</td>
                                             <td>{{ quotation.client }}</td>
-                                            <td>{{ quotation.total_price|intcomma  }}</td>
+                                            {% if quotation.taxable is True  %}
+                                                <td>{{ quotation.total_price|intcomma }}</td>
+                                            {% else %}
+                                                <td>{{ quotation.sub_total|intcomma }}</td>
+                                            {% endif %}
                                             <td>{{ quotation.submission_date|date:"d M. Y" }}</td>
                                             <td>{% if quotation.status %}
                                                     Final

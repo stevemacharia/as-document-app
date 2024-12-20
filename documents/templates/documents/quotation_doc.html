@@ -225,11 +225,16 @@
                         <td class="text-end pb-0" colspan="5" style="border:none;">VAT (16%):</td>
                         <td class="text-end pb-0 pe-3" style="border:none;">{{selected_quotation.total_price|sub:selected_quotation.sub_total|intcomma }}</td>
                     </tr>
+                    <tr class="text-end fw-bold" style="padding-bottom: 0cm">
+                        <td class="text-end pb-0" colspan="5" style="border:none;">TOTAL (Incl): </td>
+                        <td class="text-end pe-3 pb-0" style="border:none;">{{selected_quotation.total_price|intcomma }}</td>
+                    </tr>
+                {% else %}
+                    <tr class="text-end fw-bold" style="padding-bottom: 0cm">
+                        <td class="text-end pb-0" colspan="5" style="border:none;">TOTAL (Incl): </td>
+                        <td class="text-end pe-3 pb-0" style="border:none;">{{selected_quotation.sub_total|intcomma }}</td>
+                    </tr>
                 {% endif %}
-                <tr class="text-end fw-bold" style="padding-bottom: 0cm">
-                    <td class="text-end pb-0" colspan="5" style="border:none;">TOTAL (Incl): </td>
-                    <td class="text-end pe-3 pb-0" style="border:none;">{{selected_quotation.total_price|intcomma }}</td>
-                </tr>
 
             </tbody>
             </table>
@@ -240,7 +245,7 @@
             <div class="card my-4" style="border: 1px solid {{ selected_business_account.theme_color }}; margin-top: 10px; width: 30rem;">
               <div class="card-body" style="padding-bottom:0cm !important; padding-top:0.2cm !important;">
                   <div class="fw-semibold">*Notes</div>
-                  <p class="fw-normal ps-2" style="font-size:10px;">{{ selected_quotation.note }}</p>
+                  <p class="fw-semibold ps-2" style="font-size:10px;">{{ selected_quotation.note }}</p>
               </div>
             </div>
         {% endif %}
