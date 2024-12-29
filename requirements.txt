@@ -22,7 +22,6 @@ importlib_metadata==8.0.0
 num2words==0.5.13
 pillow==10.4.0
 pycparser==2.22
-pycairo==1.26.1
 pydantic==2.8.2
 pydantic_core==2.20.1
 pydyf==0.11.0
