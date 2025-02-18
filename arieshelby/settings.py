@@ -149,23 +149,23 @@ WSGI_APPLICATION = 'arieshelby.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#             'ENGINE': 'django.db.backends.mysql',
-#             'NAME': 'arieshelby',
-#             'USER': 'root',
-#             'PASSWORD': 'toor',
-#             'HOST': 'localhost',
-#             'PORT': '3306',
-#         }
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
 # }
+
+DATABASES = {
+    'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'arieshelby',
+            'USER': 'root',
+            'PASSWORD': 'toor',
+            'HOST': 'localhost',
+            'PORT': '3306',
+        }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -230,7 +230,7 @@ USE_THOUSAND_SEPARATOR = True
 # email config
 DEFAULT_FROM_EMAIL = 'info@arieshelby.com'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'mail.arieshelby.com'
+EMAIL_HOST = 'smtp.hostinger.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'info@arieshelby.com'
