@@ -37,7 +37,7 @@ class ReceiptForm(forms.ModelForm):
         widget=forms.DateInput(format="%Y-%m-%d", attrs={"type": "date"}),
         input_formats=["%Y-%m-%d"]
     )
-    status = forms.ChoiceField(choices=STATUS_CHOICES, label='Status', required=True)
+    status = forms.ChoiceField(choices=STATUS_CHOICES, label='Status', widget=forms.Select, required=True)
     taxable = forms.ChoiceField(
         choices=TAXABLE_CHOICES,
         label='Include 16% Tax',

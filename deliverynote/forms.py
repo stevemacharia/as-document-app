@@ -3,6 +3,7 @@ from .models import DeliveryNote, DeliveryNoteItems, Client
 from crispy_bootstrap5.bootstrap5 import FloatingField
 from django.contrib.admin.widgets import AdminDateWidget
 from accounts.models import BusinessAccount, PaymentOption
+from django.forms import ImageField
 
 
 class DeliveryNoteForm(forms.ModelForm):
@@ -82,9 +83,10 @@ class DeliveryNoteItemsForm(forms.ModelForm):
     item = forms.CharField(required=True, label="Item Name")
     item_description = forms.CharField(required=True, label="Description", widget=forms.Textarea)
     quantity = forms.IntegerField(required=True)
+    item_image = ImageField(required=False)
     # price = forms.CharField(required=True, label="Unit cost")
 
 
     class Meta:
         model = DeliveryNoteItems
-        fields = ['item', 'item_description', 'quantity']
+        fields = ['item', 'item_description', 'item_image', 'quantity']

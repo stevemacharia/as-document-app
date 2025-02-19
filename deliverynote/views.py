@@ -40,6 +40,7 @@ def delivery_note(request):
     form = DeliveryNoteItemsForm(prefix='form0')
     delivery_note_form = DeliveryNoteForm()
     delivery_note_form.set_request(request)
+    
     business_account = request.session.get('selected_business_account')
     selected_business_account = BusinessAccount.objects.get(id=business_account) 
     draft_delivery_notes = DeliveryNote.objects.filter(business_account=selected_business_account, status=False)
@@ -55,7 +56,7 @@ def delivery_note(request):
         # form.set_request(request)  # Ensure this is called on InvoiceForm
 
         form_count = int(request.POST.get('form_count', 1))
-        forms = [DeliveryNoteItemsForm(request.POST, prefix=f'form{i}') for i in range(form_count)]
+        forms = [DeliveryNoteItemsForm(request.POST, request.FILES, prefix=f'form{i}') for i in range(form_count)]
         x = str(uuid.uuid4())[:5]
 
         if delivery_note_form.is_valid() and all(f.is_valid() for f in forms):
@@ -185,7 +186,7 @@ def delivery_note_details(request, id):
     if request.method == "POST":
         form = DeliveryNoteForm(request.POST, instance=chosen_delivery_note)
         form.set_request(request)
-        formset = DeliveryNoteItemFormSet(request.POST, instance=chosen_delivery_note)
+        formset = DeliveryNoteItemFormSet(request.POST, request.FILES, instance=chosen_delivery_note)
         if form.is_valid() and formset.is_valid():
 
             form.save()
@@ -214,7 +215,7 @@ def delivery_note_details(request, id):
 def add_delivery_note_item(request, id):
     selected_delivery_note = DeliveryNote.objects.get(id=id)
     if request.method == "POST":
-        delivery_note_item_form = DeliveryNoteItemsForm(request.POST)
+        delivery_note_item_form = DeliveryNoteItemsForm(request.POST, request.FILES)
         if delivery_note_item_form.is_valid():
 
             DI_form = delivery_note_item_form.save(commit=False)

@@ -7,11 +7,11 @@ from django.forms import ImageField
 
 class BusinessAccountForm(forms.ModelForm):
     name = forms.CharField(max_length=255)
-    email = forms.CharField(max_length=100)
+    email = forms.CharField(max_length=100, required=False)
     address = forms.CharField(max_length=255, label="Your P.O. Box address")
     location = forms.CharField(max_length=200, widget=forms.Textarea, label="Your physical location")
-    phone_number = forms.CharField(max_length=100)
-    tel = forms.CharField(max_length=100, label="Tel")
+    phone_number = forms.CharField(max_length=100, required=False)
+    tel = forms.CharField(max_length=100, label="Tel", required=False)
     logo = ImageField(required=True)
 
     class Meta:
