@@ -2,7 +2,7 @@ from django import forms
 from .models import Quotation, QuotationItems, Client
 from crispy_bootstrap5.bootstrap5 import FloatingField
 from django.contrib.admin.widgets import AdminDateWidget
-
+from django.forms import ImageField
 
 class ClientForm(forms.ModelForm):
     name = forms.CharField()
@@ -53,10 +53,11 @@ class QuotationForm(forms.ModelForm):
 class QuotationItemsForm(forms.ModelForm):
     item = forms.CharField(required=True, label="Item Name")
     item_description = forms.CharField(required=True, label="Description", widget=forms.Textarea)
+    item_image = ImageField(required=False)
     quantity = forms.IntegerField(required=True)
     price = forms.CharField(required=True, label="Unit cost")
 
 
     class Meta:
         model = QuotationItems
-        fields = ['item', 'item_description', 'quantity', 'price']
+        fields = ['item', 'item_description', 'item_image', 'quantity', 'price']

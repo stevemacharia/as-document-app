@@ -281,6 +281,7 @@ def convert_invoice_to_delivery_note(request, id):
             dnote=delivery_note,
             item=item.item,
             item_description=item.item_description,
+            item_image=item.item_image,
             quantity=item.quantity,
             # price=item.price,
         )

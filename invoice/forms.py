@@ -4,6 +4,7 @@ from crispy_bootstrap5.bootstrap5 import FloatingField
 from django.contrib.admin.widgets import AdminDateWidget
 from accounts.models import BusinessAccount, PaymentOption
 from documents.models import Client
+from django.forms import ImageField
 
 class InvoiceForm(forms.ModelForm):
     STATUS_CHOICES = (
@@ -78,6 +79,7 @@ class InvoiceForm(forms.ModelForm):
 class InvoiceItemsForm(forms.ModelForm):
     item = forms.CharField(required=True, label="Item Name")
     item_description = forms.CharField(required=True, label="Description", widget=forms.Textarea)
+    item_image = ImageField(required=False)
     quantity = forms.IntegerField(required=True)
     price = forms.CharField(required=True, label="Unit cost")
     # unit = forms.CharField(required=True, label="Unit of Measurement")
@@ -85,4 +87,4 @@ class InvoiceItemsForm(forms.ModelForm):
 
     class Meta:
         model = InvoiceItems
-        fields = ['item', 'item_description', 'quantity', 'price']
+        fields = ['item', 'item_description', 'item_image', 'quantity', 'price']

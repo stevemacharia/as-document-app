@@ -268,7 +268,12 @@
                     <tr class="text-start">
                         <td class="text-start" style="border: 1px solid {{ selected_business_account.theme_color }};">{{ forloop.counter }}</td>
                         <td class="text-start" style="border: 1px solid {{ selected_business_account.theme_color }} ">{{ item.item}}</td>
-                        <td class="text-start" style="border: 1px solid {{ selected_business_account.theme_color }} ;">{{ item.item_description|linebreaks }}</td>
+                        <td class="text-start" style="border: 1px solid {{ selected_business_account.theme_color }} ;">
+                            {{ item.item_description|linebreaks }}
+                                {% if item.item_image != 'item_images/AS_LOGO.png' %}
+                                    <br>Picture:<br><img src="{{ item.item_image.url}}" alt="item_picture" style="width:150px">
+                                {% endif %}
+                        </td>
                         <td class="text-start" style="border: 1px solid {{ selected_business_account.theme_color }} ;">{{ item.quantity}}</td>
                         <td class="text-end pe-3" style="border: 1px solid {{ selected_business_account.theme_color }} ;">
                         {{selected_receipt.total_price|intcomma }}

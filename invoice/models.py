@@ -13,7 +13,8 @@ import uuid
 from documents.models import Client
 from accounts.models import BusinessAccount, PaymentOption
 from django.core.exceptions import ObjectDoesNotExist
-
+from django.core.exceptions import ValidationError
+import os
 
 def get_default_payment_option_account():
     try:
@@ -22,6 +23,17 @@ def get_default_payment_option_account():
     except (ObjectDoesNotExist, AttributeError):
         # Handle case where no BusinessAccount exists yet
         return None  # Or handle with a custom fallback if needed
+    
+# Validator to check the file size
+def validate_image_size(image):
+    max_size = 3 * 1024 * 1024  # 3MB
+    if image.size > max_size:
+        raise ValidationError(f"The image size should not exceed 3 MB. Your file is {image.size / (1024 * 1024):.2f} MB")
+
+# Function to rename the image file based on the 'name' column
+def upload_to(instance, filename):
+    extension = os.path.splitext(filename)[1]  # Get the file extension
+    return f"item_images/{instance.name}{extension}"
 
 
 
@@ -54,10 +66,18 @@ class InvoiceItems(models.Model):
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE)
     item = models.CharField(max_length=300)
     item_description = models.CharField(max_length=800)
+    item_image = models.ImageField(upload_to="item_images/", blank=True, null=True, default="item_images/AS_LOGO.png")
     quantity = models.IntegerField()
     price = models.DecimalField(max_digits=15, decimal_places=2)
 
 
+    def save(self):
+        super().save()
+        img = Image.open(self.item_image.path)
+        if img.height > 600 or img.width > 600:
+            output_size = (600, 600)
+            img.thumbnail(output_size)
+            img.save(self.item_image.path)
 
 
 

@@ -55,7 +55,7 @@ def receipt(request):
 
 
         form_count = int(request.POST.get('form_count', 1))
-        forms = [ReceiptItemsForm(request.POST, prefix=f'form{i}') for i in range(form_count)]
+        forms = [ReceiptItemsForm(request.POST, request.FILES,prefix=f'form{i}') for i in range(form_count)]
         x = str(uuid.uuid4())[:5]
 
         if receipt_form.is_valid() and all(f.is_valid() for f in forms):
@@ -182,7 +182,7 @@ def receipt_details(request, id):
     if request.method == "POST":
         form = ReceiptForm(request.POST, instance=chosen_receipt)
         form.set_request(request)
-        formset = ReceiptItemFormSet(request.POST, instance=chosen_receipt)
+        formset = ReceiptItemFormSet(request.POST, request.FILES, instance=chosen_receipt)
         
         if form.is_valid() and formset.is_valid():
             sub_total_price = 0
@@ -229,7 +229,7 @@ def receipt_details(request, id):
 def add_receipt_item(request, id):
     selected_receipt = Receipt.objects.get(id=id)
     if request.method == "POST":
-        receipt_item_form = ReceiptItemsForm(request.POST)
+        receipt_item_form = ReceiptItemsForm(request.POST, request.FILES)
         if receipt_item_form.is_valid():
             QI_form = receipt_item_form.save(commit=False)
 
@@ -300,6 +300,7 @@ def convert_invoice_to_receipt(request, id):
             receipt=receipt,
             item=item.item,
             item_description=item.item_description,
+            item_image=item.item_image,
             quantity=item.quantity,
             price=item.price,
         )
@@ -310,11 +311,6 @@ def convert_invoice_to_receipt(request, id):
 
     # Redirect to the receipt detail page with the new receipt ID
     return redirect(reverse('receipt_details', args=[receipt.id]))
-
-
-
-
-
 
 
 @login_required

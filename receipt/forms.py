@@ -3,6 +3,7 @@ from .models import Receipt, ReceiptItems, Client
 from crispy_bootstrap5.bootstrap5 import FloatingField
 from django.contrib.admin.widgets import AdminDateWidget
 from accounts.models import BusinessAccount, PaymentOption
+from django.forms import ImageField
 
 class ReceiptForm(forms.ModelForm):
     STATUS_CHOICES = (
@@ -77,6 +78,7 @@ class ReceiptForm(forms.ModelForm):
 class ReceiptItemsForm(forms.ModelForm):
     item = forms.CharField(required=True, label="Item Name")
     item_description = forms.CharField(required=True, label="Description", widget=forms.Textarea)
+    item_image = ImageField(required=False)
     quantity = forms.IntegerField(required=True)
     price = forms.CharField(required=True, label="Unit cost")
     # unit = forms.CharField(required=True, label="Unit of Measurement")
@@ -84,4 +86,4 @@ class ReceiptItemsForm(forms.ModelForm):
 
     class Meta:
         model = ReceiptItems
-        fields = ['item', 'item_description', 'quantity', 'price']
+        fields = ['item', 'item_description', 'item_image', 'quantity', 'price']

@@ -130,10 +130,13 @@
                                                 </div>
                                             </div>
                                             <div class="row g-3">
-                                                <div class="col-sm-6">
+                                                <div class="col-sm-4">
+                                                    {{ form.item_image|as_crispy_field }}
+                                                </div>
+                                                <div class="col-sm-4">
                                                     {{ form.quantity|as_crispy_field }}
                                                 </div>
-                                                <div class="col-sm-6">
+                                                <div class="col-sm-4">
                                                     {{ form.price|as_crispy_field }}
                                                 </div>
                                             </div>

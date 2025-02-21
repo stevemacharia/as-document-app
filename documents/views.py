@@ -76,7 +76,7 @@ def quotations(request):
     if request.method == 'POST':
         quotation_form = QuotationForm(request.POST)
         form_count = int(request.POST.get('form_count', 1))
-        forms = [QuotationItemsForm(request.POST, prefix=f'form{i}') for i in range(form_count)]
+        forms = [QuotationItemsForm(request.POST, request.FILES, prefix=f'form{i}') for i in range(form_count)]
         x = str(uuid.uuid4())[:5]
 
         if quotation_form.is_valid() and all(f.is_valid() for f in forms):
@@ -181,7 +181,7 @@ def quotation_details(request, id):
 
     if request.method == "POST":
         form = QuotationForm(request.POST, instance=chosen_quotation)
-        formset = QuotationItemFormSet(request.POST, instance=chosen_quotation)
+        formset = QuotationItemFormSet(request.POST, request.FILES, instance=chosen_quotation)
         if form.is_valid() and formset.is_valid():
             sub_total_price = 0
             for i in formset:
@@ -223,7 +223,7 @@ def quotation_details(request, id):
 def add_quotation_item(request, id):
     selected_quotation = Quotation.objects.get(id=id)
     if request.method == "POST":
-        quotation_item_form = QuotationItemsForm(request.POST)
+        quotation_item_form = QuotationItemsForm(request.POST, request.FILES)
         if quotation_item_form.is_valid():
             QI_form = quotation_item_form.save(commit=False)
 

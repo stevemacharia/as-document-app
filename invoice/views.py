@@ -57,7 +57,7 @@ def invoice(request):
         # form.set_request(request)  # Ensure this is called on InvoiceForm
 
         form_count = int(request.POST.get('form_count', 1))
-        forms = [InvoiceItemsForm(request.POST, prefix=f'form{i}') for i in range(form_count)]
+        forms = [InvoiceItemsForm(request.POST, request.FILES,prefix=f'form{i}') for i in range(form_count)]
         x = str(uuid.uuid4())[:5]
 
         if invoice_form.is_valid() and all(f.is_valid() for f in forms):
@@ -183,7 +183,7 @@ def invoice_details(request, id):
     if request.method == "POST":
         form = InvoiceForm(request.POST, instance=chosen_invoice)
         form.set_request(request)
-        formset = InvoiceItemFormSet(request.POST, instance=chosen_invoice)
+        formset = InvoiceItemFormSet(request.POST, request.FILES, instance=chosen_invoice)
         
         if form.is_valid() and formset.is_valid():
             sub_total_price = 0
@@ -228,7 +228,7 @@ def invoice_details(request, id):
 def add_invoice_item(request, id):
     selected_invoice = Invoice.objects.get(id=id)
     if request.method == "POST":
-        invoice_item_form = InvoiceItemsForm(request.POST)
+        invoice_item_form = InvoiceItemsForm(request.POST, request.FILES)
         if invoice_item_form.is_valid():
             QI_form = invoice_item_form.save(commit=False)
 
@@ -296,6 +296,7 @@ def convert_quotation_to_invoice(request, id):
             invoice=invoice,
             item=item.item,
             item_description=item.item_description,
+            item_image=item.item_image,
             quantity=item.quantity,
             price=item.price,
         )
