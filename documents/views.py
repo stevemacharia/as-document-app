@@ -77,6 +77,7 @@ def quotations(request):
         quotation_form = QuotationForm(request.POST)
         form_count = int(request.POST.get('form_count', 1))
         forms = [QuotationItemsForm(request.POST, request.FILES, prefix=f'form{i}') for i in range(form_count)]
+        
         x = str(uuid.uuid4())[:5]
 
         if quotation_form.is_valid() and all(f.is_valid() for f in forms):
